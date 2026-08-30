@@ -100,6 +100,45 @@
     });
   });
 
+  /* --- Galeria expansível ----------------------------------
+     Os extras carregam o atributo `hidden`: recolhidos, ficam fora da
+     ordem de tabulação e da árvore de acessibilidade — não basta
+     escondê-los visualmente. */
+  var galeriaBotao = document.querySelector("[data-galeria-toggle]");
+  if (galeriaBotao) {
+    var galeria = document.getElementById(galeriaBotao.getAttribute("aria-controls"));
+    var rotulo = galeriaBotao.querySelector("[data-galeria-rotulo]");
+    var extras = galeria ? galeria.querySelectorAll("[data-extra]") : [];
+    var icone = galeriaBotao.querySelector("use");
+
+    galeriaBotao.addEventListener("click", function () {
+      var abrindo = galeriaBotao.getAttribute("aria-expanded") !== "true";
+
+      galeriaBotao.setAttribute("aria-expanded", String(abrindo));
+      rotulo.textContent = abrindo ? "Ver menos" : "Ver mais fotos";
+      if (icone) icone.setAttribute("href", abrindo ? "#i-x" : "#i-mais");
+
+      /* Ao recolher, some conteúdo ACIMA do botão e ele salta para cima
+         na tela — às vezes para fora dela. Em vez de rolar até ele depois
+         (que depende de scroll suave e falha se o navegador o suspender),
+         ancoramos: medimos antes e depois e corrigimos o scroll pela
+         diferença, de modo que o botão não sai do lugar.
+         Na expansão não se corrige nada: as fotos novas devem empurrar
+         a página mesmo, senão elas entram fora da vista. */
+      var antes = galeriaBotao.getBoundingClientRect().top;
+
+      extras.forEach(function (li) { li.hidden = !abrindo; });
+      galeria.classList.toggle("is-expandida", abrindo);
+
+      if (!abrindo) {
+        var depois = galeriaBotao.getBoundingClientRect().top;
+        if (depois !== antes) {
+          window.scrollBy({ top: depois - antes, behavior: "instant" });
+        }
+      }
+    });
+  }
+
   /* --- Contadores de impacto -------------------------------
      Contam de 0 ao valor uma única vez, com ease-out cúbico:
      o número "assenta" como um golpe. */
@@ -127,6 +166,114 @@
 
     counter.observe(el);
   });
+
+  /* --- Formulário de contato ------------------------------
+     Validação no cliente com ARIA, estado de envio e tratamento de
+     falha. O formulário tem `novalidate`: as mensagens do navegador
+     não são traduzíveis nem estilizáveis, então validamos aqui e
+     ligamos cada erro ao seu campo por aria-describedby. */
+  var form = document.querySelector("[data-form-contato]");
+  if (form) {
+    var status = form.querySelector("[data-form-status]");
+    var botao = form.querySelector('button[type="submit"]');
+
+    var mostrarErro = function (campo, mensagem) {
+      var alvo = document.getElementById("e-" + campo.id.replace(/^f-/, ""));
+      campo.setAttribute("aria-invalid", "true");
+      campo.closest(".field").classList.add("field--error");
+      if (!alvo) return;
+      alvo.hidden = false;
+      alvo.innerHTML =
+        '<svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"/></svg> ' + mensagem;
+      campo.setAttribute("aria-describedby", alvo.id);
+    };
+
+    var limparErro = function (campo) {
+      var alvo = document.getElementById("e-" + campo.id.replace(/^f-/, ""));
+      campo.removeAttribute("aria-invalid");
+      campo.removeAttribute("aria-describedby");
+      campo.closest(".field").classList.remove("field--error");
+      if (alvo) { alvo.hidden = true; alvo.textContent = ""; }
+    };
+
+    var soDigitos = function (v) { return (v || "").replace(/\D/g, ""); };
+
+    var validar = function () {
+      var erros = [];
+      var nome = form.querySelector("#f-nome");
+      var email = form.querySelector("#f-email");
+      var cnpj = form.querySelector("#f-cnpj");
+
+      [nome, email, cnpj].forEach(limparErro);
+
+      if (nome.value.trim().length < 2) {
+        mostrarErro(nome, "Escreva seu nome."); erros.push(nome);
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) {
+        mostrarErro(email, "Confira o e-mail — parece incompleto."); erros.push(email);
+      }
+      /* CNPJ é opcional, mas se preenchido tem de ter 14 dígitos */
+      if (cnpj.value.trim() && soDigitos(cnpj.value).length !== 14) {
+        mostrarErro(cnpj, "CNPJ incompleto — confira os 14 dígitos."); erros.push(cnpj);
+      }
+      return erros;
+    };
+
+    var dizer = function (texto, tipo) {
+      status.className = "form-status is-visivel form-status--" + tipo;
+      status.innerHTML = texto;
+    };
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var erros = validar();
+      if (erros.length) {
+        dizer("Confira os campos destacados antes de enviar.", "erro");
+        erros[0].focus();
+        return;
+      }
+
+      status.className = "form-status";
+      botao.classList.add("btn--loading");
+      botao.setAttribute("aria-busy", "true");
+      botao.disabled = true;
+
+      var soltar = function () {
+        botao.classList.remove("btn--loading");
+        botao.removeAttribute("aria-busy");
+        botao.disabled = false;
+      };
+
+      fetch(form.action, {
+        method: "post",
+        body: new FormData(form),
+        headers: { Accept: "application/json" }
+      })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          soltar();
+          form.reset();
+          dizer("Mensagem enviada. A associação responde em breve.", "ok");
+        })
+        .catch(function () {
+          soltar();
+          /* Falha nunca é beco sem saída: oferece o caminho que funciona. */
+          dizer(
+            'Não conseguimos enviar agora. Fale com a gente pelo ' +
+            '<a href="https://wa.me/55SEUNUMERO" target="_blank" rel="noopener">WhatsApp</a>.',
+            "erro"
+          );
+        });
+    });
+
+    /* Limpa o erro assim que a pessoa corrige o campo */
+    form.querySelectorAll(".field__control").forEach(function (campo) {
+      campo.addEventListener("input", function () {
+        if (campo.getAttribute("aria-invalid")) limparErro(campo);
+      });
+    });
+  }
 
   /* --- Formulário: assunto pré-selecionado pela URL --------
      A dobra 7 (patrocínio) linka para /#contato?assunto=patrocinio;

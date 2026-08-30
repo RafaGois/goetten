@@ -42,6 +42,17 @@
   --color-border-light:   #E4E1DC;
   --color-muted-light:    #5C5C5C; /* texto secundário sobre papel (6.14:1 AA) */
 
+  /* --- Cor · graduação ---
+     Única exceção à paleta da marca: faixa é informação do esporte, não
+     decoração. Um token por faixa para o badge e a barra do card de
+     professor lerem da mesma fonte e nunca divergirem.
+     Todas passam AAA com o texto indicado em .badge--belt. */
+  --belt-branca: #DCD9D4;
+  --belt-azul:   #1B4E9B;
+  --belt-roxa:   #5B2D86;
+  --belt-marrom: #5C3A21;
+  --belt-preta:  var(--color-black-pure);
+
   /* --- Cor · feedback (harmonizada, uso com ícone + texto, nunca só cor) --- */
   --color-success:        #1E7A3C; /* sobre claro 5.38:1 AA */
   --color-success-dark-bg:#2E9E52; /* sobre preto 5.78:1 AA */
@@ -460,13 +471,32 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 .card__body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); }
 .card__title { font-size: var(--text-h4); }
 .card__meta { font-size: var(--text-caption); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+.card__bio { font-size: var(--text-body-sm); color: var(--text-muted); }
+/* .card__body é flex column: sem isto o badge estica para a largura
+   inteira do card em vez de abraçar o texto. */
+.card__body > .badge { align-self: flex-start; }
 
 /* Card de professor: a faixa (graduação) é a barra inferior da foto */
 .card--sensei .card__media { aspect-ratio: 1; }
 .card--sensei .card__media::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 8px;
-  background: var(--belt, var(--color-black-pure));
+  background: var(--belt, var(--belt-preta));
 }
+/* A graduação é declarada por classe no card, não por style inline:
+   a barra da foto e o badge passam a ler o mesmo token. */
+.card--sensei.is-branca { --belt: var(--belt-branca); }
+.card--sensei.is-azul   { --belt: var(--belt-azul); }
+.card--sensei.is-roxa   { --belt: var(--belt-roxa); }
+.card--sensei.is-marrom { --belt: var(--belt-marrom); }
+.card--sensei.is-preta  { --belt: var(--belt-preta); }
+/* A faixa preta somia contra o card escuro. A ponteira vermelha resolve a
+   visibilidade e é o que existe na faixa de verdade. */
+.card--sensei.is-preta .card__media::after {
+  background: linear-gradient(90deg, var(--belt-preta) 0 74%, var(--color-red) 74%);
+}
+/* Empurra o badge para o rodapé do card: com bios de tamanhos diferentes
+   ele ficaria em alturas diferentes em cada card da grade. */
+.card--sensei .card__body > .badge { margin-top: auto; }
 
 /* Card de conquista: número editorial-esportivo grande */
 .card--conquista .card__body { position: relative; }
@@ -497,7 +527,11 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   font-size: var(--text-overline); text-transform: uppercase; letter-spacing: 0.1em;
   padding: var(--space-1) var(--space-3);
   border: var(--border-w) solid var(--border); color: var(--text);
-  /* o corte do monograma, em miniatura */
+}
+/* O corte do monograma só entra em badge PREENCHIDO. Num badge de
+   contorno o clip-path comeria as bordas laterais e sobrariam duas
+   linhas horizontais soltas, que leem como borda quebrada. */
+.badge--red, .badge--belt {
   clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
 }
 .badge--red { background: var(--color-red-ink); border-color: var(--color-red-ink); color: var(--color-white); }
@@ -505,11 +539,11 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 /* Faixas: sistema de cor EXTERNO à marca — graduação é informação,
    não decoração; por isso escapa da regra preto/branco/vermelho. */
 .badge--belt { border: none; color: var(--color-white); }
-.badge--belt.is-branca { background: #DCD9D4; color: var(--color-black); }
-.badge--belt.is-azul   { background: #1B4E9B; }
-.badge--belt.is-roxa   { background: #5B2D86; }
-.badge--belt.is-marrom { background: #5C3A21; }
-.badge--belt.is-preta  { background: var(--color-black-pure); box-shadow: inset 0 0 0 1px var(--color-red); }
+.badge--belt.is-branca { background: var(--belt-branca); color: var(--color-black); }
+.badge--belt.is-azul   { background: var(--belt-azul); }
+.badge--belt.is-roxa   { background: var(--belt-roxa); }
+.badge--belt.is-marrom { background: var(--belt-marrom); }
+.badge--belt.is-preta  { background: var(--belt-preta); box-shadow: inset 0 0 0 1px var(--color-red); }
 
 /* --- Stat block --- */
 .stat { display: flex; flex-direction: column; gap: var(--space-1); }
@@ -634,7 +668,18 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 .footer { background: var(--color-black-pure); color: var(--color-white); padding: var(--space-16) var(--gutter) var(--space-8); }
 .footer__grid { max-width: var(--container); margin: 0 auto; display: grid; gap: var(--space-12); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .footer__brand { display: flex; flex-direction: column; gap: var(--space-4); }
-.footer h6 { color: var(--color-muted-dark); margin-bottom: var(--space-3); }
+/* Rótulo de coluna do footer. É <h2>, não <h6>: o último heading de
+   conteúdo é h3, e ir para h6 pularia dois níveis. Voltar para h2 é
+   válido — o que não pode é pular descendo. A aparência de overline
+   vem desta classe, não do nível da tag. */
+.rotulo-coluna {
+  font-family: var(--font-body);
+  font-size: var(--text-overline); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  line-height: 1.3;
+  color: var(--color-muted-dark);
+  margin-bottom: var(--space-3);
+}
 .footer ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
 .footer a { color: var(--color-white); text-decoration: none; font-size: var(--text-body-sm); }
 .footer a:hover { color: var(--color-red-light); }
@@ -647,6 +692,20 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 .footer__cnpj { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
 
 
+/* --- Ícones ---
+   Sprite de <symbol> inline no index.html. Grid 24px, traço 1.75,
+   cantos vivos (miter/square) ecoando a geometria do monograma.
+   A cor vem de currentColor: o ícone herda o contexto onde está. */
+.icon {
+  width: 24px; height: 24px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: square; stroke-linejoin: miter;
+  flex: none;
+}
+.icon--sm { width: 16px; height: 16px; }
+.icon--lg { width: 32px; height: 32px; }
+
 /* ------------------------------------------------------------
    6. LAYOUT DO SITE
    Estruturas de página. Na documentação viviam como .ds-section /
@@ -658,6 +717,16 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   color: var(--text);
 }
 .section--tight { padding-block: var(--space-16); }
+
+/* Fio entre seções consecutivas. Resolve dois problemas de uma vez:
+   1. duas seções do mesmo tema (1→2 no escuro, 3→4 no claro) se fundiriam
+      num bloco único, sem leitura de "seção nova";
+   2. a fronteira entre elas deixa passar um fio do fundo escuro do body
+      por arredondamento de subpixel — o body é preto e as seções claras
+      abutam em coordenada fracionária. A borda explícita cobre a costura.
+   No limite escuro↔claro o fio some sozinho contra o próprio fundo. */
+.section + .section,
+.hero + .section { border-top: var(--border-w) solid var(--border); }
 .container { max-width: var(--container); margin-inline: auto; }
 .container--narrow { max-width: var(--container-narrow); margin-inline: auto; }
 
@@ -672,9 +741,15 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 
 /* Grid padrão de cards (equipe, conquistas, depoimentos) */
 .grid-cards {
+  list-style: none; padding: 0; margin: 0;
   display: grid; gap: var(--space-6);
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
+/* Cards de alturas diferentes (bios de tamanhos diferentes) não podem
+   desalinhar: o item da grade estica e o card preenche. */
+.grid-cards > li { display: flex; }
+.grid-cards > li > .card { display: flex; flex-direction: column; width: 100%; }
+.grid-cards > li > .card > .card__body { flex: 1; }
 
 /* Faixa de números de impacto (dobra 2) */
 .stats-row {
@@ -708,33 +783,44 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
    Acompanha .theme-paper para trocar os papéis semânticos. */
 .bg-papel { background: var(--color-paper); color: var(--color-black); }
 
-/* Exclusivo da chamada de patrocínio: o corte do monograma em escala
-   de seção — o único fundo onde o vermelho domina. */
+/* Exclusivo da chamada de patrocínio: o corte do monograma em escala de
+   seção — o único fundo onde o vermelho domina.
+
+   A primeira versão era uma faixa diagonal atravessando a seção inteira.
+   Foi descartada: a faixa cruzava a coluna de conteúdo e texto branco
+   sobre o vermelho da marca dá 4.41:1, abaixo de AA. Uma faixa decorativa
+   que às vezes fica atrás do texto, dependendo da largura da tela, é um
+   contraste que não dá para garantir.
+
+   Agora é uma cunha no topo, sem texto por cima em nenhuma largura. O
+   vermelho domina onde é seguro: aqui e no bloco fiscal preenchido. */
 .bg-corte {
-  background:
-    linear-gradient(114deg,
-      var(--color-black) 0 62%,
-      var(--color-red) 62.2% 78%,
-      var(--color-black) 78.2%);
+  position: relative; overflow: hidden;
+  background: var(--color-black);
   color: var(--color-white);
 }
-@media (max-width: 767px) {
-  /* em telas estreitas a diagonal vira uma faixa superior: a mesma
-     ideia gráfica sem espremer o texto contra o vermelho */
-  .bg-corte {
-    background:
-      linear-gradient(160deg,
-        var(--color-red) 0 12%,
-        var(--color-black) 12.2%);
-  }
+.bg-corte::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0;
+  height: clamp(2.5rem, 5vw, 4.5rem);
+  background: var(--color-red);
+  /* grossa à esquerda, afinando à direita: a diagonal do monograma */
+  clip-path: polygon(0 0, 100% 0, 100% 42%, 0 100%);
 }
+.bg-corte > * { position: relative; }
+/* O padding padrão da seção é menor que a cunha, e o kicker encostava
+   nela. Soma-se a altura da cunha ao respiro do topo. */
+.section.bg-corte { padding-top: calc(var(--space-16) + clamp(2.5rem, 5vw, 4.5rem)); }
 
 /* Fotografia sob véu de tinta. A foto entra por --foto:
    <section class="bg-foto" style="--foto: url('assets/img/…')">
-   Véu de 78–92% é o mínimo que mantém o contraste do texto branco. */
+   Véu medido, não estimado: com um pixel BRANCO da foto atrás (kimono,
+   o caso mais comum num pódio de jiu-jitsu), 85% deixa o texto branco em
+   13.4:1 e o texto secundário #A3A3A3 em 5.3:1 — os dois passam AA.
+   A 78% o secundário caía para 4.11:1 e reprovava. */
 .bg-foto {
   background:
-    linear-gradient(rgba(10,10,10,.78), rgba(10,10,10,.92)),
+    linear-gradient(rgba(10,10,10,.85), rgba(10,10,10,.93)),
     var(--foto, none) center / cover no-repeat,
     var(--color-black);
   color: var(--color-white);
@@ -815,9 +901,10 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   .hero__ctas .btn { flex: 1 1 100%; }
 }
 
+/* Um único filho (a dica de rolagem), encostado à direita do container.
+   space-between não serve aqui: com um item só ele alinharia à esquerda. */
 .hero__rodape {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: var(--space-6); flex-wrap: wrap;
+  display: flex; align-items: flex-end; justify-content: flex-end;
   margin-top: var(--space-12);
 }
 
@@ -860,4 +947,271 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 .hero__lead.is-inked  { transition-delay: 200ms; }
 .hero__ctas.is-inked  { transition-delay: 350ms; }
 .hero__rodape.is-inked { transition-delay: 500ms; }
-.hero .stamp-in.is-inked { animation-delay: 650ms; animation-fill-mode: both; }
+
+/* ------------------------------------------------------------
+   9. NÚMEROS DE IMPACTO — Dobra 2
+   ------------------------------------------------------------ */
+.stats-row { list-style: none; padding: 0; margin: 0; }
+
+/* O sufixo (+, %) é o acento; o número fica branco, com contraste
+   máximo, porque é ele que precisa ser lido de longe. */
+.stat__value em { font-style: normal; color: var(--accent-text); }
+
+/* ------------------------------------------------------------
+   10. SEÇÕES DE CONTEÚDO — Dobras 3 e 4
+   ------------------------------------------------------------ */
+/* O cabeçalho vive dentro da coluna de texto, não acima do split.
+   Acima, a seção passava de 90vh; aqui ela fecha em ~72vh, e título
+   e foto ficam lado a lado em vez de separados por um bloco inteiro. */
+.split .section-header { margin-bottom: var(--space-6); }
+
+.coluna-texto {
+  display: flex; flex-direction: column;
+  align-items: flex-start; gap: var(--space-4);
+}
+
+/* PROVISÓRIO — apagar quando a foto real entrar.
+   Tracejado e rótulo explícito para que ninguém publique sem perceber. */
+.foto-placeholder {
+  aspect-ratio: 4 / 3;
+  display: grid; place-content: center; gap: var(--space-3);
+  padding: var(--space-6);
+  border: var(--border-w-strong) dashed var(--border);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: var(--text-caption);
+}
+.foto-placeholder svg { margin-inline: auto; }
+/* Dentro de um card, quem manda na proporção é o .card__media; o
+   placeholder vai aninhado e apenas preenche. Aplicá-lo direto no media
+   sobrescrevia o aspect-ratio 1:1 do card de professor. */
+.foto-placeholder--preencher {
+  aspect-ratio: auto; width: 100%; height: 100%;
+  border: none;
+}
+
+/* Foto real: mesma proporção do placeholder, para a troca não mexer no layout */
+.foto { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
+
+/* --- Informações práticas (horário, local) — Dobra 4 --- */
+/* Duas colunas quando cabe: em coluna única a lista empurrava a seção
+   para 94vh. Empilha sozinha abaixo de ~420px. */
+.info-lista {
+  list-style: none; padding: 0; margin: 0; width: 100%;
+  display: grid; gap: var(--space-3) var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+.info-lista li { display: flex; gap: var(--space-3); align-items: flex-start; font-size: var(--text-body-sm); }
+.info-lista svg { color: var(--accent-text); margin-top: 3px; }
+.info-lista strong {
+  display: block;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--text-overline); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+}
+
+.badges-linha { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+/* Linha de ações: botão + link alternativo lado a lado */
+.acoes { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
+
+/* A frase que liga a frente paga à causa. Não é um destaque decorativo:
+   é o argumento que impede a seção de soar como anúncio dentro de uma ONG. */
+.nota-vinculo {
+  border-left: var(--border-w-strong) solid var(--color-red);
+  padding-left: var(--space-4);
+  font-size: var(--text-body);
+}
+
+/* ------------------------------------------------------------
+   11. CONQUISTAS — Dobra 6
+   ------------------------------------------------------------ */
+.conquista__meta-linha { display: flex; align-items: center; gap: var(--space-2); }
+.conquista__meta-linha svg { color: var(--accent-text); flex: none; }
+
+/* Rodapé de seção: o link "ver todas" fecha o bloco à direita */
+.secao-rodape {
+  display: flex; justify-content: flex-end;
+  margin-top: var(--space-8);
+}
+
+/* ------------------------------------------------------------
+   12. PATROCÍNIO — Dobra 7
+   ------------------------------------------------------------ */
+/* O bloco onde o vermelho domina de verdade. Texto branco sobre
+   --color-red-ink (4.59:1, AA); a cor da marca pura reprovaria. */
+.destaque-fiscal {
+  display: flex; gap: var(--space-6);
+  align-items: flex-start;
+  background: var(--color-red-ink);
+  color: var(--color-white);
+  padding: var(--space-8);
+  margin-bottom: var(--space-12);
+}
+.destaque-fiscal > svg { flex: none; margin-top: 2px; }
+.destaque-fiscal__corpo {
+  /* item flex ao lado do ícone: sem flex:1 ele encolhe para a largura do
+     texto e o grid interno nunca chega a duas colunas. */
+  flex: 1;
+  display: grid; gap: var(--space-3) var(--space-8);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  align-items: start;
+}
+.destaque-fiscal h3 {
+  grid-column: 1 / -1;
+  font-size: var(--text-h4); margin-bottom: var(--space-2);
+}
+.destaque-fiscal p { max-width: none; }
+.fora-lucro-real { max-width: 78ch; }
+.destaque-fiscal strong { font-weight: 700; }
+
+/* Caminho para quem não é Lucro Real: some do bloco vermelho para não
+   competir, mas fica logo abaixo e no mesmo fio de leitura. */
+.fora-lucro-real {
+  grid-column: 1 / -1;
+  font-size: var(--text-body-sm);
+  border-top: var(--border-w) solid rgba(255,255,255,.35);
+  padding-top: var(--space-3); margin-top: var(--space-4);
+}
+
+.patrocinio-rodape {
+  display: flex; flex-wrap: wrap; gap: var(--space-6);
+  align-items: center; justify-content: space-between;
+  margin-top: var(--space-12);
+}
+.patrocinio-rodape p { max-width: 52ch; }
+
+/* ------------------------------------------------------------
+   13. TRANSPARÊNCIA — Dobra 8
+   ------------------------------------------------------------ */
+/* Faixa curta e direta: o carimbo assina, o texto afirma, a ação leva
+   ao documento. Nada mais — é a dobra que remove a última objeção. */
+.transparencia {
+  display: flex; flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: center;
+}
+.transparencia__selo { flex: none; }
+.transparencia__texto { flex: 1 1 min(100%, 36rem); }
+.transparencia__texto h2 { margin-block: var(--space-3) var(--space-4); }
+.transparencia__texto p { max-width: 62ch; }
+
+.transparencia__cnpj {
+  display: block;
+  margin-top: var(--space-4);
+  font-size: var(--text-body-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------
+   14. DEPOIMENTOS — Dobra 9
+   ------------------------------------------------------------ */
+/* Alterna voz de família e voz de patrocinador: são os dois públicos
+   co-primários se validando um para o outro. */
+.depoimentos { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); list-style: none; padding: 0; margin: 0; }
+.depoimentos > li { display: flex; }
+.depoimentos > li > .card { display: flex; flex-direction: column; width: 100%; }
+.depoimentos .card__body { flex: 1; }
+/* Empurra a assinatura para o rodapé: citações de tamanhos diferentes
+   deixariam os nomes em alturas diferentes na grade. */
+.card--depoimento figcaption { margin-top: auto; padding-top: var(--space-2); }
+
+/* Etiqueta de origem da voz: família ou empresa */
+.depoimento__origem {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--text-overline); text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--accent-text);
+}
+
+/* ------------------------------------------------------------
+   15. COMUNIDADE — Dobra 10
+   ------------------------------------------------------------ */
+/* Grade de fotos recentes. Colunas explícitas, não auto-fit: com 6 itens
+   o auto-fit deixaria órfãos na última linha em várias larguras. */
+.grade-fotos {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: var(--space-3);
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 640px)  { .grade-fotos { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .grade-fotos { grid-template-columns: repeat(6, 1fr); } }
+.grade-fotos > li { aspect-ratio: 1; }
+.grade-fotos .foto-placeholder { font-size: var(--text-overline); padding: var(--space-2); }
+
+/* --- Galeria expansível --- */
+/* Os extras usam o atributo `hidden`, não uma classe visual: assim eles
+   saem também da ordem de tabulação e da árvore de acessibilidade
+   enquanto estão recolhidos. */
+.grade-fotos > li[hidden] { display: none; }
+
+.galeria-mais { display: flex; justify-content: center; margin-top: var(--space-6); }
+
+/* Entrada dos extras. `backwards` faz o estado inicial valer durante o
+   atraso — sem isso os últimos piscariam visíveis antes de animar. */
+.grade-fotos.is-expandida > li[data-extra] {
+  animation: surgir var(--dur-base) var(--ease-strike) backwards;
+}
+@keyframes surgir {
+  from { opacity: 0; transform: translateY(12px); }
+}
+/* Escada de atrasos: cada seletor pega do item N em diante e o seguinte
+   sobrescreve, então cada extra entra 50ms depois do anterior. */
+.grade-fotos.is-expandida > li:nth-child(n+7)  { animation-delay: 0ms; }
+.grade-fotos.is-expandida > li:nth-child(n+8)  { animation-delay: 50ms; }
+.grade-fotos.is-expandida > li:nth-child(n+9)  { animation-delay: 100ms; }
+.grade-fotos.is-expandida > li:nth-child(n+10) { animation-delay: 150ms; }
+.grade-fotos.is-expandida > li:nth-child(n+11) { animation-delay: 200ms; }
+.grade-fotos.is-expandida > li:nth-child(n+12) { animation-delay: 250ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .grade-fotos.is-expandida > li[data-extra] { animation: none; }
+}
+
+.comunidade-rodape {
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+  align-items: center; justify-content: space-between;
+  margin-top: var(--space-8);
+}
+
+/* A faixa de patrocinadores é uma banda fina de borda a borda: fica
+   fora do .container e sem padding de seção, senão vira um bloco de
+   200px para mostrar meia dúzia de logos. */
+#patrocinadores { background: var(--bg); }
+
+/* Logos reais entram em escala de cinza e ganham cor no hover */
+.marquee__logo img { filter: grayscale(1); opacity: .7; transition: filter var(--dur-fast), opacity var(--dur-fast); }
+.marquee__logo:hover img { filter: none; opacity: 1; }
+
+/* ------------------------------------------------------------
+   16. CONTATO — Dobra 11
+   ------------------------------------------------------------ */
+.contato { display: grid; gap: var(--space-12); grid-template-columns: 1fr; }
+@media (min-width: 900px) { .contato { grid-template-columns: 1.5fr 1fr; } }
+
+.formulario { display: flex; flex-direction: column; gap: var(--space-6); }
+/* Dentro do formulário o campo ocupa a coluna; o limite de 28rem do
+   componente vale para campos avulsos. */
+.formulario .field { max-width: none; }
+.formulario__linha {
+  display: grid; gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Aparte: WhatsApp e dados, AO LADO do formulário e não depois dele —
+   muita gente não preenche formulário nenhum. */
+.contato__aparte { display: flex; flex-direction: column; gap: var(--space-6); }
+.contato__aparte h3 { font-size: var(--text-h5); font-family: var(--font-body); text-transform: none; letter-spacing: 0; }
+
+.form-status {
+  display: none;
+  padding: var(--space-4);
+  font-size: var(--text-body-sm);
+  border-left: var(--border-w-strong) solid;
+}
+.form-status.is-visivel { display: block; }
+.form-status--erro { border-color: var(--color-error); background: color-mix(in srgb, var(--color-error) 8%, transparent); }
+.form-status--ok   { border-color: var(--color-success); background: color-mix(in srgb, var(--color-success) 10%, transparent); }
+.form-status a { color: inherit; font-weight: 600; }

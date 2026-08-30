@@ -494,7 +494,11 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   font-size: var(--text-overline); text-transform: uppercase; letter-spacing: 0.1em;
   padding: var(--space-1) var(--space-3);
   border: var(--border-w) solid var(--border); color: var(--text);
-  /* o corte do monograma, em miniatura */
+}
+/* O corte do monograma só entra em badge PREENCHIDO: num badge de
+   contorno o clip-path comeria as bordas laterais e sobrariam duas
+   linhas horizontais soltas, que leem como borda quebrada. */
+.badge--red, .badge--belt {
   clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
 }
 .badge--red { background: var(--color-red-ink); border-color: var(--color-red-ink); color: var(--color-white); }
@@ -895,9 +899,7 @@ details.ds-snippet > summary:hover { color: var(--text); }
         <a class="btn btn--primary btn--lg" href="#componentes">Seja patrocinador</a>
         <a class="btn btn--secondary btn--lg" href="#componentes">Conheça as aulas</a>
       </div>
-      <div class="stamp-in is-inked" style="margin-top: var(--space-12);">
-        <span class="hanko" aria-hidden="true">柔術</span>
-      </div>
+
     </div>
   </div>
 
@@ -919,11 +921,11 @@ details.ds-snippet > summary:hover { color: var(--text); }
           <tr><td>3</td><td>Traço sob "transforma vidas"</td><td>load</td><td><code>.traco-draw</code> — scaleX 0→1, origem esquerda</td><td><code>900ms · --ease-brush</code></td></tr>
           <tr><td>4</td><td>Parágrafo de apoio</td><td>load +200ms</td><td><code>.rise</code></td><td><code>600ms · --ease-strike</code></td></tr>
           <tr><td>5</td><td>Par de CTAs</td><td>load +350ms</td><td><code>.rise</code> (o par entra junto — nenhum CTA chega "antes" do outro)</td><td><code>600ms · --ease-strike</code></td></tr>
-          <tr><td>6</td><td>Carimbo hanko</td><td>load, após texto</td><td><code>.stamp-in</code> — pressiona e assenta a -3°</td><td><code>350ms · --ease-strike</code></td></tr>
+
         </tbody>
       </table>
     </div>
-    <p class="ds-rationale">a sequência inteira dura menos de 1,6s e cada elemento faz um único gesto; com prefers-reduced-motion tudo aparece no estado final imediatamente. Em mobile nada muda estruturalmente — os CTAs empilham via flex-wrap.</p>
+    <p class="ds-rationale">a sequência inteira dura menos de 1,4s e cada elemento faz um único gesto; com prefers-reduced-motion tudo aparece no estado final imediatamente. Em mobile nada muda estruturalmente — os CTAs empilham via flex-wrap.</p>
 
     <details class="ds-snippet"><summary>Código do hero</summary>
       <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;section class="hero grain"&gt;
@@ -941,7 +943,6 @@ details.ds-snippet > summary:hover { color: var(--text); }
     &lt;a class="btn btn--primary btn--lg" href="/patrocinio"&gt;Seja patrocinador&lt;/a&gt;
     &lt;a class="btn btn--secondary btn--lg" href="/escola"&gt;Conheça as aulas&lt;/a&gt;
   &lt;/div&gt;
-  &lt;span class="hanko stamp-in" aria-hidden="true"&gt;柔術&lt;/span&gt;
 &lt;/section&gt;
 &lt;script&gt;
   // as classes .is-inked são adicionadas por IntersectionObserver (ver seção Movimento)
@@ -1559,7 +1560,7 @@ addEventListener("scroll", () =&gt;
         <span class="badge badge--belt is-marrom">Marrom</span>
         <span class="badge badge--belt is-preta">Preta</span>
       </div>
-      <p class="ds-rationale">as cores de faixa são a única exceção à paleta: graduação é informação do esporte (um sistema de cor que existe fora da marca), não decoração. A faixa preta leva o filete vermelho interno — como a ponteira real da faixa.</p>
+      <p class="ds-rationale">o corte angular vale só para badges preenchidos — num badge de contorno ele comeria as bordas laterais. Já as cores de faixa são a única exceção à paleta: graduação é informação do esporte (um sistema de cor que existe fora da marca), não decoração. A faixa preta leva o filete vermelho interno — como a ponteira real da faixa.</p>
     </div>
 
     <!-- MARQUEE -->
@@ -1804,8 +1805,8 @@ addEventListener("scroll", () =&gt;
         <figcaption style="padding:var(--space-3) var(--space-4);font-size:var(--text-caption);color:var(--text-muted);border-top:var(--border-w) solid var(--border)">Exclusivo da chamada de patrocínio na home (o único fundo onde o vermelho domina). Custo: gradiente puro. Fallback: ele mesmo — é CSS estático.</figcaption>
       </figure>
       <figure style="margin:0;border:var(--border-w) solid var(--border)">
-        <div style="height:150px;background:linear-gradient(rgba(10,10,10,.78), rgba(10,10,10,.92)), repeating-linear-gradient(45deg, #1A1A1A 0 14px, #161616 14px 28px);display:grid;place-content:center;color:var(--color-muted-dark);font-size:var(--text-caption)">.bg-foto — fotografia + véu de tinta</div>
-        <figcaption style="padding:var(--space-3) var(--space-4);font-size:var(--text-caption);color:var(--text-muted);border-top:var(--border-w) solid var(--border)">Foto real de treino sob overlay 78–92%. Texto por cima exige o véu ≥ 78% (mantém o contraste AAA medido do branco). Fallback: .bg-dojo.</figcaption>
+        <div style="height:150px;background:linear-gradient(rgba(10,10,10,.85), rgba(10,10,10,.93)), repeating-linear-gradient(45deg, #1A1A1A 0 14px, #161616 14px 28px);display:grid;place-content:center;color:var(--color-muted-dark);font-size:var(--text-caption)">.bg-foto — fotografia + véu de tinta</div>
+        <figcaption style="padding:var(--space-3) var(--space-4);font-size:var(--text-caption);color:var(--text-muted);border-top:var(--border-w) solid var(--border)">Foto real de treino sob overlay <b>85–93%</b>. O piso foi medido com um pixel branco da foto atrás — o kimono, caso mais comum num pódio: a 85% o texto branco fica em 13.4:1 e o secundário #A3A3A3 em 5.3:1, ambos AA. A 78% o secundário caía para 4.11:1 e reprovava. Fallback: preto chapado.</figcaption>
       </figure>
     </div>
   </div>
