@@ -1,0 +1,2021 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Goetten Jiu-Jitsu — Design System</title>
+<meta name="description" content="Documentação viva do design system da Associação Goetten Brazilian Jiu-Jitsu. Preto, branco, vermelho — e tinta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   GOETTEN JIU-JITSU — DESIGN SYSTEM v1.0
+   Fonte de identidade: references/Logo-goetten-jiu-jitsu.svg
+   Paleta: preto · branco · vermelho. Linguagem: tinta sumi-ê.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. TOKENS
+   ------------------------------------------------------------ */
+:root {
+  /* --- Cor · marca ---
+     Extraídos de references/Logo-goetten-jiu-jitsu.svg com conta-gotas
+     no vetor. O vermelho da marca é claro demais para carregar texto
+     (branco sobre #EC1C24 = 4.41:1, abaixo de AA), então o sistema tem
+     DOIS vermelhos separados por 2% de brilho: --color-red para
+     grafismo, --color-red-ink para superfícies preenchidas com texto.
+     O preto de produção é #0A0A0A (não o #030303 da marca) para dar
+     profundidade às superfícies empilhadas; o #030303 fica no lockup. */
+  --color-black-pure: #030303; /* preto da marca — lockup e footer */
+  --color-black:      #0A0A0A;
+  --color-white:      #FFFFFF;
+  --color-paper:      #F7F5F2; /* "papel washi" — fundo claro quente, não branco estéril */
+  --color-red:        #EC1C24; /* MARCA — grafismo apenas, nunca sob texto */
+  --color-red-ink:    #E71B23; /* preenchimento com texto branco (4.59:1 AA) */
+  --color-red-dark:   #B3151B; /* vermelho-texto sobre fundos claros (6.91:1 AA) */
+  --color-red-light:  #FF5A5F; /* vermelho-texto sobre fundos escuros (6.49:1 AA) */
+
+  /* --- Cor · neutros derivados do preto --- */
+  --color-surface-dark:   #141414; /* cartão sobre preto */
+  --color-surface-dark-2: #1F1F1F; /* segundo nível de empilhamento */
+  --color-border-dark:    #2B2B2B;
+  --color-muted-dark:     #A3A3A3; /* texto secundário sobre preto (7.85:1 AAA) */
+  --color-border-light:   #E4E1DC;
+  --color-muted-light:    #5C5C5C; /* texto secundário sobre papel (6.14:1 AA) */
+
+  /* --- Cor · feedback (harmonizada, uso com ícone + texto, nunca só cor) --- */
+  --color-success:        #1E7A3C; /* sobre claro 5.38:1 AA */
+  --color-success-dark-bg:#2E9E52; /* sobre preto 5.78:1 AA */
+  --color-warning:        #8A6D00; /* texto sobre claro 4.92:1 AA */
+  --color-warning-dark-bg:#E5A800; /* sobre preto 9.36:1 AAA */
+  --color-error:          var(--color-red-dark); /* erro herda a marca */
+  --color-error-dark-bg:  var(--color-red-light);
+  --color-info:           #0E63B3; /* sobre claro 6.08:1 AA */
+  --color-info-dark-bg:   #4DA3E8; /* sobre preto 7.28:1 AAA */
+
+  /* --- Cor · papéis semânticos (contexto escuro é o default da marca) --- */
+  --bg:            var(--color-black);
+  --surface:       var(--color-surface-dark);
+  --surface-2:     var(--color-surface-dark-2);
+  --border:        var(--color-border-dark);
+  --text:          var(--color-white);
+  --text-muted:    var(--color-muted-dark);
+  --accent:        var(--color-red);
+  --accent-text:   var(--color-red-light);
+
+  /* --- Tipografia ---
+     Display: Oswald (substituta declarada da condensada do wordmark).
+     Corpo: Inter. Kanji decorativo: serifada japonesa do sistema. */
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-kanji: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+
+  /* Escala fluida: clamp(min, preferido, max) — min medido em 360px,
+     max em 1280px; preferido = intercepto rem + coeficiente vw. */
+  --text-display: clamp(2.75rem, 1.772rem + 4.35vw, 5.25rem);
+  --text-h1: clamp(2.25rem, 1.76rem + 2.17vw, 3.5rem);
+  --text-h2: clamp(1.75rem, 1.457rem + 1.3vw, 2.5rem);
+  --text-h3: clamp(1.375rem, 1.228rem + 0.65vw, 1.75rem);
+  --text-h4: 1.25rem;
+  --text-h5: 1.125rem;
+  --text-h6: 1rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.8125rem;
+  --text-overline: 0.75rem;
+
+  /* --- Espaçamento: base 4px, escala nomeada --- */
+  --space-1: 0.25rem;  /*  4px */
+  --space-2: 0.5rem;   /*  8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  --space-24: 6rem;    /* 96px */
+  --space-32: 8rem;    /* 128px */
+
+  /* --- Layout --- */
+  --container: 72rem;       /* 1152px */
+  --container-narrow: 44rem;/* leitura: ~70ch em Inter 1rem */
+  --gutter: var(--space-6);
+  /* breakpoints (referência p/ media queries): 640 / 768 / 1024 / 1280 */
+
+  /* --- Forma ---
+     Racional: a marca é angular; raio zero é o padrão. Raio pequeno
+     só em controles de formulário (afford de toque), nunca em cartões. */
+  --radius-none: 0;
+  --radius-control: 2px;
+  --radius-full: 999px; /* exclusivo de indicadores/pills de status */
+  --border-w: 1px;
+  --border-w-strong: 2px;
+
+  /* --- Elevação ---
+     Em fundo preto, sombra é invisível: elevação = superfície + borda.
+     Em papel, sombra-tinta suave (nunca cinza-azulada). */
+  --shadow-paper-1: 0 1px 2px rgba(10,10,10,.06), 0 4px 12px rgba(10,10,10,.08);
+  --shadow-paper-2: 0 2px 4px rgba(10,10,10,.08), 0 12px 32px rgba(10,10,10,.12);
+
+  /* --- Movimento: "a pincelada" ---
+     Ataque rápido, assentamento suave — como tinta absorvida pelo papel. */
+  --dur-instant: 100ms;
+  --dur-fast: 200ms;
+  --dur-base: 350ms;
+  --dur-slow: 600ms;
+  --dur-brush: 900ms;
+  --ease-strike: cubic-bezier(0.22, 1, 0.36, 1);   /* golpe: entra rápido, assenta */
+  --ease-breath: cubic-bezier(0.65, 0, 0.35, 1);   /* respiração: simétrico, p/ loops */
+  --ease-brush:  cubic-bezier(0.7, 0, 0.16, 1);    /* pincelada: arranca com peso */
+  --stagger: 70ms;
+
+  /* --- z-index nomeado --- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-toast: 1100;
+
+  /* --- Opacidade semântica --- */
+  --alpha-hover: 0.9;      /* estado hover de sólidos */
+  --alpha-secondary: 0.72; /* conteúdo de apoio */
+  --alpha-disabled: 0.45;  /* controles desabilitados */
+  --alpha-hairline: 0.28;  /* linhas decorativas */
+  --alpha-tint: 0.12;      /* lavagens de cor (tinta diluída) */
+  --alpha-grain: 0.05;     /* grão de papel */
+}
+
+/* Contexto claro: seções de leitura longa trocam os papéis semânticos */
+.theme-paper {
+  --bg: var(--color-paper);
+  --surface: var(--color-white);
+  --surface-2: #EFECE7;
+  --border: var(--color-border-light);
+  --text: var(--color-black);
+  --text-muted: var(--color-muted-light);
+  --accent: var(--color-red);
+  --accent-text: var(--color-red-dark);
+}
+
+/* ------------------------------------------------------------
+   2. RESET + BASE
+   ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1,h2,h3,h4 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  font-weight: 600;
+  text-wrap: balance;
+}
+h1 { font-size: var(--text-h1); font-weight: 700; }
+h2 { font-size: var(--text-h2); }
+h3 { font-size: var(--text-h3); }
+h4 { font-size: var(--text-h4); }
+h5 { font-size: var(--text-h5); font-weight: 600; line-height: 1.3; }
+h6 {
+  font-size: var(--text-overline); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--text-muted); line-height: 1.3;
+}
+p { max-width: 70ch; }
+a { color: inherit; }
+::selection { background: var(--color-red-ink); color: var(--color-white); }
+:focus-visible {
+  outline: var(--border-w-strong) solid var(--color-red);
+  outline-offset: 2px;
+}
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* Grão de papel — variante de fundo reutilizável (custo: 1 camada de
+   composição; fallback: sem o pseudo-elemento nada quebra) */
+.grain { position: relative; isolation: isolate; }
+.grain::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  opacity: var(--alpha-grain);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------
+   3. ELEMENTOS-ASSINATURA (tinta sumi-ê)
+   ------------------------------------------------------------ */
+
+/* 3a. O TRAÇO — pincelada de tinta usada como sublinhado/divisor.
+   Forma via mask (a cor vem de background-color, então funciona
+   em vermelho, branco ou preto). Revela com scaleX origem esquerda:
+   o traço é "puxado" como um pincel. */
+.traco {
+  display: block; height: 10px; width: 100%; border: 0;
+  background-color: var(--accent);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+}
+.traco--fino { height: 6px; }
+.traco--texto { color: currentColor; background-color: currentColor; }
+
+/* 3b. O CARIMBO (hanko) — selo vermelho com o kanji 柔術.
+   Sempre levemente rotacionado: carimbo de verdade nunca sai reto. */
+.hanko {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 3.5rem; height: 3.5rem;
+  background: var(--color-red-ink); color: var(--color-white);
+  font-family: var(--font-kanji); font-weight: 700;
+  font-size: 1.05rem; line-height: 1.05;
+  text-align: center; writing-mode: vertical-rl;
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  box-shadow: inset 0 0 0 2px var(--color-red-ink), inset 0 0 0 3px rgba(255,255,255,.55);
+  user-select: none;
+}
+.hanko--sm { width: 2.5rem; height: 2.5rem; font-size: 0.8rem; }
+
+/* 3c. O CORTE — a diagonal vermelha do monograma como vocabulário.
+   Ângulo canônico: 24°. Usado em badges, faixas de seção e divisores. */
+.corte {
+  display: inline-block; width: 3rem; height: 0.875rem;
+  background: var(--color-red);
+  clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%);
+}
+
+/* ------------------------------------------------------------
+   4. ANIMAÇÕES DO SISTEMA
+   ------------------------------------------------------------ */
+
+/* Pincelada de revelação: o elemento surge como um traço único,
+   varrendo da esquerda com leve inclinação (o ângulo do corte). */
+.ink-reveal {
+  clip-path: polygon(-8% 0, -2% 0, -8% 100%, -14% 100%);
+  opacity: 0;
+}
+.ink-reveal.is-inked {
+  animation: ink-sweep var(--dur-brush) var(--ease-brush) forwards;
+}
+@keyframes ink-sweep {
+  from { clip-path: polygon(-8% 0, -2% 0, -8% 100%, -14% 100%); opacity: 1; }
+  to   { clip-path: polygon(0% 0, 114% 0, 108% 100%, 0% 100%); opacity: 1; }
+}
+
+/* Entrada padrão: um gesto só — sobe e assenta. */
+.rise { opacity: 0; transform: translateY(18px); }
+.rise.is-inked {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-slow) var(--ease-strike),
+              transform var(--dur-slow) var(--ease-strike);
+}
+
+/* Carimbada do hanko: pressiona, afunda, assenta torto. */
+.stamp-in { opacity: 0; }
+.stamp-in.is-inked { animation: stamp var(--dur-base) var(--ease-strike) forwards; }
+@keyframes stamp {
+  0%   { opacity: 0; transform: scale(1.5) rotate(-7deg); }
+  55%  { opacity: 1; transform: scale(0.94) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-3deg); }
+}
+
+/* Traço que se desenha (sublinhado do título) */
+.traco-draw { transform: scaleX(0); transform-origin: left center; }
+.traco-draw.is-inked {
+  transform: scaleX(1);
+  transition: transform var(--dur-brush) var(--ease-brush);
+}
+
+/* Grupo com stagger: filhos entram em sequência de golpes curtos */
+.stagger > * { opacity: 0; transform: translateY(14px); }
+.stagger.is-inked > * {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-base) var(--ease-strike),
+              transform var(--dur-base) var(--ease-strike);
+}
+.stagger.is-inked > *:nth-child(2) { transition-delay: calc(var(--stagger) * 1); }
+.stagger.is-inked > *:nth-child(3) { transition-delay: calc(var(--stagger) * 2); }
+.stagger.is-inked > *:nth-child(4) { transition-delay: calc(var(--stagger) * 3); }
+.stagger.is-inked > *:nth-child(5) { transition-delay: calc(var(--stagger) * 4); }
+.stagger.is-inked > *:nth-child(6) { transition-delay: calc(var(--stagger) * 5); }
+
+/* Linha SVG que se desenha (dashoffset) */
+.draw-path path, .draw-path circle {
+  stroke-dasharray: var(--path-len, 600);
+  stroke-dashoffset: var(--path-len, 600);
+}
+.draw-path.is-inked path, .draw-path.is-inked circle {
+  animation: draw var(--dur-brush) var(--ease-brush) forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* Reduced motion: a alternativa de CADA animação é "estado final,
+   sem deslocamento" — nunca conteúdo faltando. */
+@media (prefers-reduced-motion: reduce) {
+  .ink-reveal, .rise, .stamp-in, .stagger > * { opacity: 1 !important; transform: none !important; clip-path: none !important; animation: none !important; transition: none !important; }
+  .stamp-in { transform: rotate(-3deg) !important; }
+  .traco-draw { transform: scaleX(1) !important; transition: none !important; }
+  .draw-path path, .draw-path circle { stroke-dashoffset: 0 !important; animation: none !important; }
+  .marquee__track { animation: none !important; }
+}
+
+/* ------------------------------------------------------------
+   5. COMPONENTES DO PRODUTO (classes que o site final usa — BEM)
+   ------------------------------------------------------------ */
+
+/* --- Button --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-display); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  font-size: var(--text-body-sm);
+  min-height: 48px; padding: 0 var(--space-6);
+  border: var(--border-w-strong) solid transparent;
+  border-radius: var(--radius-none);
+  background: none; cursor: pointer; text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-strike),
+              color var(--dur-fast) var(--ease-strike),
+              border-color var(--dur-fast) var(--ease-strike),
+              transform var(--dur-instant) var(--ease-strike);
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn:disabled { opacity: var(--alpha-disabled); cursor: not-allowed; transform: none; }
+
+.btn--primary { background: var(--color-red-ink); border-color: var(--color-red-ink); color: var(--color-white); }
+.btn--primary:hover:not(:disabled) { background: var(--color-red-dark); border-color: var(--color-red-dark); }
+
+.btn--secondary { border-color: var(--text); color: var(--text); }
+.btn--secondary:hover:not(:disabled) { background: var(--text); color: var(--bg); }
+
+.btn--ghost { color: var(--text); }
+.btn--ghost:hover:not(:disabled) { background: color-mix(in srgb, currentColor 12%, transparent); }
+
+.btn--sm { min-height: 40px; padding: 0 var(--space-4); font-size: var(--text-caption); }
+.btn--lg { min-height: 56px; padding: 0 var(--space-8); font-size: var(--text-body); }
+
+.btn--loading { position: relative; color: transparent !important; pointer-events: none; }
+.btn--loading::after {
+  content: ""; position: absolute; width: 1.1em; height: 1.1em;
+  border: 2px solid rgba(255,255,255,.4); border-top-color: #fff;
+  border-radius: var(--radius-full);
+  animation: spin 700ms linear infinite;
+}
+.btn--secondary.btn--loading::after { border-color: color-mix(in srgb, currentColor 40%, transparent); border-top-color: var(--text); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Link com sublinhado de tinta */
+.link-ink {
+  position: relative; display: inline-block;
+  color: var(--accent-text); text-decoration: none; font-weight: 500;
+  padding-bottom: 2px;
+}
+.link-ink::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 5px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-brush);
+}
+.link-ink:hover::after, .link-ink:focus-visible::after { transform: scaleX(1); }
+
+/* --- Field (input/textarea/select/checkbox/radio) --- */
+.field { display: flex; flex-direction: column; gap: var(--space-2); max-width: 28rem; }
+.field__label { font-size: var(--text-body-sm); font-weight: 600; letter-spacing: 0.01em; }
+.field__label abbr { color: var(--accent-text); text-decoration: none; }
+.field__control {
+  min-height: 48px; padding: var(--space-3) var(--space-4);
+  background: var(--surface); color: var(--text);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-control);
+  transition: border-color var(--dur-fast) var(--ease-strike);
+}
+.field__control::placeholder { color: var(--text-muted); }
+.field__control:hover { border-color: var(--text-muted); }
+.field__control:focus { outline: none; border-color: var(--color-red); box-shadow: 0 0 0 1px var(--color-red); }
+.field__control:disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
+textarea.field__control { min-height: 120px; resize: vertical; }
+select.field__control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23A3A3A3' stroke-width='2'/></svg>");
+  background-repeat: no-repeat; background-position: right var(--space-4) center;
+  padding-right: var(--space-8);
+}
+.field__helper { font-size: var(--text-caption); color: var(--text-muted); }
+.field--error .field__control { border-color: var(--color-error); box-shadow: 0 0 0 1px var(--color-error); }
+.field__error {
+  display: flex; gap: var(--space-1); align-items: center;
+  font-size: var(--text-caption); font-weight: 500;
+  color: var(--accent-text);
+}
+.check { display: flex; gap: var(--space-3); align-items: flex-start; cursor: pointer; max-width: 34rem; }
+.check input {
+  appearance: none; flex: none; width: 20px; height: 20px; margin-top: 2px;
+  border: var(--border-w-strong) solid var(--text-muted);
+  border-radius: var(--radius-control); cursor: pointer;
+  display: grid; place-content: center;
+  transition: border-color var(--dur-fast), background-color var(--dur-fast);
+}
+.check input[type="radio"] { border-radius: var(--radius-full); }
+.check input:checked { background: var(--color-red); border-color: var(--color-red); }
+.check input[type="checkbox"]:checked::before {
+  content: ""; width: 10px; height: 10px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><path d='M1 5.5 4 8.5 9 1.5' fill='none' stroke='white' stroke-width='2'/></svg>") center / contain no-repeat;
+}
+.check input[type="radio"]:checked::before {
+  content: ""; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-white);
+}
+.check span { font-size: var(--text-body-sm); }
+
+/* --- Cards --- */
+.card {
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-none);
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease-strike), border-color var(--dur-fast);
+}
+.theme-paper .card { box-shadow: var(--shadow-paper-1); }
+a.card, .card--interactive { cursor: pointer; text-decoration: none; display: block; }
+a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-color: var(--text-muted); }
+.card__media { aspect-ratio: 4 / 3; background: var(--surface-2); position: relative; }
+.card__media img { width: 100%; height: 100%; object-fit: cover; }
+.card__body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); }
+.card__title { font-size: var(--text-h4); }
+.card__meta { font-size: var(--text-caption); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+
+/* Card de professor: a faixa (graduação) é a barra inferior da foto */
+.card--sensei .card__media { aspect-ratio: 1; }
+.card--sensei .card__media::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 8px;
+  background: var(--belt, var(--color-black-pure));
+}
+
+/* Card de conquista: número editorial-esportivo grande */
+.card--conquista .card__body { position: relative; }
+.card--conquista .conquista__ano {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--text-h2); line-height: 1;
+  color: transparent; -webkit-text-stroke: 1px var(--text-muted);
+}
+
+/* Card de depoimento */
+.card--depoimento .card__body { gap: var(--space-4); }
+.card--depoimento blockquote { font-size: var(--text-body-lg); line-height: 1.55; font-style: italic; }
+.card--depoimento blockquote::before { content: "“"; display: block; font-family: var(--font-kanji); font-size: 2.5rem; line-height: 0.6; color: var(--accent-text); }
+.card--depoimento figcaption { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-body-sm); }
+.card--depoimento figcaption b { display: block; }
+.card--depoimento figcaption span { color: var(--text-muted); font-size: var(--text-caption); }
+.avatar {
+  flex: none; width: 44px; height: 44px; border-radius: var(--radius-full);
+  background: var(--surface-2); border: var(--border-w) solid var(--border);
+  display: grid; place-content: center;
+  font-family: var(--font-display); font-weight: 600;
+}
+
+/* --- Badges --- */
+.badge {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--text-overline); text-transform: uppercase; letter-spacing: 0.1em;
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-w) solid var(--border); color: var(--text);
+  /* o corte do monograma, em miniatura */
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.badge--red { background: var(--color-red-ink); border-color: var(--color-red-ink); color: var(--color-white); }
+.badge--outline-red { border-color: var(--color-red); color: var(--accent-text); }
+/* Faixas: sistema de cor EXTERNO à marca — graduação é informação,
+   não decoração; por isso escapa da regra preto/branco/vermelho. */
+.badge--belt { border: none; color: var(--color-white); }
+.badge--belt.is-branca { background: #DCD9D4; color: var(--color-black); }
+.badge--belt.is-azul   { background: #1B4E9B; }
+.badge--belt.is-roxa   { background: #5B2D86; }
+.badge--belt.is-marrom { background: #5C3A21; }
+.badge--belt.is-preta  { background: var(--color-black-pure); box-shadow: inset 0 0 0 1px var(--color-red); }
+
+/* --- Stat block --- */
+.stat { display: flex; flex-direction: column; gap: var(--space-1); }
+.stat__value {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--text-h1); line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat__value em { font-style: normal; color: var(--accent-text); }
+.stat__label { font-size: var(--text-body-sm); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+
+/* --- Section header --- */
+.section-header { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-12); max-width: 44rem; }
+.section-header__kicker {
+  display: flex; align-items: center; gap: var(--space-3);
+  font-size: var(--text-overline); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted);
+}
+.section-header__kicker .corte { width: 2rem; height: 0.625rem; }
+.section-header .traco { max-width: 9rem; }
+.section-header__lead { color: var(--text-muted); font-size: var(--text-body-lg); }
+
+/* --- Navbar --- */
+.navbar {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); min-height: 72px;
+  padding: 0 var(--gutter);
+  background: color-mix(in srgb, var(--color-black) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--border-w) solid transparent;
+  transition: border-color var(--dur-fast), background-color var(--dur-fast);
+}
+.navbar.is-scrolled { border-bottom-color: var(--color-border-dark); background: color-mix(in srgb, var(--color-black) 96%, transparent); }
+.navbar__brand { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; color: var(--color-white); font-family: var(--font-display); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.navbar__brand .corte { width: 1.75rem; height: 0.625rem; }
+.navbar__links { display: flex; gap: var(--space-6); list-style: none; padding: 0; }
+.navbar__links a { text-decoration: none; font-size: var(--text-body-sm); font-weight: 500; color: var(--color-muted-dark); transition: color var(--dur-fast); }
+.navbar__links a:hover, .navbar__links a[aria-current="page"] { color: var(--color-white); }
+.navbar__toggle { display: none; background: none; border: 0; color: var(--color-white); padding: var(--space-2); cursor: pointer; }
+.navbar__menu-mobile { display: none; }
+@media (max-width: 767px) {
+  .navbar__links, .navbar .btn { display: none; }
+  .navbar__toggle { display: block; }
+  .navbar__menu-mobile.is-open {
+    display: flex; flex-direction: column; gap: var(--space-4);
+    position: absolute; left: 0; right: 0; top: 100%;
+    padding: var(--space-6) var(--gutter) var(--space-8);
+    background: var(--color-black); border-bottom: var(--border-w) solid var(--color-border-dark);
+    list-style: none;
+  }
+  .navbar__menu-mobile a { color: var(--color-white); text-decoration: none; font-family: var(--font-display); font-size: var(--text-h4); text-transform: uppercase; }
+}
+
+/* --- Tier table (níveis de patrocínio) --- */
+.tiers { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: stretch; }
+.tier {
+  display: flex; flex-direction: column; gap: var(--space-4);
+  padding: var(--space-8) var(--space-6);
+  background: var(--surface); border: var(--border-w) solid var(--border);
+}
+.tier--featured { border-color: var(--color-red); border-width: var(--border-w-strong); position: relative; }
+.tier--featured .tier__flag {
+  position: absolute; top: 0; right: var(--space-6); transform: translateY(-50%);
+}
+.tier__name { font-size: var(--text-h4); }
+.tier__tax { display: flex; gap: var(--space-2); align-items: flex-start; font-size: var(--text-caption); color: var(--text-muted); }
+.tier__tax svg { flex: none; margin-top: 1px; color: var(--accent-text); }
+.tier__list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-body-sm); }
+.tier__list li { display: flex; gap: var(--space-2); align-items: flex-start; }
+.tier__list svg { flex: none; margin-top: 4px; color: var(--accent-text); }
+.tier__list li[data-off] { color: var(--text-muted); opacity: var(--alpha-secondary); }
+.tier__list li[data-off] svg { color: var(--text-muted); }
+.tier .btn { margin-top: auto; }
+
+/* --- Marquee de patrocinadores --- */
+.marquee { overflow: hidden; position: relative; border-block: var(--border-w) solid var(--border); padding-block: var(--space-6); }
+.marquee__track { display: flex; gap: var(--space-16); width: max-content; animation: marquee 28s linear infinite; }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+.marquee__logo {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-family: var(--font-display); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-muted); white-space: nowrap;
+  transition: color var(--dur-fast);
+}
+.marquee__logo:hover { color: var(--text); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* --- Acordeão --- */
+.accordion { border-top: var(--border-w) solid var(--border); max-width: 44rem; }
+.accordion__item { border-bottom: var(--border-w) solid var(--border); }
+.accordion__trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-4); padding: var(--space-4) 0;
+  background: none; border: 0; cursor: pointer; text-align: left;
+  font-weight: 600; font-size: var(--text-body);
+}
+.accordion__trigger svg { flex: none; transition: transform var(--dur-base) var(--ease-strike); color: var(--accent-text); }
+.accordion__trigger[aria-expanded="true"] svg { transform: rotate(45deg); }
+.accordion__panel { overflow: hidden; }
+.accordion__panel > div { padding: 0 0 var(--space-4); color: var(--text-muted); font-size: var(--text-body-sm); line-height: 1.7; }
+.accordion__panel[hidden] { display: none; }
+
+/* --- WhatsApp --- */
+.whatsapp-btn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-weight: 600; font-size: var(--text-body-sm);
+  color: var(--text); text-decoration: none;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-w) solid var(--border);
+  transition: border-color var(--dur-fast), color var(--dur-fast);
+}
+/* verde oficial do WhatsApp: exceção documentada de marca terceira */
+.whatsapp-btn svg { color: #25D366; }
+.whatsapp-btn:hover { border-color: #25D366; }
+
+/* --- Footer --- */
+.footer { background: var(--color-black-pure); color: var(--color-white); padding: var(--space-16) var(--gutter) var(--space-8); }
+.footer__grid { max-width: var(--container); margin: 0 auto; display: grid; gap: var(--space-12); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.footer__brand { display: flex; flex-direction: column; gap: var(--space-4); }
+.footer h6 { color: var(--color-muted-dark); margin-bottom: var(--space-3); }
+.footer ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.footer a { color: var(--color-white); text-decoration: none; font-size: var(--text-body-sm); }
+.footer a:hover { color: var(--color-red-light); }
+.footer__legal {
+  max-width: var(--container); margin: var(--space-12) auto 0;
+  padding-top: var(--space-6); border-top: var(--border-w) solid var(--color-border-dark);
+  display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between;
+  font-size: var(--text-caption); color: var(--color-muted-dark);
+}
+.footer__cnpj { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
+/* ------------------------------------------------------------
+   6. CASCA DA DOCUMENTAÇÃO (.ds-*) — não faz parte do produto
+   ------------------------------------------------------------ */
+.ds-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.ds-nav {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  padding: var(--space-8) var(--space-6);
+  border-right: var(--border-w) solid var(--color-border-dark);
+  background: var(--color-black);
+  display: flex; flex-direction: column; gap: var(--space-6);
+}
+.ds-nav__brand { display: flex; align-items: center; gap: var(--space-3); }
+.ds-nav__brand-title { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1.15; }
+.ds-nav__brand-title small { display: block; font-family: var(--font-body); font-weight: 500; font-size: var(--text-overline); color: var(--color-muted-dark); letter-spacing: 0.12em; }
+.ds-nav ol { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 2px; counter-reset: nav; }
+.ds-nav ol a {
+  counter-increment: nav;
+  display: flex; gap: var(--space-3); align-items: baseline;
+  padding: var(--space-2) var(--space-3);
+  text-decoration: none; font-size: var(--text-body-sm);
+  color: var(--color-muted-dark);
+  border-left: 2px solid transparent;
+  transition: color var(--dur-fast), border-color var(--dur-fast);
+}
+.ds-nav ol a::before {
+  content: counter(nav, decimal-leading-zero);
+  font-family: var(--font-display); font-size: var(--text-overline);
+  color: var(--color-border-dark); font-weight: 600;
+}
+.ds-nav ol a:hover { color: var(--color-white); }
+.ds-nav ol a.is-active { color: var(--color-white); border-left-color: var(--color-red); }
+.ds-nav ol a.is-active::before { color: var(--color-red-light); }
+.ds-main { min-width: 0; }
+.ds-section { padding: var(--space-24) var(--gutter); border-bottom: var(--border-w) solid var(--border); }
+.ds-section__inner { max-width: var(--container); margin: 0 auto; }
+.ds-block { margin-top: var(--space-16); }
+.ds-block > h3 { margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3); }
+.ds-block > h3 .corte { width: 1.5rem; height: 0.55rem; }
+.ds-note {
+  border-left: 3px solid var(--color-red);
+  background: color-mix(in srgb, var(--color-red) 7%, transparent);
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-body-sm); color: var(--text); max-width: 70ch;
+  margin-block: var(--space-6);
+}
+.ds-note b { color: var(--accent-text); }
+.ds-rationale { font-size: var(--text-caption); color: var(--text-muted); font-style: italic; max-width: 70ch; margin-top: var(--space-3); }
+.ds-rationale::before { content: "racional — "; font-weight: 600; font-style: normal; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.6875rem; }
+
+/* Demo stage: onde os exemplos vivos são renderizados */
+.ds-stage {
+  border: var(--border-w) dashed var(--border);
+  padding: var(--space-8);
+  display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: center;
+  position: relative;
+}
+.ds-stage--column { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+.ds-stage--column > * { min-width: 0; }
+.ds-stage--paper { background: var(--color-paper); }
+.ds-stage__label {
+  position: absolute; top: 0; left: var(--space-4); transform: translateY(-50%);
+  background: var(--bg); padding: 0 var(--space-2);
+  font-size: var(--text-overline); font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.ds-stage--paper .ds-stage__label { background: var(--color-paper); color: var(--color-muted-light); }
+
+/* Código copiável */
+.ds-code { position: relative; margin-top: var(--space-2); }
+.ds-code pre {
+  background: var(--color-black-pure);
+  border: var(--border-w) solid var(--color-border-dark);
+  padding: var(--space-6); overflow-x: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.8125rem; line-height: 1.6; color: #D9D9D9;
+  tab-size: 2;
+}
+.ds-code__copy {
+  position: absolute; top: var(--space-2); right: var(--space-2);
+  font-family: var(--font-body); font-size: var(--text-overline);
+  font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--color-surface-dark-2); color: var(--color-muted-dark);
+  border: var(--border-w) solid var(--color-border-dark);
+  padding: var(--space-1) var(--space-3); cursor: pointer;
+  transition: color var(--dur-fast), border-color var(--dur-fast);
+}
+.ds-code__copy:hover { color: var(--color-white); border-color: var(--color-muted-dark); }
+.ds-code__copy.is-copied { color: var(--color-success-dark-bg); border-color: var(--color-success-dark-bg); }
+details.ds-snippet > summary {
+  cursor: pointer; font-size: var(--text-caption); font-weight: 600;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;
+  padding: var(--space-3) 0; list-style: none; display: flex; gap: var(--space-2); align-items: center;
+}
+details.ds-snippet > summary::before { content: "‹›"; font-family: ui-monospace, monospace; color: var(--accent-text); }
+details.ds-snippet > summary:hover { color: var(--text); }
+
+/* Tabelas de especificação */
+.ds-table-wrap { overflow-x: auto; }
+.ds-table { border-collapse: collapse; width: 100%; font-size: var(--text-body-sm); }
+.ds-table th {
+  text-align: left; font-family: var(--font-display); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--text-overline);
+  color: var(--text-muted); padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-w-strong) solid var(--border);
+  white-space: nowrap;
+}
+.ds-table td { padding: var(--space-3) var(--space-4); border-bottom: var(--border-w) solid var(--border); vertical-align: middle; }
+.ds-table code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.8125rem; color: var(--accent-text); white-space: nowrap; }
+.ds-swatch { display: inline-block; width: 2.5rem; height: 1.5rem; border: var(--border-w) solid var(--border); vertical-align: middle; }
+.ds-verdict { font-family: var(--font-display); font-weight: 600; font-size: var(--text-overline); letter-spacing: 0.08em; padding: 2px 8px; white-space: nowrap; }
+.ds-verdict--aaa { background: color-mix(in srgb, var(--color-success-dark-bg) 18%, transparent); color: var(--color-success-dark-bg); }
+.ds-verdict--aa { background: color-mix(in srgb, var(--color-info-dark-bg) 16%, transparent); color: var(--color-info-dark-bg); }
+.ds-verdict--large { background: color-mix(in srgb, var(--color-warning-dark-bg) 14%, transparent); color: var(--color-warning-dark-bg); }
+.ds-verdict--deco { background: color-mix(in srgb, var(--color-red-light) 14%, transparent); color: var(--color-red-light); }
+
+/* Do / Don't */
+.ds-dodont { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.ds-dodont figure { border: var(--border-w) solid var(--border); }
+.ds-dodont figure > div { padding: var(--space-6); min-height: 130px; display: flex; flex-direction: column; gap: var(--space-3); justify-content: center; }
+.ds-dodont figcaption {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-caption); font-weight: 600;
+  display: flex; gap: var(--space-2); align-items: baseline;
+  border-top: var(--border-w) solid var(--border);
+}
+.ds-dodont figure[data-kind="dont"] figcaption::before { content: "✕ NÃO"; color: var(--color-red-light); font-family: var(--font-display); letter-spacing: 0.08em; flex: none; }
+.ds-dodont figure[data-kind="do"] figcaption::before { content: "✓ SIM"; color: var(--color-success-dark-bg); font-family: var(--font-display); letter-spacing: 0.08em; flex: none; }
+.ds-dodont figure[data-kind="do"] { border-color: color-mix(in srgb, var(--color-success-dark-bg) 40%, var(--border)); }
+
+/* Replay button do catálogo de animações */
+.ds-replay {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  background: none; border: var(--border-w) solid var(--border);
+  color: var(--text-muted); font-size: var(--text-overline);
+  font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: var(--space-2) var(--space-3); cursor: pointer;
+  transition: color var(--dur-fast), border-color var(--dur-fast);
+}
+.ds-replay:hover { color: var(--text); border-color: var(--text-muted); }
+.ds-anim-card { border: var(--border-w) solid var(--border); }
+.ds-anim-card__stage { min-height: 150px; display: grid; place-content: center; padding: var(--space-8); background: var(--surface); }
+.ds-anim-card__meta { padding: var(--space-4) var(--space-6); border-top: var(--border-w) solid var(--border); display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; justify-content: space-between; }
+.ds-anim-card__meta dl { display: flex; flex-wrap: wrap; gap: var(--space-4); font-size: var(--text-caption); margin: 0; }
+.ds-anim-card__meta dt { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.6875rem; font-weight: 600; }
+.ds-anim-card__meta dd { margin: 0; font-family: ui-monospace, monospace; font-size: 0.75rem; }
+
+/* Grade de ícones */
+.ds-icon-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+.ds-icon-cell {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-3);
+  padding: var(--space-6) var(--space-3);
+  border: var(--border-w) solid var(--border);
+  font-size: var(--text-overline); color: var(--text-muted);
+  text-align: center; letter-spacing: 0.06em;
+  transition: border-color var(--dur-fast), color var(--dur-fast);
+}
+.ds-icon-cell:hover { border-color: var(--color-red); color: var(--text); }
+.icon { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: square; stroke-linejoin: miter; }
+.icon--sm { width: 16px; height: 16px; }
+.icon--lg { width: 32px; height: 32px; }
+
+/* Responsivo da casca */
+@media (max-width: 1023px) {
+  .ds-layout { grid-template-columns: 1fr; }
+  .ds-nav { position: static; height: auto; border-right: 0; border-bottom: var(--border-w) solid var(--color-border-dark); }
+  .ds-nav ol { flex-direction: row; flex-wrap: wrap; }
+  .ds-nav ol a { border-left: 0; border-bottom: 2px solid transparent; }
+  .ds-nav ol a.is-active { border-bottom-color: var(--color-red); }
+  .ds-section { padding: var(--space-16) var(--space-4); }
+}
+</style>
+</head>
+<body class="grain">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-faixa" viewBox="0 0 24 24"><path d="M2 10h20v4H2z"/><path d="M15 10v4"/><path d="M12 14l-3 6M12 14l3 6"/></symbol>
+    <symbol id="i-medalha" viewBox="0 0 24 24"><circle cx="12" cy="15" r="5.5"/><path d="M12 12.5v3l2 1.2"/><path d="M8.5 10.5 5 2h5l2 5 2-5h5l-3.5 8.5"/></symbol>
+    <symbol id="i-trofeu" viewBox="0 0 24 24"><path d="M7 3h10v6a5 5 0 0 1-10 0V3z"/><path d="M7 5H3.5v1.5A4.5 4.5 0 0 0 8 11M17 5h3.5v1.5A4.5 4.5 0 0 1 16 11"/><path d="M12 14v4M8 21h8M9.5 18h5"/></symbol>
+    <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 2.5 20 5v7c0 5-3.5 8-8 9.5C7.5 20 4 17 4 12V5l8-2.5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-parceria" viewBox="0 0 24 24"><path d="M2 7h5l5 4.5a1.8 1.8 0 0 1-2.5 2.6L7.5 12"/><path d="M22 7h-5l-2 1.8"/><path d="M12.5 14.6l1.8 1.6a1.8 1.8 0 0 0 2.4-2.7"/><path d="M14.9 16.2l1 0.9a1.8 1.8 0 0 1-2.4 2.7l-1.6-1.5"/><path d="M2 15h4M18 15h4"/></symbol>
+    <symbol id="i-familia" viewBox="0 0 24 24"><circle cx="8" cy="6.5" r="3"/><circle cx="17" cy="8.5" r="2.2"/><path d="M2.5 21v-3a5.5 5.5 0 0 1 11 0v3"/><path d="M16 21v-2.5a4 4 0 0 1 5.5-3.7"/></symbol>
+    <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16"/><path d="M3 10h18M8 2.5V7M16 2.5V7"/><path d="M7.5 14.5h3v3h-3z"/></symbol>
+    <symbol id="i-local" viewBox="0 0 24 24"><path d="M12 21.5S5 14.8 5 9.5a7 7 0 0 1 14 0c0 5.3-7 12-7 12z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z"/><path d="M8.7 8.5c-.3 2.8 4 7.2 6.8 6.8l.9-1.7-2.3-1.2-1 .9c-.9-.4-2-1.5-2.4-2.4l.9-1-1.2-2.3-1.7.9z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8h.01"/></symbol>
+    <symbol id="i-documento" viewBox="0 0 24 24"><path d="M6 2.5h8l4 4V21.5H6z"/><path d="M14 2.5v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
+    <symbol id="i-seta" viewBox="0 0 24 24"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13"/></symbol>
+    <symbol id="i-mais" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6.5h18M3 12h18M3 17.5h12"/></symbol>
+  </defs>
+</svg>
+
+<div class="ds-layout">
+
+<!-- =========================================================
+     NAVEGAÇÃO DA DOCUMENTAÇÃO
+     ========================================================= -->
+<nav class="ds-nav" aria-label="Seções do design system">
+  <div class="ds-nav__brand">
+    <span class="hanko hanko--sm" aria-hidden="true">柔術</span>
+    <div class="ds-nav__brand-title">Goetten<br>Jiu-Jitsu
+      <small>Design System v1.0</small>
+    </div>
+  </div>
+  <ol>
+    <li><a href="#hero">Hero — primeira dobra</a></li>
+    <li><a href="#identidade">Identidade &amp; princípios</a></li>
+    <li><a href="#tokens">Fundação — tokens</a></li>
+    <li><a href="#cor">Cor</a></li>
+    <li><a href="#tipografia">Tipografia</a></li>
+    <li><a href="#componentes">Componentes</a></li>
+    <li><a href="#icones">Ícones</a></li>
+    <li><a href="#movimento">Movimento</a></li>
+    <li><a href="#fundos">Fundos de seção</a></li>
+    <li><a href="#transversais">Padrões transversais</a></li>
+  </ol>
+  <p style="font-size: var(--text-caption); color: var(--text-muted); margin-top: auto;">
+    Identidade extraída de<br><code style="font-size:0.72rem">references/Logo-goetten-jiu-jitsu.svg</code>
+  </p>
+</nav>
+
+<main class="ds-main">
+
+<!-- =========================================================
+     1. HERO — prévia funcional da primeira dobra do site
+     ========================================================= -->
+<section class="ds-section" id="hero" style="padding:0; border-bottom: var(--border-w) solid var(--border);">
+  <div class="grain" style="position:relative; overflow:hidden; padding: var(--space-24) var(--gutter) var(--space-16); background: linear-gradient(160deg, var(--color-black) 55%, #100B0B 100%);">
+    <!-- kanji-marca d'água: 柔術 = "jiu-jitsu" (arte da suavidade) -->
+    <div aria-hidden="true" style="position:absolute; right:-1rem; top:50%; transform:translateY(-50%); font-family:var(--font-kanji); font-size:clamp(11rem,24vw,22rem); line-height:0.9; color:var(--color-white); opacity:0.04; writing-mode:vertical-rl; user-select:none;">柔術</div>
+    <!-- o corte do monograma atravessando o hero -->
+    <div aria-hidden="true" style="position:absolute; left:0; right:0; top:0; height:6px; background: linear-gradient(90deg, var(--color-red) 0 34%, transparent 34.5%);"></div>
+
+    <div style="max-width: var(--container); margin: 0 auto; position: relative;">
+      <p class="rise is-inked section-header__kicker" style="margin-bottom: var(--space-6);">
+        <span class="corte" aria-hidden="true"></span>
+        Associação sem fins lucrativos · Curitibanos BJJ
+      </p>
+      <h1 class="ink-reveal is-inked" id="hero-h1" style="font-size: var(--text-display); max-width: 16ch;">
+        Disciplina que<br>
+        <span style="display:inline-block; position:relative;">
+          transforma vidas.
+          <span class="traco traco-draw is-inked" aria-hidden="true" style="position:absolute; left:0; right:0; bottom:-0.08em;"></span>
+        </span>
+      </h1>
+      <p class="rise is-inked" style="margin-top: var(--space-6); font-size: var(--text-body-lg); color: var(--text-muted); max-width: 52ch; transition-delay: 200ms;">
+        Projeto social gratuito e escola de jiu-jitsu em um só tatame.
+        Empresas que patrocinam deduzem do Imposto de Renda pela
+        Lei de Incentivo ao Esporte — projeto aprovado pelo Ministério do Esporte.
+      </p>
+      <div class="rise is-inked" style="display:flex; flex-wrap:wrap; gap: var(--space-4); margin-top: var(--space-8); transition-delay: 350ms;">
+        <a class="btn btn--primary btn--lg" href="#componentes">Seja patrocinador</a>
+        <a class="btn btn--secondary btn--lg" href="#componentes">Conheça as aulas</a>
+      </div>
+      <div class="stamp-in is-inked" style="margin-top: var(--space-12);">
+        <span class="hanko" aria-hidden="true">柔術</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section__inner" style="padding: var(--space-16) var(--gutter);">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>01 · Primeira dobra</p>
+      <h2>Anatomia do hero</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">Acima está a prévia funcional — não uma imagem. Os dois CTAs têm peso visual idêntico por decisão de negócio: patrocinador e família são co-primários (BRIEFING.md, seção 2).</p>
+    </div>
+
+    <div class="ds-table-wrap">
+      <table class="ds-table">
+        <caption class="visually-hidden">Timeline de entrada do hero</caption>
+        <thead><tr><th>Ordem</th><th>Elemento</th><th>Gatilho</th><th>Animação</th><th>Duração / easing</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Kicker (overline)</td><td>load</td><td><code>.rise</code> — sobe 18px e assenta</td><td><code>600ms · --ease-strike</code></td></tr>
+          <tr><td>2</td><td>Título</td><td>load</td><td><code>.ink-reveal</code> — varredura de pincel inclinada (ângulo do corte)</td><td><code>900ms · --ease-brush</code></td></tr>
+          <tr><td>3</td><td>Traço sob "transforma vidas"</td><td>load</td><td><code>.traco-draw</code> — scaleX 0→1, origem esquerda</td><td><code>900ms · --ease-brush</code></td></tr>
+          <tr><td>4</td><td>Parágrafo de apoio</td><td>load +200ms</td><td><code>.rise</code></td><td><code>600ms · --ease-strike</code></td></tr>
+          <tr><td>5</td><td>Par de CTAs</td><td>load +350ms</td><td><code>.rise</code> (o par entra junto — nenhum CTA chega "antes" do outro)</td><td><code>600ms · --ease-strike</code></td></tr>
+          <tr><td>6</td><td>Carimbo hanko</td><td>load, após texto</td><td><code>.stamp-in</code> — pressiona e assenta a -3°</td><td><code>350ms · --ease-strike</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ds-rationale">a sequência inteira dura menos de 1,6s e cada elemento faz um único gesto; com prefers-reduced-motion tudo aparece no estado final imediatamente. Em mobile nada muda estruturalmente — os CTAs empilham via flex-wrap.</p>
+
+    <details class="ds-snippet"><summary>Código do hero</summary>
+      <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;section class="hero grain"&gt;
+  &lt;p class="section-header__kicker rise"&gt;
+    &lt;span class="corte" aria-hidden="true"&gt;&lt;/span&gt;
+    Associação sem fins lucrativos · Curitibanos BJJ
+  &lt;/p&gt;
+  &lt;h1 class="ink-reveal"&gt;Disciplina que
+    &lt;span class="hero__destaque"&gt;transforma vidas.
+      &lt;span class="traco traco-draw" aria-hidden="true"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/h1&gt;
+  &lt;p class="rise hero__lead"&gt;Projeto social gratuito e escola de jiu-jitsu…&lt;/p&gt;
+  &lt;div class="rise hero__ctas"&gt;
+    &lt;a class="btn btn--primary btn--lg" href="/patrocinio"&gt;Seja patrocinador&lt;/a&gt;
+    &lt;a class="btn btn--secondary btn--lg" href="/escola"&gt;Conheça as aulas&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;span class="hanko stamp-in" aria-hidden="true"&gt;柔術&lt;/span&gt;
+&lt;/section&gt;
+&lt;script&gt;
+  // as classes .is-inked são adicionadas por IntersectionObserver (ver seção Movimento)
+&lt;/script&gt;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<!-- =========================================================
+     2. IDENTIDADE & PRINCÍPIOS
+     ========================================================= -->
+<section class="ds-section" id="identidade">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>02 · Identidade</p>
+      <h2>Três traços, um sistema</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">Tudo neste documento deriva de três fontes: o logo (preto, branco, vermelho, geometria angular), a herança japonesa do jiu-jitsu (tinta sumi-ê, disciplina, tradição) e a dupla missão da associação (causa social + escola).</p>
+    </div>
+
+    <div class="stagger is-inked" style="display:grid; gap:var(--space-6); grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+      <div class="card"><div class="card__body">
+        <span class="corte" aria-hidden="true"></span>
+        <h3 class="card__title">O corte</h3>
+        <p style="font-size:var(--text-body-sm); color:var(--text-muted);">A diagonal vermelha do monograma é o gesto gráfico da marca. Ela reaparece em badges, kickers, na borda superior do hero e na varredura das animações — sempre no mesmo ângulo (~24°). <b>Isso representa a precisão do golpe porque é um único corte decidido, nunca repetido por enfeite.</b></p>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <span class="traco" style="max-width:4rem" aria-hidden="true"></span>
+        <h3 class="card__title">O traço</h3>
+        <p style="font-size:var(--text-body-sm); color:var(--text-muted);">A pincelada de tinta é o ornamento do sistema: sublinha títulos, divide seções, marca links. É desenhada uma única vez, da esquerda para a direita, como caligrafia. <b>Isso representa a tradição japonesa porque no sumi-ê o traço não se corrige — se treina até sair certo.</b></p>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <span class="hanko hanko--sm" aria-hidden="true">柔術</span>
+        <h3 class="card__title">O carimbo</h3>
+        <p style="font-size:var(--text-body-sm); color:var(--text-muted);">O selo hanko vermelho com 柔術 ("arte da suavidade") é o elemento-assinatura: fecha o hero, assina depoimentos e a página de transparência. <b>Isso representa valor e autenticidade porque o hanko é como se assina o que é oficial no Japão.</b></p>
+      </div></div>
+    </div>
+
+    <div class="ds-note">
+      <b>Regra de ouro:</b> confiança institucional para o patrocinador se constrói <em>em cima</em> da estética de combate — dados bem apresentados, transparência, hierarquia clara — nunca trocando-a por um visual corporativo suavizado. Se uma tela poderia ser de um banco, ela falhou.
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Princípios de movimento — economia de gesto</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>#</th><th>Princípio</th><th>Na prática</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Um gesto por elemento</strong></td><td>Cada elemento faz uma única animação de entrada. Nada "flutua", "pulsa" ou se repete em loop decorativo.</td></tr>
+          <tr><td>2</td><td><strong>Ataque rápido, assentamento suave</strong></td><td>Como tinta no papel: easings fortemente desacelerados (<code>--ease-strike</code>, <code>--ease-brush</code>). Nunca ease-in-out simétrico em entradas.</td></tr>
+          <tr><td>3</td><td><strong>O papel fica parado</strong></td><td>Fundos não animam continuamente. Movimento é resposta a um evento: scroll chegou, hover aconteceu, formulário respondeu.</td></tr>
+          <tr><td>4</td><td><strong>A tinta seca uma vez</strong></td><td>Revelações de scroll disparam uma única vez (<code>once: true</code>). Rolar de volta não re-anima — o traço já foi feito.</td></tr>
+          <tr><td>5</td><td><strong>Respeito ao praticante</strong></td><td><code>prefers-reduced-motion</code> tem alternativa declarada por animação: estado final imediato, conteúdo nunca some.</td></tr>
+          <tr><td>6</td><td><strong>60fps ou nada</strong></td><td>Só <code>transform</code>, <code>opacity</code> e <code>clip-path</code>. Nunca width/height/top/left. Marquee pausa em hover.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     3. FUNDAÇÃO — TOKENS
+     ========================================================= -->
+<section class="ds-section" id="tokens">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>03 · Fundação</p>
+      <h2>Tokens</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">Todos os tokens vivem como custom properties em <code>:root</code>. O contexto escuro é o padrão da marca; a classe <code>.theme-paper</code> troca os papéis semânticos para seções claras de leitura longa.</p>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Espaçamento — base 4px</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Token</th><th>Valor</th><th>Onde usar</th><th>Exemplo</th></tr></thead>
+        <tbody>
+          <tr><td><code>--space-1</code></td><td>4px</td><td>gap ícone↔texto</td><td><span style="display:inline-block;width:4px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-2</code></td><td>8px</td><td>gaps internos mínimos</td><td><span style="display:inline-block;width:8px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-3</code></td><td>12px</td><td>padding vertical de controles</td><td><span style="display:inline-block;width:12px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-4</code></td><td>16px</td><td>padding padrão, gap entre textos</td><td><span style="display:inline-block;width:16px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-6</code></td><td>24px</td><td>padding de card, gutter</td><td><span style="display:inline-block;width:24px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-8</code></td><td>32px</td><td>gap entre blocos irmãos</td><td><span style="display:inline-block;width:32px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-12</code></td><td>48px</td><td>respiro após section-header</td><td><span style="display:inline-block;width:48px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-16</code></td><td>64px</td><td>entre sub-blocos de seção</td><td><span style="display:inline-block;width:64px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-24</code></td><td>96px</td><td>padding vertical de seção</td><td><span style="display:inline-block;width:96px;height:16px;background:var(--color-red)"></span></td></tr>
+          <tr><td><code>--space-32</code></td><td>128px</td><td>hero e seções de máximo impacto</td><td><span style="display:inline-block;width:128px;height:16px;background:var(--color-red)"></span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="ds-rationale">base 4px em vez de 8px porque os controles compactos (badges, botões sm) precisam do degrau de 12px; a escala pula degraus intermediários de propósito — menos opções, menos decisão arbitrária.</p>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Escala fluida — regra do clamp()</h3>
+      <p style="font-size:var(--text-body-sm); max-width:70ch;">Todo tamanho fluido é <code>clamp(min, intercepto + coeficiente·vw, max)</code>, com <strong>min medido em 360px</strong> e <strong>max em 1280px</strong> de viewport. Fórmula: <code>coef = (max−min)/(1280−360)·100</code>; <code>intercepto = min − coef·3.6</code>. Exemplo do display: <code>clamp(2.75rem, 1.772rem + 4.35vw, 5.25rem)</code>.</p>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Grid &amp; layout</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td><code>--container</code></td><td>1152px</td><td>largura máxima de seção</td></tr>
+          <tr><td><code>--container-narrow</code></td><td>704px</td><td>colunas de leitura (~70ch)</td></tr>
+          <tr><td><code>--gutter</code></td><td>24px</td><td>margem lateral e gap de grid</td></tr>
+          <tr><td>breakpoints</td><td>640 / 768 / 1024 / 1280</td><td>mobile-first; grids usam <code>auto-fit + minmax()</code> e raramente precisam de media query</td></tr>
+          <tr><td>colunas</td><td>1 → 2 (640) → 3 (1024) → 4 (1280)</td><td>cards de equipe/conquistas</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Forma, elevação, z-index e opacidade</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Token</th><th>Valor</th><th>Regra</th></tr></thead>
+        <tbody>
+          <tr><td><code>--radius-none</code></td><td>0</td><td><strong>padrão do sistema</strong> — a marca é angular; cards, botões e seções têm canto reto</td></tr>
+          <tr><td><code>--radius-control</code></td><td>2px</td><td>exclusivo de inputs/checkbox (suaviza o serrilhado do foco)</td></tr>
+          <tr><td><code>--radius-full</code></td><td>999px</td><td>exclusivo de avatares e spinners</td></tr>
+          <tr><td><code>--border-w / -strong</code></td><td>1px / 2px</td><td>strong só em CTAs, foco e o tier destacado</td></tr>
+          <tr><td><code>--shadow-paper-1/-2</code></td><td>rgba(10,10,10,…)</td><td><strong>só em .theme-paper</strong>. Em fundo preto elevação = superfície (<code>--surface</code> → <code>--surface-2</code>) + borda, porque sombra sobre preto é invisível</td></tr>
+          <tr><td><code>--z-base/raised/sticky/overlay/toast</code></td><td>0 / 10 / 100 / 1000 / 1100</td><td>nenhum z-index literal fora da escala</td></tr>
+          <tr><td><code>--alpha-*</code></td><td>.9 / .72 / .45 / .28 / .12 / .05</td><td>hover · apoio · disabled · linha decorativa · tinta diluída · grão</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Motion tokens</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td><code>--dur-instant</code></td><td>100ms</td><td>press de botão</td></tr>
+          <tr><td><code>--dur-fast</code></td><td>200ms</td><td>hover, foco, trocas de cor</td></tr>
+          <tr><td><code>--dur-base</code></td><td>350ms</td><td>carimbo, acordeão, underline de link</td></tr>
+          <tr><td><code>--dur-slow</code></td><td>600ms</td><td>entradas .rise</td></tr>
+          <tr><td><code>--dur-brush</code></td><td>900ms</td><td>pinceladas: ink-reveal, traço, linha SVG</td></tr>
+          <tr><td><code>--ease-strike</code></td><td><code>cubic-bezier(0.22, 1, 0.36, 1)</code></td><td>o golpe — padrão de entradas e estados</td></tr>
+          <tr><td><code>--ease-brush</code></td><td><code>cubic-bezier(0.7, 0, 0.16, 1)</code></td><td>a pincelada — arranca com peso, usada nas revelações de tinta</td></tr>
+          <tr><td><code>--ease-breath</code></td><td><code>cubic-bezier(0.65, 0, 0.35, 1)</code></td><td>a respiração — único easing permitido em loops (marquee usa linear por ser esteira)</td></tr>
+          <tr><td><code>--stagger</code></td><td>70ms</td><td>degrau entre irmãos em grupos .stagger (máx. 6 filhos)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     4. COR
+     ========================================================= -->
+<section class="ds-section" id="cor">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>04 · Cor</p>
+      <h2>Preto, branco, vermelho — e nada mais</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">A paleta inteira da marca são três cores. Todo o resto (neutros, feedback) é derivado e documentado abaixo. Cada combinação traz o ratio <em>calculado</em> — nenhum "provavelmente passa".</p>
+    </div>
+
+    <div class="ds-note"><b>Origem confirmada:</b> as três cores vêm do vetor oficial (<code>references/Logo-goetten-jiu-jitsu.svg</code>), lidas com conta-gotas: vermelho <code>#EC1C24</code>, preto <code>#030303</code>, branco <code>#FFFFFF</code>. <b>Consequência que mudou o sistema:</b> o vermelho da marca é claro demais para carregar texto — branco sobre ele dá 4.41:1, abaixo do mínimo AA. Por isso existem <b>dois vermelhos</b>, separados por 2% de brilho (imperceptíveis lado a lado): <code>--color-red</code> para grafismo e <code>--color-red-ink</code> para superfícies preenchidas com texto.</div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Paleta completa</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th></th><th>Token</th><th>HEX</th><th>RGB</th><th>HSL</th><th>Papel</th><th>Regras</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ds-swatch" style="background:#030303"></span></td><td><code>--color-black-pure</code></td><td>#030303</td><td>3 3 3</td><td>0° 0% 1%</td><td>primary</td><td><b>preto da marca</b> — lockup e footer, onde o logo precisa assentar sem emenda</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#0A0A0A"></span></td><td><code>--color-black</code></td><td>#0A0A0A</td><td>10 10 10</td><td>0° 0% 4%</td><td>primary / bg</td><td>fundo padrão; dá 2 níveis de superfície acima dele</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#FFFFFF"></span></td><td><code>--color-white</code></td><td>#FFFFFF</td><td>255 255 255</td><td>0° 0% 100%</td><td>primary / text</td><td>texto sobre escuro; superfície sobre papel</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#F7F5F2"></span></td><td><code>--color-paper</code></td><td>#F7F5F2</td><td>247 245 242</td><td>36° 24% 96%</td><td>bg claro</td><td>"papel washi" — fundo de leitura longa; nunca branco estéril</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#EC1C24"></span></td><td><code>--color-red</code></td><td>#EC1C24</td><td>236 28 36</td><td>358° 88% 93%</td><td>accent</td><td><b>vermelho da marca</b> — grafismo: corte, traço, bordas, hanko. <strong>Nunca sob texto</strong></td></tr>
+          <tr><td><span class="ds-swatch" style="background:#E71B23"></span></td><td><code>--color-red-ink</code></td><td>#E71B23</td><td>231 27 35</td><td>358° 88% 91%</td><td>accent (texto)</td><td><b>superfícies preenchidas com texto</b>: botão primário, badge vermelha, hanko, seleção. 2% mais escuro que a marca — o suficiente para passar AA</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#B3151B"></span></td><td><code>--color-red-dark</code></td><td>#B3151B</td><td>179 21 27</td><td>358° 88% 70%</td><td>accent-text claro</td><td>vermelho-como-texto sobre papel/branco; hover do CTA</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#FF5A5F"></span></td><td><code>--color-red-light</code></td><td>#FF5A5F</td><td>255 90 95</td><td>358° 65% 100%</td><td>accent-text escuro</td><td>vermelho-como-texto sobre preto</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#141414"></span></td><td><code>--color-surface-dark</code></td><td>#141414</td><td>20 20 20</td><td>0° 0% 8%</td><td>neutral</td><td>cards sobre preto (elevação nível 1)</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#1F1F1F"></span></td><td><code>--color-surface-dark-2</code></td><td>#1F1F1F</td><td>31 31 31</td><td>0° 0% 12%</td><td>neutral</td><td>elevação nível 2 / media placeholder</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#2B2B2B"></span></td><td><code>--color-border-dark</code></td><td>#2B2B2B</td><td>43 43 43</td><td>0° 0% 17%</td><td>neutral</td><td>bordas em contexto escuro</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#A3A3A3"></span></td><td><code>--color-muted-dark</code></td><td>#A3A3A3</td><td>163 163 163</td><td>0° 0% 64%</td><td>neutral / text</td><td>texto secundário sobre escuro</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#E4E1DC"></span></td><td><code>--color-border-light</code></td><td>#E4E1DC</td><td>228 225 220</td><td>38° 13% 88%</td><td>neutral</td><td>bordas em contexto claro</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#5C5C5C"></span></td><td><code>--color-muted-light</code></td><td>#5C5C5C</td><td>92 92 92</td><td>0° 0% 36%</td><td>neutral / text</td><td>texto secundário sobre papel</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Contrastes calculados (WCAG 2.1)</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Combinação</th><th>Ratio</th><th>Veredito</th><th>Uso autorizado</th></tr></thead>
+        <tbody>
+          <tr><td>branco sobre <code>#0A0A0A</code></td><td>19.80:1</td><td><span class="ds-verdict ds-verdict--aaa">AAA</span></td><td>texto padrão do tema escuro</td></tr>
+          <tr><td>branco sobre <code>#030303</code> (marca)</td><td>20.62:1</td><td><span class="ds-verdict ds-verdict--aaa">AAA</span></td><td>lockup e footer</td></tr>
+          <tr><td>preto sobre papel <code>#F7F5F2</code></td><td>18.19:1</td><td><span class="ds-verdict ds-verdict--aaa">AAA</span></td><td>texto padrão do tema claro</td></tr>
+          <tr><td>branco sobre <code>#141414</code></td><td>18.42:1</td><td><span class="ds-verdict ds-verdict--aaa">AAA</span></td><td>texto em cards escuros</td></tr>
+          <tr><td><code>#A3A3A3</code> sobre <code>#0A0A0A</code></td><td>7.85:1</td><td><span class="ds-verdict ds-verdict--aaa">AAA</span></td><td>texto secundário escuro</td></tr>
+          <tr><td><code>#5C5C5C</code> sobre papel</td><td>6.14:1</td><td><span class="ds-verdict ds-verdict--aa">AA</span></td><td>texto secundário claro</td></tr>
+          <tr><td><strong>branco sobre red-ink <code>#E71B23</code></strong></td><td>4.59:1</td><td><span class="ds-verdict ds-verdict--aa">AA</span></td><td><strong>botão primário, badge vermelha, hanko</strong></td></tr>
+          <tr><td><code>#B3151B</code> sobre branco</td><td>6.91:1</td><td><span class="ds-verdict ds-verdict--aa">AA</span></td><td>vermelho-texto em contexto claro</td></tr>
+          <tr><td><code>#B3151B</code> sobre papel</td><td>6.35:1</td><td><span class="ds-verdict ds-verdict--aa">AA</span></td><td>links e erros no tema claro</td></tr>
+          <tr><td><code>#FF5A5F</code> sobre <code>#0A0A0A</code></td><td>6.49:1</td><td><span class="ds-verdict ds-verdict--aa">AA</span></td><td>vermelho-texto em contexto escuro</td></tr>
+          <tr><td><strong>branco sobre a marca <code>#EC1C24</code></strong></td><td>4.41:1</td><td><span class="ds-verdict ds-verdict--large">AA-large</span></td><td><strong>REPROVA para texto normal</strong> — foi por isso que o red-ink existe</td></tr>
+          <tr><td>marca <code>#EC1C24</code> sobre preto</td><td>4.49:1</td><td><span class="ds-verdict ds-verdict--large">AA-large</span></td><td>só grafismo; para texto usar #FF5A5F</td></tr>
+          <tr><td>marca <code>#EC1C24</code> sobre papel</td><td>4.06:1</td><td><span class="ds-verdict ds-verdict--large">AA-large</span></td><td>só grafismo; para texto usar #B3151B</td></tr>
+        </tbody>
+      </table></div>
+      <p class="ds-rationale">medidos com a fórmula de luminância relativa do WCAG 2.1 sobre os hexes lidos do vetor oficial, não estimados. O achado que mudou o sistema: o vermelho da marca reprova como fundo de texto normal em <em>qualquer</em> cor de texto — branco dá 4.41, preto dá 4.49, e o mínimo é 4.5. O red-ink resolve com 2% de escurecimento.</p>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Feedback — harmonizada com a marca</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th></th><th>Papel</th><th>Sobre claro</th><th>Sobre escuro</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ds-swatch" style="background:#1E7A3C"></span><span class="ds-swatch" style="background:#2E9E52"></span></td><td>success</td><td><code>#1E7A3C</code> · 5.38:1 AA</td><td><code>#2E9E52</code> · 5.78:1 AA</td><td>verde dessaturado, sem competir com o vermelho</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#8A6D00"></span><span class="ds-swatch" style="background:#E5A800"></span></td><td>warning</td><td><code>#8A6D00</code> · 4.92:1 AA</td><td><code>#E5A800</code> · 9.36:1 AAA</td><td>âmbar terroso</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#B3151B"></span><span class="ds-swatch" style="background:#FF5A5F"></span></td><td>error</td><td><code>#B3151B</code> · 6.91:1 AA</td><td><code>#FF5A5F</code> · 6.49:1 AA</td><td><strong>erro herda a marca</strong> — aponta para <code>--color-red-dark/-light</code>, então nunca sai de sincronia</td></tr>
+          <tr><td><span class="ds-swatch" style="background:#0E63B3"></span><span class="ds-swatch" style="background:#4DA3E8"></span></td><td>info</td><td><code>#0E63B3</code> · 6.08:1 AA</td><td><code>#4DA3E8</code> · 7.28:1 AAA</td><td>uso raro; nunca em CTAs</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:var(--text-body-sm); color:var(--text-muted); margin-top:var(--space-3);">Feedback nunca é só cor: sempre acompanha ícone + texto (ex.: <svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px;color:var(--color-error-dark-bg)"><use href="#i-x"/></svg> "CPF inválido"). Seleção de texto: fundo vermelho, texto branco. Foco visível: outline 2px vermelho com offset 2px, em ambos os temas.</p>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Orçamento cromático do vermelho</h3>
+      <p style="font-size:var(--text-body-sm); max-width:70ch;">O vermelho vale porque é raro. Por tipo de seção: <strong>hero</strong> — corte superior, traço do título, 1 CTA (~5% da tela); <strong>seções institucionais</strong> — kicker, traço do header, links (~2%); <strong>patrocínio</strong> — o único lugar onde ele pode dominar: tier destacado, faixa de fundo com corte diagonal (~15%); <strong>footer</strong> — hanko e hovers (~1%). Se duas áreas vermelhas grandes aparecem na mesma dobra, uma delas está errada.</p>
+    </div>
+  </div>
+</section>
+<!-- =========================================================
+     5. TIPOGRAFIA
+     ========================================================= -->
+<section class="ds-section" id="tipografia">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>05 · Tipografia</p>
+      <h2>A voz condensada e a voz que lê</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">O wordmark oficial usa uma condensada geométrica de cortes angulares. <strong>Oswald é a substituta declarada</strong> (não é a fonte oficial) para títulos e impacto; <strong>Inter</strong> carrega toda a leitura. A serifada japonesa do sistema operacional renderiza os kanji decorativos — sem download extra.</p>
+    </div>
+
+    <div class="ds-table-wrap"><table class="ds-table">
+      <thead><tr><th>Família</th><th>Stack</th><th>Pesos</th><th>Papel</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Oswald</strong></td><td><code>"Oswald", "Arial Narrow", sans-serif</code></td><td>500 · 600 · 700</td><td>display, h1–h4, CTAs, números, badges. Sempre UPPERCASE + tracking 0.02–0.14em</td></tr>
+        <tr><td><strong>Inter</strong></td><td><code>"Inter", -apple-system, "Segoe UI", Roboto, sans-serif</code></td><td>400 · 500 · 600 · 700 · 400i</td><td>corpo, formulários, tabelas, legendas</td></tr>
+        <tr><td><strong>Kanji (sistema)</strong></td><td><code>"Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif</code></td><td>—</td><td>somente 柔術 no hanko e marca d'água. Zero bytes de webfont</td></tr>
+      </tbody>
+    </table></div>
+    <p class="ds-rationale">carregamento: Google Fonts com preconnect + display=swap; os pesos listados são os únicos baixados. Antes do swap, Arial Narrow (display) e a system-ui (corpo) têm métricas próximas o suficiente para evitar layout shift perceptível. Se o arquivo da fonte oficial do wordmark aparecer, ela substitui a Oswald só nos papéis display/h1 — o resto do sistema não muda.</p>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Escala completa — amostras reais</h3>
+      <div class="ds-stage ds-stage--column">
+        <span class="ds-stage__label">papéis de texto</span>
+        <div style="display:flex; flex-direction:column; gap:var(--space-6);">
+          <div><h6 style="margin-bottom:4px">display · Oswald 700 · clamp(2.75–5.25rem) · lh 1.05 · ls 0.01em</h6>
+            <p style="font-family:var(--font-display);font-weight:700;font-size:var(--text-display);line-height:1.05;letter-spacing:0.01em;text-transform:uppercase;max-width:none">Ação social</p></div>
+          <div><h6 style="margin-bottom:4px">h1 · Oswald 700 · clamp(2.25–3.5rem) · lh 1.1</h6>
+            <p style="font-family:var(--font-display);font-weight:700;font-size:var(--text-h1);line-height:1.1;text-transform:uppercase;letter-spacing:0.02em">Conquistas no tatame</p></div>
+          <div><h6 style="margin-bottom:4px">h2 · Oswald 600 · clamp(1.75–2.5rem)</h6>
+            <p style="font-family:var(--font-display);font-weight:600;font-size:var(--text-h2);line-height:1.1;text-transform:uppercase;letter-spacing:0.02em">Seja patrocinador</p></div>
+          <div><h6 style="margin-bottom:4px">h3 · Oswald 600 · clamp(1.375–1.75rem)</h6>
+            <p style="font-family:var(--font-display);font-weight:600;font-size:var(--text-h3);line-height:1.1;text-transform:uppercase;letter-spacing:0.02em">Professores e graduações</p></div>
+          <div><h6 style="margin-bottom:4px">h4 · Oswald 600 · 1.25rem — h5 · Inter 600 · 1.125rem · lh 1.3</h6>
+            <p style="font-family:var(--font-display);font-weight:600;font-size:var(--text-h4);text-transform:uppercase;letter-spacing:0.02em">Nível parceiro</p>
+            <p style="font-weight:600;font-size:var(--text-h5);line-height:1.3">A associação em números</p></div>
+          <div><h6 style="margin-bottom:4px">body-lg · Inter 400 · 1.125rem · lh 1.6 · máx 70ch</h6>
+            <p style="font-size:var(--text-body-lg)">Há mais de dois anos, o tatame da Goetten recebe crianças e adolescentes de Curitibanos — de graça, com faixa, kimono e disciplina.</p></div>
+          <div><h6 style="margin-bottom:4px">body · Inter 400 · 1rem · lh 1.6 — body-sm · 0.875rem · lh 1.6</h6>
+            <p>O treino começa com o cumprimento; a educação, também. Cada aluno é acompanhado na escola e no tatame.</p>
+            <p style="font-size:var(--text-body-sm);color:var(--text-muted)">Válido para empresas tributadas pelo Lucro Real, conforme a Lei nº 11.438/2006.</p></div>
+          <div><h6 style="margin-bottom:4px">caption · 0.8125rem — label · Inter 600 · 0.875rem — overline · Inter 600 · 0.75rem · caps · ls 0.14em</h6>
+            <p style="font-size:var(--text-caption);color:var(--text-muted)">Foto: Campeonato Catarinense 2025 — categoria infantil.</p>
+            <p style="font-size:var(--text-body-sm);font-weight:600">Nome completo <abbr style="color:var(--accent-text);text-decoration:none" title="obrigatório">*</abbr></p>
+            <p style="font-size:var(--text-overline);font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--text-muted)">Projeto aprovado · Ministério do Esporte</p></div>
+          <div><h6 style="margin-bottom:4px">quote · Inter 400 itálico · 1.125rem · lh 1.55</h6>
+            <p style="font-style:italic;font-size:var(--text-body-lg);line-height:1.55">“O jiu-jitsu mudou o comportamento do meu filho — na escola e em casa.”</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Regras de pareamento</h3>
+      <ul style="font-size:var(--text-body-sm); display:flex; flex-direction:column; gap:var(--space-2); padding-left:1.2em; max-width:70ch;">
+        <li><strong>Oswald</strong> quando o texto é um grito curto: títulos, CTAs, números, badges. Sempre uppercase.</li>
+        <li><strong>Inter</strong> quando o texto é uma conversa: qualquer coisa com mais de ~8 palavras.</li>
+        <li><strong>Nunca</strong>: Oswald em parágrafo; Oswald em minúsculas; Inter uppercase espremida imitando display; kanji fora do hanko/marca d'água.</li>
+        <li>Números institucionais (CNPJ, valores, datas em tabela) usam <code>font-variant-numeric: tabular-nums</code>.</li>
+        <li>Títulos recebem <code>text-wrap: balance</code>. Aspas em português são “curvas” e o travessão de diálogo/aparte é — (em-dash).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     6. COMPONENTES
+     ========================================================= -->
+<section class="ds-section" id="componentes">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>06 · Componentes</p>
+      <h2>Componentes</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">Convenção BEM (<code>bloco__elemento--modificador</code>). Todo componente aqui é o componente real, interativo, com todos os estados — e o código copiável logo abaixo.</p>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="ds-block" id="c-buttons">
+      <h3><span class="corte" aria-hidden="true"></span>Buttons</h3>
+      <p style="font-size:var(--text-body-sm);color:var(--text-muted);max-width:70ch;">Anatomia: rótulo Oswald uppercase · ícone opcional (16px) · borda 2px · canto reto. Alvo de toque mínimo 48px (40px no sm, usado só em contexto denso). Foco: outline vermelho 2px + offset.</p>
+      <div class="ds-stage">
+        <span class="ds-stage__label">variantes · tema escuro</span>
+        <button class="btn btn--primary" type="button">Seja patrocinador</button>
+        <button class="btn btn--secondary" type="button">Conheça as aulas</button>
+        <button class="btn btn--ghost" type="button">Ver todas</button>
+        <a class="link-ink" href="#c-buttons">Prestação de contas 2025</a>
+      </div>
+      <div class="ds-stage">
+        <span class="ds-stage__label">tamanhos · estados</span>
+        <button class="btn btn--primary btn--sm" type="button">Small</button>
+        <button class="btn btn--primary btn--lg" type="button">Large · com ícone <svg class="icon icon--sm" aria-hidden="true"><use href="#i-seta"/></svg></button>
+        <button class="btn btn--primary" type="button" disabled>Desabilitado</button>
+        <button class="btn btn--primary btn--loading" type="button" aria-busy="true"><span>Enviando</span></button>
+        <button class="btn btn--secondary btn--loading" type="button" aria-busy="true"><span>Enviando</span></button>
+      </div>
+      <div class="ds-stage ds-stage--paper theme-paper">
+        <span class="ds-stage__label">tema claro</span>
+        <button class="btn btn--primary" type="button">Seja patrocinador</button>
+        <button class="btn btn--secondary" type="button">Conheça as aulas</button>
+        <a class="link-ink" href="#c-buttons">Baixar apresentação (PDF)</a>
+      </div>
+      <p class="ds-rationale">o secundário é outline na cor do texto do contexto (branco no escuro, preto no claro) — por isso os CTAs do hero têm o mesmo peso sem serem dois botões vermelhos. Hover do primário escurece para --color-red-dark em vez de clarear: tinta concentra, não dilui.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;button class="btn btn--primary" type="button"&gt;Seja patrocinador&lt;/button&gt;
+&lt;button class="btn btn--secondary" type="button"&gt;Conheça as aulas&lt;/button&gt;
+&lt;button class="btn btn--ghost btn--sm" type="button"&gt;Ver todas&lt;/button&gt;
+&lt;button class="btn btn--primary btn--loading" aria-busy="true"&gt;&lt;span&gt;Enviando&lt;/span&gt;&lt;/button&gt;
+&lt;a class="link-ink" href="/transparencia"&gt;Prestação de contas&lt;/a&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="ds-block" id="c-inputs">
+      <h3><span class="corte" aria-hidden="true"></span>Formulário</h3>
+      <div class="ds-stage ds-stage--column">
+        <span class="ds-stage__label">campos · todos os estados</span>
+        <div style="display:grid; gap:var(--space-6); grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+          <div class="field">
+            <label class="field__label" for="f-nome">Nome completo <abbr title="obrigatório">*</abbr></label>
+            <input class="field__control" id="f-nome" type="text" placeholder="Seu nome" autocomplete="name">
+            <p class="field__helper">Como aparece no documento.</p>
+          </div>
+          <div class="field field--error">
+            <label class="field__label" for="f-cnpj">CNPJ da empresa <abbr title="obrigatório">*</abbr></label>
+            <input class="field__control" id="f-cnpj" type="text" value="12.345" aria-invalid="true" aria-describedby="f-cnpj-err">
+            <p class="field__error" id="f-cnpj-err"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"/></svg> CNPJ incompleto — confira os 14 dígitos.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-interesse">Interesse</label>
+            <select class="field__control" id="f-interesse">
+              <option>Patrocínio — Lei de Incentivo ao Esporte</option>
+              <option>Patrocínio — apoio direto</option>
+              <option>Aulas particulares</option>
+              <option>Outro assunto</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-msg-demo">Mensagem</label>
+            <textarea class="field__control" id="f-msg-demo" placeholder="Conte para a gente…"></textarea>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-4);">
+          <label class="check"><input type="checkbox" checked><span>Minha empresa é tributada pelo <strong>Lucro Real</strong> (elegível à dedução do IR pela Lei nº 11.438/2006).</span></label>
+          <label class="check"><input type="checkbox"><span>Quero receber a prestação de contas anual por e-mail.</span></label>
+          <div role="radiogroup" aria-label="Faixa etária do aluno" style="display:flex;gap:var(--space-6);flex-wrap:wrap;">
+            <label class="check"><input type="radio" name="idade" checked><span>Infantil (4–12)</span></label>
+            <label class="check"><input type="radio" name="idade"><span>Juvenil (13–17)</span></label>
+            <label class="check"><input type="radio" name="idade"><span>Adulto</span></label>
+          </div>
+        </div>
+      </div>
+      <p class="ds-rationale">o checkbox do Lucro Real faz triagem fiscal já no formulário — quem não é elegível recebe o pitch de apoio direto, não a promessa errada de dedução. Erro sempre com ícone + mensagem específica ligada por aria-describedby; a cor de erro é a própria marca.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;div class="field field--error"&gt;
+  &lt;label class="field__label" for="cnpj"&gt;CNPJ da empresa &lt;abbr title="obrigatório"&gt;*&lt;/abbr&gt;&lt;/label&gt;
+  &lt;input class="field__control" id="cnpj" aria-invalid="true" aria-describedby="cnpj-err"&gt;
+  &lt;p class="field__error" id="cnpj-err"&gt;
+    &lt;svg class="icon icon--sm"&gt;&lt;use href="#i-x"/&gt;&lt;/svg&gt; CNPJ incompleto.
+  &lt;/p&gt;
+&lt;/div&gt;
+&lt;label class="check"&gt;&lt;input type="checkbox"&gt;&lt;span&gt;Minha empresa é Lucro Real.&lt;/span&gt;&lt;/label&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- CARDS -->
+    <div class="ds-block" id="c-cards">
+      <h3><span class="corte" aria-hidden="true"></span>Cards</h3>
+      <div class="ds-stage ds-stage--column">
+        <span class="ds-stage__label">professor · conquista · depoimento</span>
+        <div style="display:grid;gap:var(--space-6);grid-template-columns:repeat(auto-fit,minmax(250px,1fr));">
+          <article class="card card--sensei" style="--belt: var(--color-black-pure);">
+            <div class="card__media" role="img" aria-label="Foto do professor (placeholder)">
+              <div style="height:100%;display:grid;place-content:center;color:var(--text-muted)"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-familia"/></svg></div>
+            </div>
+            <div class="card__body">
+              <p class="card__meta">Professor · Faixa preta 2º grau</p>
+              <h4 class="card__title">Prof. Goetten</h4>
+              <p style="font-size:var(--text-body-sm);color:var(--text-muted)">Fundador da associação. 18 anos de tatame, formando atletas e cidadãos em Curitibanos.</p>
+              <span class="badge badge--belt is-preta">Faixa preta</span>
+            </div>
+          </article>
+          <article class="card card--conquista">
+            <div class="card__body">
+              <span class="conquista__ano" aria-hidden="true">2025</span>
+              <p class="card__meta">Campeonato Catarinense · IBJJF</p>
+              <h4 class="card__title">3 ouros, 2 pratas</h4>
+              <p style="font-size:var(--text-body-sm);color:var(--text-muted)">Categorias infantil e juvenil — cinco pódios com atletas do projeto social.</p>
+              <a class="link-ink" href="#c-cards" style="font-size:var(--text-body-sm)">Ver a galeria</a>
+            </div>
+          </article>
+          <figure class="card card--depoimento" style="margin:0">
+            <div class="card__body">
+              <blockquote>Patrocinar a Goetten foi a decisão de marketing mais fácil do ano: impacto real na cidade e dedução no IR.</blockquote>
+              <figcaption>
+                <span class="avatar" aria-hidden="true">RM</span>
+                <span><b>Diretora — Empresa Parceira</b><span>Patrocinadora Oficial desde 2025</span></span>
+              </figcaption>
+            </div>
+          </figure>
+        </div>
+      </div>
+      <p class="ds-rationale">no card de professor, a barra inferior da foto é a cor da faixa do professor (var(--belt)) — a graduação vira arquitetura do card, não um adereço. No card de conquista, o ano em outline gigante é o padrão editorial-esportivo da prova social.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;article class="card card--sensei" style="--belt: var(--color-black-pure)"&gt;
+  &lt;div class="card__media"&gt;&lt;img src="/img/equipe/goetten.jpg" alt="Professor Goetten de kimono no tatame"&gt;&lt;/div&gt;
+  &lt;div class="card__body"&gt;
+    &lt;p class="card__meta"&gt;Professor · Faixa preta 2º grau&lt;/p&gt;
+    &lt;h3 class="card__title"&gt;Prof. Goetten&lt;/h3&gt;
+    &lt;span class="badge badge--belt is-preta"&gt;Faixa preta&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/article&gt;
+
+&lt;article class="card card--conquista"&gt;
+  &lt;div class="card__body"&gt;
+    &lt;span class="conquista__ano" aria-hidden="true"&gt;2025&lt;/span&gt;
+    &lt;p class="card__meta"&gt;Campeonato Catarinense · IBJJF&lt;/p&gt;
+    &lt;h3 class="card__title"&gt;3 ouros, 2 pratas&lt;/h3&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- STATS -->
+    <div class="ds-block" id="c-stats">
+      <h3><span class="corte" aria-hidden="true"></span>Blocos de estatística</h3>
+      <div class="ds-stage">
+        <span class="ds-stage__label">contadores animados por scroll · tabular-nums</span>
+        <div class="stagger is-inked" style="display:grid;gap:var(--space-8);grid-template-columns:repeat(auto-fit,minmax(160px,1fr));width:100%;">
+          <div class="stat"><span class="stat__value"><em data-count="120">120</em>+</span><span class="stat__label">Alunos no projeto</span></div>
+          <div class="stat"><span class="stat__value" data-count="47">47</span><span class="stat__label">Pódios conquistados</span></div>
+          <div class="stat"><span class="stat__value" data-count="2">2</span><span class="stat__label">Anos de associação</span></div>
+          <div class="stat"><span class="stat__value"><span data-count="100">100</span>%</span><span class="stat__label">Aulas sociais gratuitas</span></div>
+        </div>
+      </div>
+      <p class="ds-rationale">o contador conta uma única vez (a tinta seca) em 900ms com desaceleração; com reduced-motion o número aparece pronto. tabular-nums evita o número "dançar" enquanto conta.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;div class="stat"&gt;
+  &lt;span class="stat__value"&gt;&lt;em data-count="120"&gt;120&lt;/em&gt;+&lt;/span&gt;
+  &lt;span class="stat__label"&gt;Alunos no projeto&lt;/span&gt;
+&lt;/div&gt;
+&lt;script&gt;
+// contador: roda quando entra na viewport, uma única vez
+document.querySelectorAll("[data-count]").forEach(el =&gt; {
+  const io = new IntersectionObserver(([e]) =&gt; {
+    if (!e.isIntersecting) return; io.disconnect();
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const end = +el.dataset.count, t0 = performance.now();
+    (function tick(t) {
+      const p = Math.min((t - t0) / 900, 1), k = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(end * k);
+      if (p &lt; 1) requestAnimationFrame(tick);
+    })(t0);
+  }, { threshold: 0.6 });
+  io.observe(el);
+});
+&lt;/script&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="ds-block" id="c-navbar">
+      <h3><span class="corte" aria-hidden="true"></span>Navbar</h3>
+      <div class="ds-stage ds-stage--column" style="padding:0; overflow:hidden;">
+        <span class="ds-stage__label">desktop + mobile (redimensione) · botão demo alterna estado scrolled</span>
+        <div style="position:relative">
+          <header class="navbar" id="demo-navbar" style="position:relative;">
+            <a class="navbar__brand" href="#c-navbar"><span class="corte" aria-hidden="true"></span>Goetten <span style="color:var(--color-muted-dark);font-weight:500">BJJ</span></a>
+            <ul class="navbar__links">
+              <li><a href="#c-navbar" aria-current="page">Início</a></li>
+              <li><a href="#c-navbar">Projeto social</a></li>
+              <li><a href="#c-navbar">Escola</a></li>
+              <li><a href="#c-navbar">Conquistas</a></li>
+              <li><a href="#c-navbar">Transparência</a></li>
+            </ul>
+            <a class="btn btn--primary btn--sm" href="#c-navbar">Seja patrocinador</a>
+            <button class="navbar__toggle" type="button" aria-expanded="false" aria-controls="demo-menu" aria-label="Abrir menu">
+              <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+            </button>
+            <ul class="navbar__menu-mobile" id="demo-menu">
+              <li><a href="#c-navbar">Início</a></li>
+              <li><a href="#c-navbar">Projeto social</a></li>
+              <li><a href="#c-navbar">Escola</a></li>
+              <li><a href="#c-navbar">Conquistas</a></li>
+              <li><a href="#c-navbar">Transparência</a></li>
+              <li><a class="btn btn--primary" href="#c-navbar" style="width:100%">Seja patrocinador</a></li>
+            </ul>
+          </header>
+        </div>
+        <div style="padding:var(--space-4) var(--space-6)"><button class="ds-replay" type="button" id="demo-navbar-scroll">Alternar estado scrolled</button></div>
+      </div>
+      <p class="ds-rationale">o CTA de patrocínio mora na navbar — presente em todas as páginas, como pede o negócio. No topo a navbar é translúcida sobre o hero; ao rolar, ganha fundo quase-opaco e borda (transição de 200ms). No mobile o menu abre em bloco sob a barra, com o CTA em largura total no fim.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;header class="navbar" id="navbar"&gt;
+  &lt;a class="navbar__brand" href="/"&gt;&lt;span class="corte"&gt;&lt;/span&gt;Goetten BJJ&lt;/a&gt;
+  &lt;ul class="navbar__links"&gt;…&lt;/ul&gt;
+  &lt;a class="btn btn--primary btn--sm" href="/patrocinio"&gt;Seja patrocinador&lt;/a&gt;
+  &lt;button class="navbar__toggle" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu"&gt;…&lt;/button&gt;
+  &lt;ul class="navbar__menu-mobile" id="menu"&gt;…&lt;/ul&gt;
+&lt;/header&gt;
+&lt;script&gt;
+addEventListener("scroll", () =&gt;
+  navbar.classList.toggle("is-scrolled", scrollY &gt; 8), { passive: true });
+&lt;/script&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- TIERS -->
+    <div class="ds-block" id="c-tiers">
+      <h3><span class="corte" aria-hidden="true"></span>Níveis de patrocínio</h3>
+      <div class="ds-stage ds-stage--column">
+        <span class="ds-stage__label">tier table · BRIEFING.md §7</span>
+        <div class="tiers">
+          <div class="tier">
+            <h4 class="tier__name">Apoiador</h4>
+            <p class="tier__tax"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-parceria"/></svg> Apoio direto — para comércios e empresas locais de qualquer regime tributário.</p>
+            <ul class="tier__list">
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Logo no site e na página de parceiros</li>
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Menção nas redes sociais</li>
+              <li data-off><svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"/></svg> Logo em kimono e tatame</li>
+              <li data-off><svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"/></svg> Relatório de impacto dedicado</li>
+            </ul>
+            <button class="btn btn--secondary" type="button">Quero apoiar</button>
+          </div>
+          <div class="tier">
+            <h4 class="tier__name">Parceiro</h4>
+            <p class="tier__tax"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-parceria"/></svg> Visibilidade completa + eventos. Elegibilidade fiscal avaliada caso a caso.</p>
+            <ul class="tier__list">
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Tudo do Apoiador</li>
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Logo em kimono e tatame</li>
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Posts dedicados e convites para eventos</li>
+              <li data-off><svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"/></svg> Relatório de impacto dedicado</li>
+            </ul>
+            <button class="btn btn--secondary" type="button">Quero ser parceiro</button>
+          </div>
+          <div class="tier tier--featured">
+            <span class="badge badge--red tier__flag">Lei de Incentivo</span>
+            <h4 class="tier__name">Patrocinador Oficial</h4>
+            <p class="tier__tax"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-documento"/></svg> <span>Empresas <strong>Lucro Real</strong>: dedução no IR devido via Lei nº 11.438/2006 — projeto aprovado, conta vinculada.</span></p>
+            <ul class="tier__list">
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Tudo do Parceiro</li>
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Destaque institucional em todas as páginas</li>
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Relatório de impacto personalizado</li>
+              <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg> Presença em eventos oficiais</li>
+            </ul>
+            <button class="btn btn--primary" type="button">Falar com a associação</button>
+          </div>
+        </div>
+      </div>
+      <p class="ds-rationale">o tier destacado leva a borda vermelha 2px e a flag "Lei de Incentivo" — é o único cartão da página autorizado a dominar em vermelho. Benefícios ausentes ficam visíveis e riscados (com ícone ✕, não só cor) para a comparação ser honesta. Valores mínimos entram depois (pendência do BRIEFING).</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;div class="tiers"&gt;
+  &lt;div class="tier"&gt;…&lt;/div&gt;
+  &lt;div class="tier"&gt;…&lt;/div&gt;
+  &lt;div class="tier tier--featured"&gt;
+    &lt;span class="badge badge--red tier__flag"&gt;Lei de Incentivo&lt;/span&gt;
+    &lt;h3 class="tier__name"&gt;Patrocinador Oficial&lt;/h3&gt;
+    &lt;p class="tier__tax"&gt;Empresas Lucro Real: dedução no IR via Lei nº 11.438/2006.&lt;/p&gt;
+    &lt;ul class="tier__list"&gt;
+      &lt;li&gt;&lt;svg class="icon icon--sm"&gt;&lt;use href="#i-check"/&gt;&lt;/svg&gt; Relatório de impacto&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;a class="btn btn--primary" href="/contato?assunto=patrocinio"&gt;Falar com a associação&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- SECTION HEADER + BADGES -->
+    <div class="ds-block" id="c-secoes">
+      <h3><span class="corte" aria-hidden="true"></span>Section header &amp; badges</h3>
+      <div class="ds-stage ds-stage--column">
+        <span class="ds-stage__label">header de seção (este documento usa o componente real)</span>
+        <div class="section-header" style="margin-bottom:0">
+          <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>03 · Projeto social</p>
+          <h2 style="font-size:var(--text-h2)">Tatame aberto, futuro aberto</h2>
+          <span class="traco" aria-hidden="true"></span>
+          <p class="section-header__lead">Kicker numerado com o corte · título Oswald · traço de tinta · lead opcional.</p>
+        </div>
+      </div>
+      <div class="ds-stage">
+        <span class="ds-stage__label">badges — o corte em miniatura · faixas = cor funcional</span>
+        <span class="badge">Neutra</span>
+        <span class="badge badge--red">Lei de Incentivo</span>
+        <span class="badge badge--outline-red">Vagas abertas</span>
+        <span class="badge badge--belt is-branca">Branca</span>
+        <span class="badge badge--belt is-azul">Azul</span>
+        <span class="badge badge--belt is-roxa">Roxa</span>
+        <span class="badge badge--belt is-marrom">Marrom</span>
+        <span class="badge badge--belt is-preta">Preta</span>
+      </div>
+      <p class="ds-rationale">as cores de faixa são a única exceção à paleta: graduação é informação do esporte (um sistema de cor que existe fora da marca), não decoração. A faixa preta leva o filete vermelho interno — como a ponteira real da faixa.</p>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="ds-block" id="c-marquee">
+      <h3><span class="corte" aria-hidden="true"></span>Marquee de patrocinadores</h3>
+      <div class="ds-stage ds-stage--column" style="padding:0">
+        <span class="ds-stage__label">esteira contínua · pausa em hover · para com reduced-motion</span>
+        <div class="marquee" aria-label="Patrocinadores e parceiros">
+          <div class="marquee__track">
+            <span class="marquee__logo"><svg class="icon" aria-hidden="true"><use href="#i-escudo"/></svg> Empresa Alfa</span>
+            <span class="marquee__logo"><svg class="icon" aria-hidden="true"><use href="#i-parceria"/></svg> Grupo Beta</span>
+            <span class="marquee__logo"><svg class="icon" aria-hidden="true"><use href="#i-trofeu"/></svg> Gama Materiais</span>
+            <span class="marquee__logo"><svg class="icon" aria-hidden="true"><use href="#i-escudo"/></svg> Delta Log</span>
+            <span class="marquee__logo"><svg class="icon" aria-hidden="true"><use href="#i-parceria"/></svg> Épsilon Foods</span>
+            <span class="marquee__logo" aria-hidden="true"><svg class="icon"><use href="#i-escudo"/></svg> Empresa Alfa</span>
+            <span class="marquee__logo" aria-hidden="true"><svg class="icon"><use href="#i-parceria"/></svg> Grupo Beta</span>
+            <span class="marquee__logo" aria-hidden="true"><svg class="icon"><use href="#i-trofeu"/></svg> Gama Materiais</span>
+            <span class="marquee__logo" aria-hidden="true"><svg class="icon"><use href="#i-escudo"/></svg> Delta Log</span>
+            <span class="marquee__logo" aria-hidden="true"><svg class="icon"><use href="#i-parceria"/></svg> Épsilon Foods</span>
+          </div>
+        </div>
+      </div>
+      <p class="ds-rationale">a track duplica o conteúdo (segunda metade aria-hidden) e desliza -50% em loop linear de 28s — a única animação contínua do sistema, por ser uma esteira informativa, e ainda assim pausável em hover e desligada em reduced-motion. Logos reais entram em escala de cinza, coloridos em hover.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;div class="marquee" aria-label="Patrocinadores e parceiros"&gt;
+  &lt;div class="marquee__track"&gt;
+    &lt;img class="marquee__logo" src="/img/patrocinadores/alfa.svg" alt="Empresa Alfa"&gt;
+    …
+    &lt;!-- duplicar a sequência com aria-hidden="true" para o loop --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- ACCORDION -->
+    <div class="ds-block" id="c-accordion">
+      <h3><span class="corte" aria-hidden="true"></span>Acordeão (dúvidas frequentes)</h3>
+      <div class="ds-stage ds-stage--column">
+        <span class="ds-stage__label">um aberto por vez · teclado ok</span>
+        <div class="accordion" data-accordion>
+          <div class="accordion__item">
+            <h4 style="font-size:inherit;text-transform:none;letter-spacing:0;font-family:var(--font-body)"><button class="accordion__trigger" type="button" aria-expanded="true" aria-controls="acc-1">Minha empresa é do Simples. Posso patrocinar?<svg class="icon" aria-hidden="true"><use href="#i-mais"/></svg></button></h4>
+            <div class="accordion__panel" id="acc-1"><div>Pode — como Apoiador ou Parceiro, com todas as contrapartidas de visibilidade. A dedução no IR pela Lei nº 11.438/2006 vale só para empresas do Lucro Real, mas o impacto (e a associação da sua marca a ele) vale para todas.</div></div>
+          </div>
+          <div class="accordion__item">
+            <h4 style="font-size:inherit;text-transform:none;letter-spacing:0;font-family:var(--font-body)"><button class="accordion__trigger" type="button" aria-expanded="false" aria-controls="acc-2">Como funciona a dedução pela Lei de Incentivo ao Esporte?<svg class="icon" aria-hidden="true"><use href="#i-mais"/></svg></button></h4>
+            <div class="accordion__panel" id="acc-2" hidden><div>Sua empresa destina parte do IR devido (limite legal de 2%) ao nosso projeto aprovado pelo Ministério do Esporte, depositando na conta vinculada. O valor é abatido integralmente do imposto — e a prestação de contas é pública.</div></div>
+          </div>
+          <div class="accordion__item">
+            <h4 style="font-size:inherit;text-transform:none;letter-spacing:0;font-family:var(--font-body)"><button class="accordion__trigger" type="button" aria-expanded="false" aria-controls="acc-3">As aulas do projeto social são pagas?<svg class="icon" aria-hidden="true"><use href="#i-mais"/></svg></button></h4>
+            <div class="accordion__panel" id="acc-3" hidden><div>Não — o projeto social é 100% gratuito. As aulas particulares são a frente paga da escola e ajudam a sustentar o projeto.</div></div>
+          </div>
+        </div>
+      </div>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;div class="accordion" data-accordion&gt;
+  &lt;div class="accordion__item"&gt;
+    &lt;h3&gt;&lt;button class="accordion__trigger" aria-expanded="false" aria-controls="faq-1"&gt;
+      Pergunta &lt;svg class="icon"&gt;&lt;use href="#i-mais"/&gt;&lt;/svg&gt;
+    &lt;/button&gt;&lt;/h3&gt;
+    &lt;div class="accordion__panel" id="faq-1" hidden&gt;&lt;div&gt;Resposta.&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- WHATSAPP + FOOTER -->
+    <div class="ds-block" id="c-footer">
+      <h3><span class="corte" aria-hidden="true"></span>WhatsApp &amp; Footer</h3>
+      <div class="ds-stage">
+        <span class="ds-stage__label">canal paralelo ao formulário</span>
+        <a class="whatsapp-btn" href="#c-footer"><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> Chamar no WhatsApp</a>
+        <a class="whatsapp-btn" href="#c-footer"><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> Falar sobre patrocínio</a>
+      </div>
+      <div class="ds-stage ds-stage--column" style="padding:0">
+        <span class="ds-stage__label">footer institucional</span>
+        <footer class="footer">
+          <div class="footer__grid">
+            <div class="footer__brand">
+              <span class="hanko hanko--sm" aria-hidden="true">柔術</span>
+              <p style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:0.04em">Goetten Brazilian<br>Jiu-Jitsu</p>
+              <p style="font-size:var(--text-caption);color:var(--color-muted-dark);max-width:26ch">Associação sem fins lucrativos. Projeto esportivo aprovado pelo Ministério do Esporte.</p>
+            </div>
+            <nav aria-label="Mapa do site"><h6>Navegue</h6><ul>
+              <li><a href="#c-footer">Projeto social</a></li>
+              <li><a href="#c-footer">Escola de jiu-jitsu</a></li>
+              <li><a href="#c-footer">Conquistas</a></li>
+              <li><a href="#c-footer">Seja patrocinador</a></li>
+              <li><a href="#c-footer">Transparência</a></li>
+            </ul></nav>
+            <div><h6>Contato</h6><ul>
+              <li><a href="#c-footer"><svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp</a></li>
+              <li><a href="#c-footer"><svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px" aria-hidden="true"><use href="#i-instagram"/></svg> @curitibanosbjj</a></li>
+              <li><a href="#c-footer"><svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px" aria-hidden="true"><use href="#i-local"/></svg> Curitibanos · SC</a></li>
+            </ul></div>
+          </div>
+          <div class="footer__legal">
+            <span class="footer__cnpj">CNPJ 00.000.000/0001-00 · Associação Goetten de Jiu-Jitsu</span>
+            <span>© 2026 — Feito com disciplina.</span>
+          </div>
+        </footer>
+      </div>
+      <p class="ds-rationale">o verde #25D366 do ícone é a única cor de terceiro autorizada (marca registrada do WhatsApp); o botão em si permanece na paleta. O footer usa o preto puro — o único lugar além do lockup — para "aterrar" a página.</p>
+    </div>
+  </div>
+</section>
+<!-- =========================================================
+     7. ÍCONES
+     ========================================================= -->
+<section class="ds-section" id="icones">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>07 · Ícones</p>
+      <h2>Traço reto, canto vivo</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">SVGs autorais inline (sprite de <code>&lt;symbol&gt;</code>), grid 24px, traço 1.75, <code>stroke-linecap: square</code> e <code>stroke-linejoin: miter</code> — os cantos vivos ecoam a geometria do monograma. Cor herdada via <code>currentColor</code>. Tamanhos: 16 / 24 / 32.</p>
+    </div>
+    <div class="ds-icon-grid">
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-faixa"/></svg>faixa</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-medalha"/></svg>medalha</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-trofeu"/></svg>troféu</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-escudo"/></svg>escudo</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-parceria"/></svg>parceria</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-familia"/></svg>família</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-calendario"/></svg>calendário</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-local"/></svg>local</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-whatsapp"/></svg>whatsapp</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-instagram"/></svg>instagram</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-documento"/></svg>documento</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-seta"/></svg>seta</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-check"/></svg>check</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-x"/></svg>x</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-mais"/></svg>mais</div>
+      <div class="ds-icon-cell"><svg class="icon"><use href="#i-menu"/></svg>menu</div>
+    </div>
+    <div class="ds-note" style="margin-top:var(--space-8)"><b>Como criar um ícone novo:</b> viewBox 24×24, margem interna de 2px, traço único de 1.75 sem fill, cantos em miter, terminações square, o mínimo de pontos que comunica a forma. Desenhe primeiro em preto sobre branco; se funciona em 16px, está aprovado. Decorativo → <code>aria-hidden="true"</code>; informativo → acompanhado de texto ou <code>aria-label</code>.</div>
+  </div>
+</section>
+
+<!-- =========================================================
+     8. MOVIMENTO — catálogo com replay
+     ========================================================= -->
+<section class="ds-section" id="movimento">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>08 · Movimento</p>
+      <h2>Catálogo de gestos</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">Cada animação do sistema, ao vivo, com replay. Implementação: <code>IntersectionObserver</code> adiciona <code>.is-inked</code> uma única vez — sem biblioteca. Só <code>transform</code>, <code>opacity</code> e <code>clip-path</code>.</p>
+    </div>
+
+    <div style="display:grid;gap:var(--space-6);grid-template-columns:repeat(auto-fit,minmax(300px,1fr));">
+      <div class="ds-anim-card">
+        <div class="ds-anim-card__stage"><h3 class="ink-reveal is-inked" data-anim style="font-size:var(--text-h3)">Pincelada única</h3></div>
+        <div class="ds-anim-card__meta">
+          <dl><div><dt>classe</dt><dd>.ink-reveal</dd></div><div><dt>gatilho</dt><dd>scroll (once)</dd></div><div><dt>spec</dt><dd>900ms · --ease-brush</dd></div></dl>
+          <button class="ds-replay" type="button">↻ Replay</button>
+        </div>
+      </div>
+      <div class="ds-anim-card">
+        <div class="ds-anim-card__stage"><div style="width:200px"><p style="font-family:var(--font-display);font-weight:600;text-transform:uppercase;font-size:var(--text-h4)">Transforma</p><span class="traco traco-draw is-inked" data-anim></span></div></div>
+        <div class="ds-anim-card__meta">
+          <dl><div><dt>classe</dt><dd>.traco-draw</dd></div><div><dt>gatilho</dt><dd>scroll (once)</dd></div><div><dt>spec</dt><dd>900ms · --ease-brush · scaleX</dd></div></dl>
+          <button class="ds-replay" type="button">↻ Replay</button>
+        </div>
+      </div>
+      <div class="ds-anim-card">
+        <div class="ds-anim-card__stage"><span class="hanko stamp-in is-inked" data-anim>柔術</span></div>
+        <div class="ds-anim-card__meta">
+          <dl><div><dt>classe</dt><dd>.stamp-in</dd></div><div><dt>gatilho</dt><dd>scroll (once)</dd></div><div><dt>spec</dt><dd>350ms · --ease-strike · scale+rotate</dd></div></dl>
+          <button class="ds-replay" type="button">↻ Replay</button>
+        </div>
+      </div>
+      <div class="ds-anim-card">
+        <div class="ds-anim-card__stage"><p class="rise is-inked" data-anim style="font-size:var(--text-body-lg);max-width:24ch;text-align:center">Sobe 18px e assenta. Um gesto só.</p></div>
+        <div class="ds-anim-card__meta">
+          <dl><div><dt>classe</dt><dd>.rise</dd></div><div><dt>gatilho</dt><dd>scroll (once)</dd></div><div><dt>spec</dt><dd>600ms · --ease-strike</dd></div></dl>
+          <button class="ds-replay" type="button">↻ Replay</button>
+        </div>
+      </div>
+      <div class="ds-anim-card">
+        <div class="ds-anim-card__stage"><div class="stagger is-inked" data-anim style="display:flex;gap:var(--space-3)"><span class="badge">um</span><span class="badge">dois</span><span class="badge">três</span><span class="badge badge--red">quatro</span></div></div>
+        <div class="ds-anim-card__meta">
+          <dl><div><dt>classe</dt><dd>.stagger</dd></div><div><dt>gatilho</dt><dd>scroll (once)</dd></div><div><dt>spec</dt><dd>350ms + 70ms/filho</dd></div></dl>
+          <button class="ds-replay" type="button">↻ Replay</button>
+        </div>
+      </div>
+      <div class="ds-anim-card">
+        <div class="ds-anim-card__stage">
+          <svg class="draw-path is-inked" data-anim width="120" height="120" viewBox="0 0 120 120" aria-hidden="true" style="--path-len: 340">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--color-red)" stroke-width="5" stroke-linecap="round" transform="rotate(-80 60 60)"/>
+          </svg>
+        </div>
+        <div class="ds-anim-card__meta">
+          <dl><div><dt>classe</dt><dd>.draw-path (ensō)</dd></div><div><dt>gatilho</dt><dd>scroll (once)</dd></div><div><dt>spec</dt><dd>900ms · dashoffset</dd></div></dl>
+          <button class="ds-replay" type="button">↻ Replay</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Micro-interações &amp; performance</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Interação</th><th>Spec</th><th>Alternativa reduced-motion</th></tr></thead>
+        <tbody>
+          <tr><td>hover de botão</td><td>troca de cor · 200ms</td><td>mantida (troca de cor não é movimento)</td></tr>
+          <tr><td>press de botão</td><td>translateY(1px) scale(.99) · 100ms</td><td>mantida (feedback tátil essencial, deslocamento de 1px)</td></tr>
+          <tr><td>underline de link</td><td>scaleX 0→1 · 350ms · --ease-brush</td><td>sublinhado estático permanente</td></tr>
+          <tr><td>hover de card</td><td>translateY(-3px) + borda · 200ms</td><td>só a troca de borda</td></tr>
+          <tr><td>acordeão</td><td>rotação do + (45°) · 350ms; painel mostra/esconde</td><td>sem rotação; painel alterna direto</td></tr>
+          <tr><td>contador</td><td>900ms, ease-out cúbico, uma vez</td><td>número final imediato</td></tr>
+          <tr><td>marquee</td><td>linear 28s, pausa em hover</td><td>parado (lista estática rolável)</td></tr>
+        </tbody>
+      </table></div>
+      <p class="ds-rationale">orçamento: nenhuma animação toca layout (width/height/top/left proibidos); will-change não é usado — os compositores modernos promovem transform/opacity sozinhos e will-change permanente gasta memória; observers usam once:true e se desconectam (cleanup); em mobile nada é desligado porque nada custa — a decisão cara (fundo animado contínuo) já foi recusada na regra "o papel fica parado".</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     9. FUNDOS DE SEÇÃO
+     ========================================================= -->
+<section class="ds-section" id="fundos">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>09 · Fundos</p>
+      <h2>Dojô e papel</h2>
+      <span class="traco" aria-hidden="true"></span>
+      <p class="section-header__lead">Quatro variantes cobrem o site inteiro. A alternância preto ↔ papel marca o ritmo da página: impacto, leitura, impacto.</p>
+    </div>
+    <div style="display:grid;gap:var(--space-6);grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <figure style="margin:0;border:var(--border-w) solid var(--border)">
+        <div class="grain" style="height:150px;background:var(--color-black);display:grid;place-content:center;color:var(--text-muted);font-size:var(--text-caption)">.bg-dojo — preto + grão 5%</div>
+        <figcaption style="padding:var(--space-3) var(--space-4);font-size:var(--text-caption);color:var(--text-muted);border-top:var(--border-w) solid var(--border)">Hero, conquistas, patrocínio. Custo: 1 camada estática. Fallback: preto chapado.</figcaption>
+      </figure>
+      <figure style="margin:0;border:var(--border-w) solid var(--border)">
+        <div class="grain" style="height:150px;background:var(--color-paper);display:grid;place-content:center;color:var(--color-muted-light);font-size:var(--text-caption)">.bg-papel — washi + grão 5%</div>
+        <figcaption style="padding:var(--space-3) var(--space-4);font-size:var(--text-caption);color:var(--text-muted);border-top:var(--border-w) solid var(--border)">Institucional, escola, formulário (via .theme-paper). Fallback: papel chapado.</figcaption>
+      </figure>
+      <figure style="margin:0;border:var(--border-w) solid var(--border)">
+        <div style="height:150px;background:linear-gradient(114deg, var(--color-black) 0 62%, var(--color-red) 62.2% 78%, var(--color-black) 78.2%);display:grid;place-content:center;color:var(--color-white);font-size:var(--text-caption)">.bg-corte — a diagonal em faixa</div>
+        <figcaption style="padding:var(--space-3) var(--space-4);font-size:var(--text-caption);color:var(--text-muted);border-top:var(--border-w) solid var(--border)">Exclusivo da chamada de patrocínio na home (o único fundo onde o vermelho domina). Custo: gradiente puro. Fallback: ele mesmo — é CSS estático.</figcaption>
+      </figure>
+      <figure style="margin:0;border:var(--border-w) solid var(--border)">
+        <div style="height:150px;background:linear-gradient(rgba(10,10,10,.78), rgba(10,10,10,.92)), repeating-linear-gradient(45deg, #1A1A1A 0 14px, #161616 14px 28px);display:grid;place-content:center;color:var(--color-muted-dark);font-size:var(--text-caption)">.bg-foto — fotografia + véu de tinta</div>
+        <figcaption style="padding:var(--space-3) var(--space-4);font-size:var(--text-caption);color:var(--text-muted);border-top:var(--border-w) solid var(--border)">Foto real de treino sob overlay 78–92%. Texto por cima exige o véu ≥ 78% (mantém o contraste AAA medido do branco). Fallback: .bg-dojo.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     10. PADRÕES TRANSVERSAIS
+     ========================================================= -->
+<section class="ds-section" id="transversais">
+  <div class="ds-section__inner">
+    <div class="section-header">
+      <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>10 · Transversais</p>
+      <h2>O que vale em todo lugar</h2>
+      <span class="traco" aria-hidden="true"></span>
+    </div>
+
+    <div class="ds-block" style="margin-top:0">
+      <h3><span class="corte" aria-hidden="true"></span>Acessibilidade</h3>
+      <ul style="font-size:var(--text-body-sm);display:flex;flex-direction:column;gap:var(--space-2);padding-left:1.2em;max-width:70ch;">
+        <li>Foco visível universal: outline 2px vermelho + offset 2px (<code>:focus-visible</code>).</li>
+        <li>Contraste: só combinações da tabela da seção Cor; qualquer par novo precisa de ratio calculado antes de entrar.</li>
+        <li>Toda foto tem <code>alt</code> descritivo — com fotos reais de alunos isso é inegociável ("Aluno do projeto no pódio do Catarinense", não "imagem1").</li>
+        <li>Headings sem pular nível; um <code>h1</code> por página; navegação por teclado testada em cada componente (acordeão, menu, formulário).</li>
+        <li>Estado nunca é só cor: erro = vermelho + ícone + mensagem; benefício ausente = ✕ + texto esmaecido.</li>
+        <li><code>prefers-reduced-motion</code> com alternativa por animação (tabela na seção Movimento).</li>
+      </ul>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Responsividade &amp; estados de página</h3>
+      <ul style="font-size:var(--text-body-sm);display:flex;flex-direction:column;gap:var(--space-2);padding-left:1.2em;max-width:70ch;">
+        <li>Mobile-first, 320px→2560px. Grids com <code>auto-fit/minmax</code> colapsam sozinhos; a navbar troca para menu em bloco &lt;768px; o kanji-marca d'água do hero encolhe com clamp e nunca cria scroll horizontal (<code>overflow:hidden</code> no hero).</li>
+        <li>Nada "desaparece" no mobile exceto os links da navbar (que migram para o menu) — conteúdo é o mesmo em qualquer viewport.</li>
+        <li><strong>Loading</strong>: botão com <code>.btn--loading</code> + <code>aria-busy</code>; listas usam skeleton na cor <code>--surface-2</code>.</li>
+        <li><strong>Vazio</strong>: ícone da grade + frase + ação ("Nenhuma conquista cadastrada ainda — volte após o próximo campeonato").</li>
+        <li><strong>Erro de envio</strong>: mensagem inline sobre o formulário + WhatsApp como caminho alternativo imediato.</li>
+        <li><strong>404</strong>: fundo .bg-dojo, hanko, "Essa página bateu e não voltou." + link para a home.</li>
+      </ul>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Do's &amp; don'ts</h3>
+      <div class="ds-dodont">
+        <figure data-kind="dont" style="margin:0"><div><p style="color:var(--color-red);font-size:var(--text-body-sm)">Todo este parágrafo de apresentação da associação escrito em vermelho sobre o fundo escuro, cansando o olho e desvalorizando a cor.</p></div><figcaption>vermelho como texto corrido (4.22:1 — reprovado)</figcaption></figure>
+        <figure data-kind="do" style="margin:0"><div><p style="font-size:var(--text-body-sm)">Parágrafo em branco/muted; o vermelho aparece uma vez: <a class="link-ink" href="#transversais">no link que importa</a>.</p></div><figcaption>vermelho gasto onde converte</figcaption></figure>
+        <figure data-kind="dont" style="margin:0"><div><p style="font-family:var(--font-display);text-transform:uppercase;font-size:var(--text-body-sm);letter-spacing:0.02em">A condensada de impacto usada num parágrafo inteiro fica gritada, apertada e ilegível — ela foi desenhada para meia dúzia de palavras.</p></div><figcaption>display em texto corrido</figcaption></figure>
+        <figure data-kind="do" style="margin:0"><div><p style="font-family:var(--font-display);text-transform:uppercase;font-weight:600;font-size:var(--text-h4)">O grito é curto.</p><p style="font-size:var(--text-body-sm)">A conversa é em Inter, com 70ch de medida e 1.6 de entrelinha.</p></div><figcaption>cada voz no seu papel</figcaption></figure>
+        <figure data-kind="dont" style="margin:0"><div><div style="display:flex;gap:var(--space-3)"><span class="badge" style="clip-path:none;border-radius:999px;background:#4A5FC7;border-color:transparent;color:#fff">Confiável</span><span class="badge" style="clip-path:none;border-radius:999px;background:#7A5FC7;border-color:transparent;color:#fff">Moderno</span></div><p style="font-size:var(--text-caption);color:var(--text-muted)">Pills azul-corporativas arredondadas "para parecer sério".</p></div><figcaption>suavizar a marca para agradar terno</figcaption></figure>
+        <figure data-kind="do" style="margin:0"><div><div style="display:flex;gap:var(--space-3)"><span class="badge badge--red">Lei de Incentivo</span><span class="badge">Projeto aprovado</span></div><p style="font-size:var(--text-caption);color:var(--text-muted)">O corte angular e a paleta da casa — a seriedade está no dado, não no azul.</p></div><figcaption>institucional com a cara do tatame</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Por que este sistema parece diferente</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Decisão</th><th>Convenção que ela recusa</th></tr></thead>
+        <tbody>
+          <tr><td>Revelações como <strong>pincelada única</strong> com clip-path inclinado no ângulo do corte</td><td>o fade-up genérico de todo template</td></tr>
+          <tr><td><strong>Hanko 柔術</strong> como assinatura recorrente, sempre a -3°</td><td>ornamentos aleatórios sem história; a marca "perfeitinha" sem gesto humano</td></tr>
+          <tr><td><strong>Traço de tinta</strong> via mask reutilizável em qualquer cor</td><td>a linha reta de 2px como único divisor do universo</td></tr>
+          <tr><td>Canto reto por padrão, raio só em controle de formulário</td><td>rounded-2xl em tudo</td></tr>
+          <tr><td>Papel washi <code>#F7F5F2</code> como tema claro</td><td>o branco estéril #FFF de site corporativo</td></tr>
+          <tr><td>Faixa de graduação como <strong>arquitetura do card</strong> de professor</td><td>foto + nome + cargo iguais aos de qualquer "nossa equipe"</td></tr>
+          <tr><td>A tinta seca uma vez: nada re-anima ao rolar de volta</td><td>páginas que piscam a cada scroll</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="ds-block">
+      <h3><span class="corte" aria-hidden="true"></span>Changelog</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th>Versão</th><th>Data</th><th>Mudanças</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1.0</strong></td><td>2026-08-29</td><td>Sistema inicial: tokens, cor com contrastes medidos, tipografia Oswald+Inter, 13 componentes, 16 ícones, catálogo de movimento sumi-ê, 4 fundos, padrões transversais.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="ds-rationale">pendências conhecidas: (1) conferir o hex do vermelho no vetor original; (2) identificar/licenciar a fonte oficial do wordmark; (3) valores mínimos dos níveis de patrocínio; (4) reconciliar o nome do handle @curitibanosbjj com a marca Goetten.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* --- Revelações por scroll: .is-inked entra uma vez ("a tinta seca") --- */
+  var revealables = document.querySelectorAll(".ink-reveal:not(.is-inked), .rise:not(.is-inked), .stamp-in:not(.is-inked), .traco-draw:not(.is-inked), .stagger:not(.is-inked), .draw-path:not(.is-inked)");
+  if ("IntersectionObserver" in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("is-inked"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.25 });
+    revealables.forEach(function (el) { io.observe(el); });
+  } else {
+    revealables.forEach(function (el) { el.classList.add("is-inked"); });
+  }
+
+  /* --- Scrollspy da navegação lateral --- */
+  var navLinks = document.querySelectorAll(".ds-nav ol a");
+  var sections = Array.prototype.map.call(navLinks, function (a) {
+    return document.querySelector(a.getAttribute("href"));
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      navLinks.forEach(function (a) {
+        a.classList.toggle("is-active", a.getAttribute("href") === "#" + e.target.id);
+      });
+    });
+  }, { rootMargin: "-30% 0px -60% 0px" });
+  sections.forEach(function (s) { if (s) spy.observe(s); });
+
+  /* --- Botões de copiar código --- */
+  document.querySelectorAll(".ds-code__copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var code = btn.parentElement.querySelector("code");
+      var text = code ? code.textContent : "";
+      function done() {
+        btn.textContent = "Copiado ✓"; btn.classList.add("is-copied");
+        setTimeout(function () { btn.textContent = "Copiar"; btn.classList.remove("is-copied"); }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta); done();
+      }
+    });
+  });
+
+  /* --- Replay do catálogo de animações --- */
+  document.querySelectorAll(".ds-replay:not(#demo-navbar-scroll)").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var card = btn.closest(".ds-anim-card");
+      if (!card) return;
+      var el = card.querySelector("[data-anim]");
+      if (!el) return;
+      el.classList.remove("is-inked");
+      void el.offsetWidth; /* reflow para reiniciar a animação */
+      el.classList.add("is-inked");
+    });
+  });
+
+  /* --- Demo: estado scrolled da navbar --- */
+  var navScrollBtn = document.getElementById("demo-navbar-scroll");
+  var demoNavbar = document.getElementById("demo-navbar");
+  if (navScrollBtn && demoNavbar) {
+    navScrollBtn.addEventListener("click", function () {
+      demoNavbar.classList.toggle("is-scrolled");
+    });
+  }
+
+  /* --- Navbar mobile (demo) --- */
+  var toggle = document.querySelector(".navbar__toggle");
+  if (toggle) {
+    toggle.addEventListener("click", function () {
+      var menu = document.getElementById(toggle.getAttribute("aria-controls"));
+      var open = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!open));
+      toggle.setAttribute("aria-label", open ? "Abrir menu" : "Fechar menu");
+      if (menu) menu.classList.toggle("is-open", !open);
+    });
+  }
+
+  /* --- Acordeão: um aberto por vez, acessível por teclado nativamente (button) --- */
+  document.querySelectorAll("[data-accordion]").forEach(function (acc) {
+    var triggers = acc.querySelectorAll(".accordion__trigger");
+    triggers.forEach(function (trg) {
+      trg.addEventListener("click", function () {
+        var expanded = trg.getAttribute("aria-expanded") === "true";
+        triggers.forEach(function (other) {
+          other.setAttribute("aria-expanded", "false");
+          var p = document.getElementById(other.getAttribute("aria-controls"));
+          if (p) p.hidden = true;
+        });
+        if (!expanded) {
+          trg.setAttribute("aria-expanded", "true");
+          var panel = document.getElementById(trg.getAttribute("aria-controls"));
+          if (panel) panel.hidden = false;
+        }
+      });
+    });
+  });
+
+  /* --- Contadores de estatística: contam uma vez ao entrar na viewport --- */
+  document.querySelectorAll("[data-count]").forEach(function (el) {
+    var end = parseInt(el.dataset.count, 10);
+    if (reduceMotion || !("IntersectionObserver" in window)) { el.textContent = end; return; }
+    var cio = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      cio.disconnect();
+      var t0 = performance.now();
+      function tick(t) {
+        var p = Math.min((t - t0) / 900, 1);
+        var k = 1 - Math.pow(1 - p, 3); /* ease-out cúbico: o golpe assenta */
+        el.textContent = Math.round(end * k);
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, { threshold: 0.6 });
+    cio.observe(el);
+  });
+})();
+</script>
+</body>
+</html>

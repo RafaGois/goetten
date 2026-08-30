@@ -1,0 +1,863 @@
+/* ============================================================
+   GOETTEN JIU-JITSU — DESIGN SYSTEM v1.0
+   Fonte de identidade: references/Logo-goetten-jiu-jitsu.svg
+   Paleta: preto · branco · vermelho. Linguagem: tinta sumi-ê.
+
+   Este arquivo é a implementação do sistema documentado em
+   docs/design_system.html (blocos 1–5). A documentação é a fonte:
+   ao mudar um token ou componente aqui, atualize-a também.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. TOKENS
+   ------------------------------------------------------------ */
+:root {
+  /* --- Cor · marca ---
+     Valores extraídos de references/Logo-goetten-jiu-jitsu.svg (conta-gotas
+     no vetor, não estimados): vermelho #EC1C24, preto #030303, branco #FFF.
+
+     O vermelho da marca é claro demais para carregar texto: branco sobre
+     #EC1C24 dá 4.41:1, abaixo do mínimo AA (4.5:1). Por isso o sistema tem
+     DOIS vermelhos, e a diferença entre eles é de 2% de brilho —
+     imperceptível lado a lado, decisiva no contraste:
+       --color-red      → grafismo (corte, traço, hanko, bordas). Sem texto.
+       --color-red-ink  → superfícies preenchidas COM texto (botões).
+     O preto de produção é #0A0A0A, não o #030303 da marca, para dar
+     profundidade às superfícies empilhadas; o #030303 fica no lockup e
+     no footer, onde o logo precisa assentar sem emenda visível. */
+  --color-black-pure: #030303; /* preto da marca — lockup e footer */
+  --color-black:      #0A0A0A;
+  --color-white:      #FFFFFF;
+  --color-paper:      #F7F5F2; /* "papel washi" — fundo claro quente, não branco estéril */
+  --color-red:        #EC1C24; /* MARCA — grafismo apenas, nunca sob texto */
+  --color-red-ink:    #E71B23; /* preenchimento com texto branco (4.59:1 AA) */
+  --color-red-dark:   #B3151B; /* vermelho-texto sobre fundos claros (6.91:1 AA) */
+  --color-red-light:  #FF5A5F; /* vermelho-texto sobre fundos escuros (6.49:1 AA) */
+
+  /* --- Cor · neutros derivados do preto --- */
+  --color-surface-dark:   #141414; /* cartão sobre preto */
+  --color-surface-dark-2: #1F1F1F; /* segundo nível de empilhamento */
+  --color-border-dark:    #2B2B2B;
+  --color-muted-dark:     #A3A3A3; /* texto secundário sobre preto (7.85:1 AAA) */
+  --color-border-light:   #E4E1DC;
+  --color-muted-light:    #5C5C5C; /* texto secundário sobre papel (6.14:1 AA) */
+
+  /* --- Cor · feedback (harmonizada, uso com ícone + texto, nunca só cor) --- */
+  --color-success:        #1E7A3C; /* sobre claro 5.38:1 AA */
+  --color-success-dark-bg:#2E9E52; /* sobre preto 5.78:1 AA */
+  --color-warning:        #8A6D00; /* texto sobre claro 4.92:1 AA */
+  --color-warning-dark-bg:#E5A800; /* sobre preto 9.36:1 AAA */
+  --color-error:          var(--color-red-dark); /* erro herda a marca */
+  --color-error-dark-bg:  var(--color-red-light);
+  --color-info:           #0E63B3; /* sobre claro 6.08:1 AA */
+  --color-info-dark-bg:   #4DA3E8; /* sobre preto 7.28:1 AAA */
+
+  /* --- Cor · papéis semânticos (contexto escuro é o default da marca) --- */
+  --bg:            var(--color-black);
+  --surface:       var(--color-surface-dark);
+  --surface-2:     var(--color-surface-dark-2);
+  --border:        var(--color-border-dark);
+  --text:          var(--color-white);
+  --text-muted:    var(--color-muted-dark);
+  --accent:        var(--color-red);
+  --accent-text:   var(--color-red-light);
+
+  /* --- Tipografia ---
+     Display: Oswald (substituta declarada da condensada do wordmark).
+     Corpo: Inter. Kanji decorativo: serifada japonesa do sistema. */
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-kanji: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+
+  /* Escala fluida: clamp(min, preferido, max) — min medido em 360px,
+     max em 1280px; preferido = intercepto rem + coeficiente vw. */
+  --text-display: clamp(2.75rem, 1.772rem + 4.35vw, 5.25rem);
+  --text-h1: clamp(2.25rem, 1.76rem + 2.17vw, 3.5rem);
+  --text-h2: clamp(1.75rem, 1.457rem + 1.3vw, 2.5rem);
+  --text-h3: clamp(1.375rem, 1.228rem + 0.65vw, 1.75rem);
+  --text-h4: 1.25rem;
+  --text-h5: 1.125rem;
+  --text-h6: 1rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.8125rem;
+  --text-overline: 0.75rem;
+
+  /* --- Espaçamento: base 4px, escala nomeada --- */
+  --space-1: 0.25rem;  /*  4px */
+  --space-2: 0.5rem;   /*  8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  --space-24: 6rem;    /* 96px */
+  --space-32: 8rem;    /* 128px */
+
+  /* --- Layout --- */
+  --container: 72rem;       /* 1152px */
+  --container-narrow: 44rem;/* leitura: ~70ch em Inter 1rem */
+  --gutter: var(--space-6);
+  /* breakpoints (referência p/ media queries): 640 / 768 / 1024 / 1280 */
+
+  /* --- Forma ---
+     Racional: a marca é angular; raio zero é o padrão. Raio pequeno
+     só em controles de formulário (afford de toque), nunca em cartões. */
+  --radius-none: 0;
+  --radius-control: 2px;
+  --radius-full: 999px; /* exclusivo de indicadores/pills de status */
+  --border-w: 1px;
+  --border-w-strong: 2px;
+
+  /* --- Elevação ---
+     Em fundo preto, sombra é invisível: elevação = superfície + borda.
+     Em papel, sombra-tinta suave (nunca cinza-azulada). */
+  --shadow-paper-1: 0 1px 2px rgba(10,10,10,.06), 0 4px 12px rgba(10,10,10,.08);
+  --shadow-paper-2: 0 2px 4px rgba(10,10,10,.08), 0 12px 32px rgba(10,10,10,.12);
+
+  /* --- Movimento: "a pincelada" ---
+     Ataque rápido, assentamento suave — como tinta absorvida pelo papel. */
+  --dur-instant: 100ms;
+  --dur-fast: 200ms;
+  --dur-base: 350ms;
+  --dur-slow: 600ms;
+  --dur-brush: 900ms;
+  --ease-strike: cubic-bezier(0.22, 1, 0.36, 1);   /* golpe: entra rápido, assenta */
+  --ease-breath: cubic-bezier(0.65, 0, 0.35, 1);   /* respiração: simétrico, p/ loops */
+  --ease-brush:  cubic-bezier(0.7, 0, 0.16, 1);    /* pincelada: arranca com peso */
+  --stagger: 70ms;
+
+  /* --- z-index nomeado --- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-toast: 1100;
+
+  /* --- Opacidade semântica --- */
+  --alpha-hover: 0.9;      /* estado hover de sólidos */
+  --alpha-secondary: 0.72; /* conteúdo de apoio */
+  --alpha-disabled: 0.45;  /* controles desabilitados */
+  --alpha-hairline: 0.28;  /* linhas decorativas */
+  --alpha-tint: 0.12;      /* lavagens de cor (tinta diluída) */
+  --alpha-grain: 0.05;     /* grão de papel */
+}
+
+/* Contexto claro: seções de leitura longa trocam os papéis semânticos */
+.theme-paper {
+  --bg: var(--color-paper);
+  --surface: var(--color-white);
+  --surface-2: #EFECE7;
+  --border: var(--color-border-light);
+  --text: var(--color-black);
+  --text-muted: var(--color-muted-light);
+  --accent: var(--color-red);
+  --accent-text: var(--color-red-dark);
+}
+
+/* ------------------------------------------------------------
+   2. RESET + BASE
+   ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1,h2,h3,h4 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  font-weight: 600;
+  text-wrap: balance;
+}
+h1 { font-size: var(--text-h1); font-weight: 700; }
+h2 { font-size: var(--text-h2); }
+h3 { font-size: var(--text-h3); }
+h4 { font-size: var(--text-h4); }
+h5 { font-size: var(--text-h5); font-weight: 600; line-height: 1.3; }
+h6 {
+  font-size: var(--text-overline); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--text-muted); line-height: 1.3;
+}
+p { max-width: 70ch; }
+a { color: inherit; }
+::selection { background: var(--color-red-ink); color: var(--color-white); }
+:focus-visible {
+  outline: var(--border-w-strong) solid var(--color-red);
+  outline-offset: 2px;
+}
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* Grão de papel — variante de fundo reutilizável (custo: 1 camada de
+   composição; fallback: sem o pseudo-elemento nada quebra) */
+.grain { position: relative; isolation: isolate; }
+.grain::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  opacity: var(--alpha-grain);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------
+   3. ELEMENTOS-ASSINATURA (tinta sumi-ê)
+   ------------------------------------------------------------ */
+
+/* 3a. O TRAÇO — pincelada de tinta usada como sublinhado/divisor.
+   Forma via mask (a cor vem de background-color, então funciona
+   em vermelho, branco ou preto). Revela com scaleX origem esquerda:
+   o traço é "puxado" como um pincel. */
+.traco {
+  display: block; height: 10px; width: 100%; border: 0;
+  background-color: var(--accent);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+}
+.traco--fino { height: 6px; }
+.traco--texto { color: currentColor; background-color: currentColor; }
+
+/* 3b. O CARIMBO (hanko) — selo vermelho com o kanji 柔術.
+   Sempre levemente rotacionado: carimbo de verdade nunca sai reto. */
+.hanko {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 3.5rem; height: 3.5rem;
+  background: var(--color-red-ink); color: var(--color-white);
+  font-family: var(--font-kanji); font-weight: 700;
+  font-size: 1.05rem; line-height: 1.05;
+  text-align: center; writing-mode: vertical-rl;
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  box-shadow: inset 0 0 0 2px var(--color-red-ink), inset 0 0 0 3px rgba(255,255,255,.55);
+  user-select: none;
+}
+.hanko--sm { width: 2.5rem; height: 2.5rem; font-size: 0.8rem; }
+
+/* 3c. O CORTE — a diagonal vermelha do monograma como vocabulário.
+   Ângulo canônico: 24°. Usado em badges, faixas de seção e divisores. */
+.corte {
+  display: inline-block; width: 3rem; height: 0.875rem;
+  background: var(--color-red);
+  clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%);
+}
+
+/* ------------------------------------------------------------
+   4. ANIMAÇÕES DO SISTEMA
+   ------------------------------------------------------------ */
+
+/* Pincelada de revelação: o elemento surge como um traço único,
+   varrendo da esquerda com leve inclinação (o ângulo do corte). */
+/* Repouso é só opacity: o clip-path inicial fica dentro da @keyframes.
+   Um elemento recortado para fora da própria caixa tem área visível zero
+   e o IntersectionObserver nunca o considera visível — ele jamais seria
+   revelado. opacity: 0 esconde sem alterar a caixa. */
+.ink-reveal { opacity: 0; }
+.ink-reveal.is-inked {
+  animation: ink-sweep var(--dur-brush) var(--ease-brush) forwards;
+}
+@keyframes ink-sweep {
+  from { clip-path: polygon(-8% 0, -2% 0, -8% 100%, -14% 100%); opacity: 1; }
+  to   { clip-path: polygon(0% 0, 114% 0, 108% 100%, 0% 100%); opacity: 1; }
+}
+
+/* Entrada padrão: um gesto só — sobe e assenta. */
+.rise { opacity: 0; transform: translateY(18px); }
+.rise.is-inked {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-slow) var(--ease-strike),
+              transform var(--dur-slow) var(--ease-strike);
+}
+
+/* Carimbada do hanko: pressiona, afunda, assenta torto. */
+.stamp-in { opacity: 0; }
+.stamp-in.is-inked { animation: stamp var(--dur-base) var(--ease-strike) forwards; }
+@keyframes stamp {
+  0%   { opacity: 0; transform: scale(1.5) rotate(-7deg); }
+  55%  { opacity: 1; transform: scale(0.94) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-3deg); }
+}
+
+/* Traço que se desenha (sublinhado do título).
+   Dispara pelo próprio gatilho OU pelo do ancestral: com scaleX(0) sua
+   largura é 0, então depender só do observer é frágil. Dentro de um
+   título revelado, o traço acompanha o pai. */
+.traco-draw { transform: scaleX(0); transform-origin: left center; }
+.traco-draw.is-inked,
+.is-inked .traco-draw {
+  transform: scaleX(1);
+  transition: transform var(--dur-brush) var(--ease-brush);
+}
+
+/* Grupo com stagger: filhos entram em sequência de golpes curtos */
+.stagger > * { opacity: 0; transform: translateY(14px); }
+.stagger.is-inked > * {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-base) var(--ease-strike),
+              transform var(--dur-base) var(--ease-strike);
+}
+.stagger.is-inked > *:nth-child(2) { transition-delay: calc(var(--stagger) * 1); }
+.stagger.is-inked > *:nth-child(3) { transition-delay: calc(var(--stagger) * 2); }
+.stagger.is-inked > *:nth-child(4) { transition-delay: calc(var(--stagger) * 3); }
+.stagger.is-inked > *:nth-child(5) { transition-delay: calc(var(--stagger) * 4); }
+.stagger.is-inked > *:nth-child(6) { transition-delay: calc(var(--stagger) * 5); }
+
+/* Linha SVG que se desenha (dashoffset) */
+.draw-path path, .draw-path circle {
+  stroke-dasharray: var(--path-len, 600);
+  stroke-dashoffset: var(--path-len, 600);
+}
+.draw-path.is-inked path, .draw-path.is-inked circle {
+  animation: draw var(--dur-brush) var(--ease-brush) forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* Reduced motion: a alternativa de CADA animação é "estado final,
+   sem deslocamento" — nunca conteúdo faltando. */
+@media (prefers-reduced-motion: reduce) {
+  .ink-reveal, .rise, .stamp-in, .stagger > * { opacity: 1 !important; transform: none !important; clip-path: none !important; animation: none !important; transition: none !important; }
+  .stamp-in { transform: rotate(-3deg) !important; }
+  .traco-draw, .is-inked .traco-draw { transform: scaleX(1) !important; transition: none !important; }
+  .draw-path path, .draw-path circle { stroke-dashoffset: 0 !important; animation: none !important; }
+  .marquee__track { animation: none !important; }
+}
+
+/* ------------------------------------------------------------
+   5. COMPONENTES DO PRODUTO (classes que o site final usa — BEM)
+   ------------------------------------------------------------ */
+
+/* --- Button --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-display); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  font-size: var(--text-body-sm);
+  min-height: 48px; padding: 0 var(--space-6);
+  border: var(--border-w-strong) solid transparent;
+  border-radius: var(--radius-none);
+  background: none; cursor: pointer; text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-strike),
+              color var(--dur-fast) var(--ease-strike),
+              border-color var(--dur-fast) var(--ease-strike),
+              transform var(--dur-instant) var(--ease-strike);
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn:disabled { opacity: var(--alpha-disabled); cursor: not-allowed; transform: none; }
+
+.btn--primary { background: var(--color-red-ink); border-color: var(--color-red-ink); color: var(--color-white); }
+.btn--primary:hover:not(:disabled) { background: var(--color-red-dark); border-color: var(--color-red-dark); }
+
+.btn--secondary { border-color: var(--text); color: var(--text); }
+.btn--secondary:hover:not(:disabled) { background: var(--text); color: var(--bg); }
+
+.btn--ghost { color: var(--text); }
+.btn--ghost:hover:not(:disabled) { background: color-mix(in srgb, currentColor 12%, transparent); }
+
+.btn--sm { min-height: 40px; padding: 0 var(--space-4); font-size: var(--text-caption); }
+.btn--lg { min-height: 56px; padding: 0 var(--space-8); font-size: var(--text-body); }
+
+.btn--loading { position: relative; color: transparent !important; pointer-events: none; }
+.btn--loading::after {
+  content: ""; position: absolute; width: 1.1em; height: 1.1em;
+  border: 2px solid rgba(255,255,255,.4); border-top-color: #fff;
+  border-radius: var(--radius-full);
+  animation: spin 700ms linear infinite;
+}
+.btn--secondary.btn--loading::after { border-color: color-mix(in srgb, currentColor 40%, transparent); border-top-color: var(--text); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Link com sublinhado de tinta */
+.link-ink {
+  position: relative; display: inline-block;
+  color: var(--accent-text); text-decoration: none; font-weight: 500;
+  padding-bottom: 2px;
+}
+.link-ink::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 5px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'><path d='M2 9 C 30 4, 70 11, 110 7 S 190 3, 235 8 S 285 6, 298 8 L 298 10 C 260 14, 210 9, 160 11 S 60 13, 20 11 L 2 11 Z' fill='black'/></svg>") no-repeat center / 100% 100%;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-brush);
+}
+.link-ink:hover::after, .link-ink:focus-visible::after { transform: scaleX(1); }
+
+/* --- Field (input/textarea/select/checkbox/radio) --- */
+.field { display: flex; flex-direction: column; gap: var(--space-2); max-width: 28rem; }
+.field__label { font-size: var(--text-body-sm); font-weight: 600; letter-spacing: 0.01em; }
+.field__label abbr { color: var(--accent-text); text-decoration: none; }
+.field__control {
+  min-height: 48px; padding: var(--space-3) var(--space-4);
+  background: var(--surface); color: var(--text);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-control);
+  transition: border-color var(--dur-fast) var(--ease-strike);
+}
+.field__control::placeholder { color: var(--text-muted); }
+.field__control:hover { border-color: var(--text-muted); }
+.field__control:focus { outline: none; border-color: var(--color-red); box-shadow: 0 0 0 1px var(--color-red); }
+.field__control:disabled { opacity: var(--alpha-disabled); cursor: not-allowed; }
+textarea.field__control { min-height: 120px; resize: vertical; }
+select.field__control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23A3A3A3' stroke-width='2'/></svg>");
+  background-repeat: no-repeat; background-position: right var(--space-4) center;
+  padding-right: var(--space-8);
+}
+.field__helper { font-size: var(--text-caption); color: var(--text-muted); }
+.field--error .field__control { border-color: var(--color-error); box-shadow: 0 0 0 1px var(--color-error); }
+.field__error {
+  display: flex; gap: var(--space-1); align-items: center;
+  font-size: var(--text-caption); font-weight: 500;
+  color: var(--accent-text);
+}
+.check { display: flex; gap: var(--space-3); align-items: flex-start; cursor: pointer; max-width: 34rem; }
+.check input {
+  appearance: none; flex: none; width: 20px; height: 20px; margin-top: 2px;
+  border: var(--border-w-strong) solid var(--text-muted);
+  border-radius: var(--radius-control); cursor: pointer;
+  display: grid; place-content: center;
+  transition: border-color var(--dur-fast), background-color var(--dur-fast);
+}
+.check input[type="radio"] { border-radius: var(--radius-full); }
+.check input:checked { background: var(--color-red); border-color: var(--color-red); }
+.check input[type="checkbox"]:checked::before {
+  content: ""; width: 10px; height: 10px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><path d='M1 5.5 4 8.5 9 1.5' fill='none' stroke='white' stroke-width='2'/></svg>") center / contain no-repeat;
+}
+.check input[type="radio"]:checked::before {
+  content: ""; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-white);
+}
+.check span { font-size: var(--text-body-sm); }
+
+/* --- Cards --- */
+.card {
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-none);
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease-strike), border-color var(--dur-fast);
+}
+.theme-paper .card { box-shadow: var(--shadow-paper-1); }
+a.card, .card--interactive { cursor: pointer; text-decoration: none; display: block; }
+a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-color: var(--text-muted); }
+.card__media { aspect-ratio: 4 / 3; background: var(--surface-2); position: relative; }
+.card__media img { width: 100%; height: 100%; object-fit: cover; }
+.card__body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); }
+.card__title { font-size: var(--text-h4); }
+.card__meta { font-size: var(--text-caption); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+
+/* Card de professor: a faixa (graduação) é a barra inferior da foto */
+.card--sensei .card__media { aspect-ratio: 1; }
+.card--sensei .card__media::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 8px;
+  background: var(--belt, var(--color-black-pure));
+}
+
+/* Card de conquista: número editorial-esportivo grande */
+.card--conquista .card__body { position: relative; }
+.card--conquista .conquista__ano {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--text-h2); line-height: 1;
+  color: transparent; -webkit-text-stroke: 1px var(--text-muted);
+}
+
+/* Card de depoimento */
+.card--depoimento .card__body { gap: var(--space-4); }
+.card--depoimento blockquote { font-size: var(--text-body-lg); line-height: 1.55; font-style: italic; }
+.card--depoimento blockquote::before { content: "“"; display: block; font-family: var(--font-kanji); font-size: 2.5rem; line-height: 0.6; color: var(--accent-text); }
+.card--depoimento figcaption { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-body-sm); }
+.card--depoimento figcaption b { display: block; }
+.card--depoimento figcaption span { color: var(--text-muted); font-size: var(--text-caption); }
+.avatar {
+  flex: none; width: 44px; height: 44px; border-radius: var(--radius-full);
+  background: var(--surface-2); border: var(--border-w) solid var(--border);
+  display: grid; place-content: center;
+  font-family: var(--font-display); font-weight: 600;
+}
+
+/* --- Badges --- */
+.badge {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--text-overline); text-transform: uppercase; letter-spacing: 0.1em;
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-w) solid var(--border); color: var(--text);
+  /* o corte do monograma, em miniatura */
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.badge--red { background: var(--color-red-ink); border-color: var(--color-red-ink); color: var(--color-white); }
+.badge--outline-red { border-color: var(--color-red); color: var(--accent-text); }
+/* Faixas: sistema de cor EXTERNO à marca — graduação é informação,
+   não decoração; por isso escapa da regra preto/branco/vermelho. */
+.badge--belt { border: none; color: var(--color-white); }
+.badge--belt.is-branca { background: #DCD9D4; color: var(--color-black); }
+.badge--belt.is-azul   { background: #1B4E9B; }
+.badge--belt.is-roxa   { background: #5B2D86; }
+.badge--belt.is-marrom { background: #5C3A21; }
+.badge--belt.is-preta  { background: var(--color-black-pure); box-shadow: inset 0 0 0 1px var(--color-red); }
+
+/* --- Stat block --- */
+.stat { display: flex; flex-direction: column; gap: var(--space-1); }
+.stat__value {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--text-h1); line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat__value em { font-style: normal; color: var(--accent-text); }
+.stat__label { font-size: var(--text-body-sm); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+
+/* --- Section header --- */
+.section-header { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-12); max-width: 44rem; }
+.section-header__kicker {
+  display: flex; align-items: center; gap: var(--space-3);
+  font-size: var(--text-overline); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted);
+}
+.section-header__kicker .corte { width: 2rem; height: 0.625rem; }
+.section-header .traco { max-width: 9rem; }
+.section-header__lead { color: var(--text-muted); font-size: var(--text-body-lg); }
+
+/* --- Navbar --- */
+.navbar {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); min-height: 72px;
+  padding: 0 var(--gutter);
+  background: color-mix(in srgb, var(--color-black) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--border-w) solid transparent;
+  transition: border-color var(--dur-fast), background-color var(--dur-fast);
+}
+.navbar.is-scrolled { border-bottom-color: var(--color-border-dark); background: color-mix(in srgb, var(--color-black) 96%, transparent); }
+.navbar__brand { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; color: var(--color-white); font-family: var(--font-display); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.navbar__brand .corte { width: 1.75rem; height: 0.625rem; }
+/* Monograma da marca. Altura fixa em px (não em rem): o logo é um
+   objeto óptico, não texto — não deve crescer com o zoom de fonte. */
+.navbar__mark { width: auto; height: 28px; flex: none; }
+.navbar__brand-sufixo { color: var(--color-muted-dark); font-weight: 500; }
+.navbar__links { display: flex; gap: var(--space-6); list-style: none; padding: 0; }
+.navbar__links a { text-decoration: none; font-size: var(--text-body-sm); font-weight: 500; color: var(--color-muted-dark); transition: color var(--dur-fast); }
+.navbar__links a:hover, .navbar__links a[aria-current="page"] { color: var(--color-white); }
+.navbar__toggle { display: none; background: none; border: 0; color: var(--color-white); padding: var(--space-2); cursor: pointer; }
+.navbar__menu-mobile { display: none; }
+@media (max-width: 767px) {
+  .navbar__links, .navbar .btn { display: none; }
+  .navbar__toggle { display: block; }
+  .navbar__menu-mobile.is-open {
+    display: flex; flex-direction: column; gap: var(--space-4);
+    position: absolute; left: 0; right: 0; top: 100%;
+    padding: var(--space-6) var(--gutter) var(--space-8);
+    background: var(--color-black); border-bottom: var(--border-w) solid var(--color-border-dark);
+    list-style: none;
+  }
+  .navbar__menu-mobile a { color: var(--color-white); text-decoration: none; font-family: var(--font-display); font-size: var(--text-h4); text-transform: uppercase; }
+}
+
+/* --- Tier table (níveis de patrocínio) --- */
+.tiers { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: stretch; }
+.tier {
+  display: flex; flex-direction: column; gap: var(--space-4);
+  padding: var(--space-8) var(--space-6);
+  background: var(--surface); border: var(--border-w) solid var(--border);
+}
+.tier--featured { border-color: var(--color-red); border-width: var(--border-w-strong); position: relative; }
+.tier--featured .tier__flag {
+  position: absolute; top: 0; right: var(--space-6); transform: translateY(-50%);
+}
+.tier__name { font-size: var(--text-h4); }
+.tier__tax { display: flex; gap: var(--space-2); align-items: flex-start; font-size: var(--text-caption); color: var(--text-muted); }
+.tier__tax svg { flex: none; margin-top: 1px; color: var(--accent-text); }
+.tier__list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-body-sm); }
+.tier__list li { display: flex; gap: var(--space-2); align-items: flex-start; }
+.tier__list svg { flex: none; margin-top: 4px; color: var(--accent-text); }
+.tier__list li[data-off] { color: var(--text-muted); opacity: var(--alpha-secondary); }
+.tier__list li[data-off] svg { color: var(--text-muted); }
+.tier .btn { margin-top: auto; }
+
+/* --- Marquee de patrocinadores --- */
+.marquee { overflow: hidden; position: relative; border-block: var(--border-w) solid var(--border); padding-block: var(--space-6); }
+.marquee__track { display: flex; gap: var(--space-16); width: max-content; animation: marquee 28s linear infinite; }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+.marquee__logo {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-family: var(--font-display); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-muted); white-space: nowrap;
+  transition: color var(--dur-fast);
+}
+.marquee__logo:hover { color: var(--text); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* --- Acordeão --- */
+.accordion { border-top: var(--border-w) solid var(--border); max-width: 44rem; }
+.accordion__item { border-bottom: var(--border-w) solid var(--border); }
+.accordion__trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-4); padding: var(--space-4) 0;
+  background: none; border: 0; cursor: pointer; text-align: left;
+  font-weight: 600; font-size: var(--text-body);
+}
+.accordion__trigger svg { flex: none; transition: transform var(--dur-base) var(--ease-strike); color: var(--accent-text); }
+.accordion__trigger[aria-expanded="true"] svg { transform: rotate(45deg); }
+.accordion__panel { overflow: hidden; }
+.accordion__panel > div { padding: 0 0 var(--space-4); color: var(--text-muted); font-size: var(--text-body-sm); line-height: 1.7; }
+.accordion__panel[hidden] { display: none; }
+
+/* --- WhatsApp --- */
+.whatsapp-btn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-weight: 600; font-size: var(--text-body-sm);
+  color: var(--text); text-decoration: none;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-w) solid var(--border);
+  transition: border-color var(--dur-fast), color var(--dur-fast);
+}
+/* verde oficial do WhatsApp: exceção documentada de marca terceira */
+.whatsapp-btn svg { color: #25D366; }
+.whatsapp-btn:hover { border-color: #25D366; }
+
+/* --- Footer --- */
+.footer { background: var(--color-black-pure); color: var(--color-white); padding: var(--space-16) var(--gutter) var(--space-8); }
+.footer__grid { max-width: var(--container); margin: 0 auto; display: grid; gap: var(--space-12); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.footer__brand { display: flex; flex-direction: column; gap: var(--space-4); }
+.footer h6 { color: var(--color-muted-dark); margin-bottom: var(--space-3); }
+.footer ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.footer a { color: var(--color-white); text-decoration: none; font-size: var(--text-body-sm); }
+.footer a:hover { color: var(--color-red-light); }
+.footer__legal {
+  max-width: var(--container); margin: var(--space-12) auto 0;
+  padding-top: var(--space-6); border-top: var(--border-w) solid var(--color-border-dark);
+  display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between;
+  font-size: var(--text-caption); color: var(--color-muted-dark);
+}
+.footer__cnpj { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
+
+/* ------------------------------------------------------------
+   6. LAYOUT DO SITE
+   Estruturas de página. Na documentação viviam como .ds-section /
+   .ds-section__inner; aqui viram as classes reais do produto.
+   ------------------------------------------------------------ */
+.section {
+  padding: var(--space-24) var(--gutter);
+  background: var(--bg);
+  color: var(--text);
+}
+.section--tight { padding-block: var(--space-16); }
+.container { max-width: var(--container); margin-inline: auto; }
+.container--narrow { max-width: var(--container-narrow); margin-inline: auto; }
+
+/* Grid de conteúdo em zigue-zague (dobras 3 e 4): mídia + texto */
+.split {
+  display: grid; gap: var(--space-12);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+}
+.split--reverse > :first-child { order: 2; }
+@media (max-width: 767px) { .split--reverse > :first-child { order: 0; } }
+
+/* Grid padrão de cards (equipe, conquistas, depoimentos) */
+.grid-cards {
+  display: grid; gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Faixa de números de impacto (dobra 2) */
+.stats-row {
+  display: grid; gap: var(--space-8);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+/* Link "pular para o conteúdo" — primeiro item de tabulação da página */
+.skip-link {
+  position: absolute; left: var(--space-4); top: var(--space-4);
+  z-index: var(--z-toast);
+  transform: translateY(-200%);
+  background: var(--color-red-ink); color: var(--color-white);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-display); text-transform: uppercase;
+  letter-spacing: 0.06em; text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-strike);
+}
+.skip-link:focus { transform: none; }
+
+/* ------------------------------------------------------------
+   7. FUNDOS DE SEÇÃO
+   As quatro variantes documentadas em docs/design_system.html §9.
+   Cada uma degrada para uma cor chapada se o recurso falhar.
+   ------------------------------------------------------------ */
+
+/* Impacto: hero, números, equipe, instagram */
+.bg-dojo { background: var(--color-black); color: var(--color-white); }
+
+/* Leitura longa: institucional, escola, transparência, depoimentos.
+   Acompanha .theme-paper para trocar os papéis semânticos. */
+.bg-papel { background: var(--color-paper); color: var(--color-black); }
+
+/* Exclusivo da chamada de patrocínio: o corte do monograma em escala
+   de seção — o único fundo onde o vermelho domina. */
+.bg-corte {
+  background:
+    linear-gradient(114deg,
+      var(--color-black) 0 62%,
+      var(--color-red) 62.2% 78%,
+      var(--color-black) 78.2%);
+  color: var(--color-white);
+}
+@media (max-width: 767px) {
+  /* em telas estreitas a diagonal vira uma faixa superior: a mesma
+     ideia gráfica sem espremer o texto contra o vermelho */
+  .bg-corte {
+    background:
+      linear-gradient(160deg,
+        var(--color-red) 0 12%,
+        var(--color-black) 12.2%);
+  }
+}
+
+/* Fotografia sob véu de tinta. A foto entra por --foto:
+   <section class="bg-foto" style="--foto: url('assets/img/…')">
+   Véu de 78–92% é o mínimo que mantém o contraste do texto branco. */
+.bg-foto {
+  background:
+    linear-gradient(rgba(10,10,10,.78), rgba(10,10,10,.92)),
+    var(--foto, none) center / cover no-repeat,
+    var(--color-black);
+  color: var(--color-white);
+}
+
+/* ------------------------------------------------------------
+   8. HERO — Dobra 1
+   ------------------------------------------------------------ */
+.hero {
+  position: relative;
+  overflow: hidden; /* contém o kanji-marca d'água: sem isso ele cria scroll horizontal */
+  display: flex;
+  align-items: center;
+  /* desconta a navbar para o hero caber exatamente numa tela.
+     svh (small viewport height) evita o salto causado pela barra
+     de endereço no mobile; a linha em vh é o fallback. */
+  min-height: calc(100vh - 72px);
+  min-height: calc(100svh - 72px);
+  padding: var(--space-24) var(--gutter) var(--space-16);
+  background: linear-gradient(160deg, var(--color-black) 55%, #100B0B 100%);
+  color: var(--color-white);
+}
+
+/* O corte do monograma atravessando o topo, em escala de seção.
+   Usa ::after, não ::before: .hero também carrega .grain, que já reivindica
+   o ::before — os dois se fundiriam por propriedade e o opacity 0.05 do
+   grão vazaria para cá, apagando a barra. */
+.hero::after {
+  content: "";
+  position: absolute; inset: 0 0 auto 0; height: 6px;
+  background: linear-gradient(90deg, var(--color-red) 0 34%, transparent 34.2%);
+}
+
+/* 柔術 — "arte da suavidade". Marca d'água, nunca lida por leitor de tela. */
+.hero__kanji {
+  position: absolute; right: -0.08em; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-kanji);
+  font-size: clamp(11rem, 24vw, 22rem);
+  line-height: 0.9;
+  writing-mode: vertical-rl;
+  color: var(--color-white);
+  opacity: 0.04;
+  user-select: none;
+  pointer-events: none;
+}
+
+.hero__inner { position: relative; width: 100%; max-width: var(--container); margin-inline: auto; }
+
+.hero__titulo {
+  font-size: var(--text-display);
+  max-width: 16ch;
+  margin-block: var(--space-6) 0;
+}
+/* o trecho que recebe o traço de tinta */
+.hero__destaque { display: inline-block; position: relative; }
+/* bottom: 0 e não um valor negativo: o .ink-reveal do h1 anima um
+   clip-path, e qualquer coisa fora da caixa do título é recortada. */
+.hero__destaque .traco {
+  position: absolute; left: 0; right: 0; bottom: 0;
+}
+
+.hero__lead {
+  margin-top: var(--space-6);
+  font-size: var(--text-body-lg);
+  color: var(--color-muted-dark);
+  max-width: 52ch;
+}
+.hero__lead b { color: var(--color-white); font-weight: 600; }
+
+.hero__ctas {
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+/* No mobile os CTAs ocupam a linha inteira — mas ambos, nunca só um:
+   assimetria aqui leria como hierarquia, e eles são co-primários. */
+@media (max-width: 479px) {
+  .hero__ctas .btn { flex: 1 1 100%; }
+}
+
+.hero__rodape {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+  margin-top: var(--space-12);
+}
+
+.hero__rolar {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-size: var(--text-overline); font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-muted-dark); text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-strike);
+}
+.hero__rolar:hover { color: var(--color-white); }
+/* Único loop permitido além do marquee, e por isso usa --ease-breath:
+   é uma dica de affordance ("há mais abaixo"), não decoração. */
+.hero__rolar svg { animation: respirar 2.4s var(--ease-breath) infinite; }
+/* A rotação vive dentro da keyframe, não num transform à parte: uma
+   animação sobrescreve o transform do elemento, e a seta perderia o
+   giro ao animar. translateY antes de rotate mantém o movimento
+   vertical na tela, não no eixo já rotacionado. */
+@keyframes respirar {
+  0%, 100% { transform: translateY(0) rotate(90deg); }
+  50%      { transform: translateY(4px) rotate(90deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__rolar svg { animation: none; transform: rotate(90deg); }
+}
+
+/* Viewports baixos (notebooks): comprime o ritmo vertical para a dica de
+   rolagem continuar dentro da primeira tela. Em telas altas o align-items
+   center já distribui a folga, então o padding generoso é redundante. */
+@media (max-height: 920px) {
+  .hero { padding-block: var(--space-12) var(--space-8); }
+  .hero__titulo { margin-top: var(--space-4); }
+  .hero__lead   { margin-top: var(--space-4); }
+  .hero__ctas   { margin-top: var(--space-6); }
+  .hero__rodape { margin-top: var(--space-8); }
+}
+
+/* Atrasos da sequência de entrada. Vêm depois do bloco 4 na cascata,
+   então sobrescrevem o transition/animation-delay zerado de lá. */
+.hero__lead.is-inked  { transition-delay: 200ms; }
+.hero__ctas.is-inked  { transition-delay: 350ms; }
+.hero__rodape.is-inked { transition-delay: 500ms; }
+.hero .stamp-in.is-inked { animation-delay: 650ms; animation-fill-mode: both; }
