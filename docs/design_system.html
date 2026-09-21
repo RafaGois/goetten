@@ -1519,7 +1519,11 @@ addEventListener("scroll", () =&gt;
           </div>
         </div>
       </div>
-      <p class="ds-rationale">o tier destacado leva a borda vermelha 2px e a flag "Lei de Incentivo" — é o único cartão da página autorizado a dominar em vermelho. Benefícios ausentes ficam visíveis e riscados (com ícone ✕, não só cor) para a comparação ser honesta. Valores mínimos entram depois (pendência do BRIEFING).</p>
+      <p class="ds-rationale">o tier destacado leva a borda vermelha 2px e a flag "Lei de Incentivo" — é o único cartão da página autorizado a dominar em vermelho. Benefícios ausentes ficam visíveis e riscados (com ícone ✕, não só cor) para a comparação ser honesta. <code>.tier__valor</code> (Página 1 — Seja Patrocinador) mostra o valor mínimo do nível; até esse número ser confirmado com a associação, o site fica com <code>[TODO]</code> visível em vez de um número inventado.</p>
+      <div class="ds-stage" style="margin-top:var(--space-4)">
+        <span class="ds-stage__label">.tier__valor — só o preço, isolado</span>
+        <p class="tier__valor">R$ [TODO]<small>contribuição mínima anual</small></p>
+      </div>
       <details class="ds-snippet"><summary>Código</summary>
         <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;div class="tiers"&gt;
   &lt;div class="tier"&gt;…&lt;/div&gt;
@@ -1527,6 +1531,7 @@ addEventListener("scroll", () =&gt;
   &lt;div class="tier tier--featured"&gt;
     &lt;span class="badge badge--red tier__flag"&gt;Lei de Incentivo&lt;/span&gt;
     &lt;h3 class="tier__name"&gt;Patrocinador Oficial&lt;/h3&gt;
+    &lt;p class="tier__valor"&gt;R$ [TODO]&lt;small&gt;contribuição mínima anual&lt;/small&gt;&lt;/p&gt;
     &lt;p class="tier__tax"&gt;Empresas Lucro Real: dedução no IR via Lei nº 11.438/2006.&lt;/p&gt;
     &lt;ul class="tier__list"&gt;
       &lt;li&gt;&lt;svg class="icon icon--sm"&gt;&lt;use href="#i-check"/&gt;&lt;/svg&gt; Relatório de impacto&lt;/li&gt;
@@ -1534,6 +1539,87 @@ addEventListener("scroll", () =&gt;
     &lt;a class="btn btn--primary" href="/contato?assunto=patrocinio"&gt;Falar com a associação&lt;/a&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- HERO DE PÁGINA INTERNA -->
+    <div class="ds-block" id="c-hero-pagina">
+      <h3><span class="corte" aria-hidden="true"></span>Hero de página interna</h3>
+      <div class="ds-stage ds-stage--column" style="padding:0">
+        <span class="ds-stage__label">.section + .hero--pagina + um fundo · 40vh, não 100vh</span>
+        <section class="section bg-corte hero--pagina" style="min-height:260px">
+          <div class="container">
+            <div class="section-header">
+              <p class="section-header__kicker"><span class="corte" aria-hidden="true"></span>Seja Patrocinador</p>
+              <h1 style="font-size:var(--text-h1)">Sua empresa deduz.<br>Nosso projeto cresce.</h1>
+              <span class="traco" aria-hidden="true"></span>
+              <p class="section-header__lead">Kicker + h1 + lead, como qualquer .section-header — sem CTA duplo, sem kanji d'água.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <p class="ds-rationale">o hero da home tem 85–100vh, kanji d'água e dois CTAs — é o cartão de visita do site inteiro. Repetir esse peso em nove páginas internas faria cada uma parecer uma home nova. <code>.hero--pagina</code> reaproveita <code>.section-header</code> (o mesmo componente que abre toda dobra) e só ajusta a altura e a centralização vertical — sem inventar tipografia ou animação novas. Some sempre com um fundo (aqui <code>.bg-corte</code>, porque é a Página 1; cada página interna tem o seu, ver CHECKLIST-PAGINAS.md).</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;section class="section bg-corte hero--pagina"&gt;
+  &lt;div class="container"&gt;
+    &lt;div class="section-header"&gt;
+      &lt;p class="section-header__kicker"&gt;Seja Patrocinador&lt;/p&gt;
+      &lt;h1&gt;Sua empresa deduz. Nosso projeto cresce.&lt;/h1&gt;
+      &lt;span class="traco" aria-hidden="true"&gt;&lt;/span&gt;
+      &lt;p class="section-header__lead"&gt;…&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- PROSA -->
+    <div class="ds-block" id="c-prosa">
+      <h3><span class="corte" aria-hidden="true"></span>Prosa</h3>
+      <div class="ds-stage ds-stage--column">
+        <span class="ds-stage__label">texto corrido de página interna · 68ch</span>
+        <div class="prosa">
+          <p>A home nunca empilha mais de dois parágrafos por dobra — cada seção é uma ideia só, lida em segundos. Página interna é o oposto: alguém chegou aqui querendo <strong>ler</strong>, não escanear.</p>
+          <h3 style="font-size:var(--text-h4)">Um subtítulo no meio do texto</h3>
+          <p>Por isso a prosa tem ritmo vertical próprio — mais espaço entre blocos que um card, medida de linha mais generosa que o <code>.hero__lead</code> — e cor de texto secundária, igual ao corpo de qualquer parágrafo do site.</p>
+          <ul><li>Listas herdam o mesmo espaçamento</li><li>Sem depender de nenhuma classe extra</li></ul>
+        </div>
+      </div>
+      <p class="ds-rationale">só ajusta largura, ritmo vertical (<code>margin-top</code> entre irmãos) e a cor de <code>p</code>/<code>li</code> para <code>--text-muted</code> — a mesma hierarquia tipográfica do resto do site (Oswald nos headings, Inter no corpo) continua valendo, <code>.prosa</code> não redefine fonte nem peso.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;div class="prosa"&gt;
+  &lt;p&gt;…&lt;/p&gt;
+  &lt;h3&gt;…&lt;/h3&gt;
+  &lt;p&gt;…&lt;/p&gt;
+&lt;/div&gt;</code></pre></div>
+      </details>
+    </div>
+
+    <!-- CTA FINAL -->
+    <div class="ds-block" id="c-cta-final">
+      <h3><span class="corte" aria-hidden="true"></span>CTA final</h3>
+      <div class="ds-stage ds-stage--column" style="padding:0">
+        <span class="ds-stage__label">faixa de conversão antes do footer de página interna</span>
+        <section class="section bg-dojo">
+          <div class="container cta-final">
+            <h2 class="cta-final__titulo">Pronto para patrocinar?</h2>
+            <div class="cta-final__acoes">
+              <a class="btn btn--primary btn--lg" href="#c-cta-final">Falar com a associação</a>
+              <a class="btn btn--secondary btn--lg" href="#c-cta-final">Ver a prestação de contas</a>
+            </div>
+          </div>
+        </section>
+      </div>
+      <p class="ds-rationale">quem lê uma página interna até o fim e esbarra direto no rodapé institucional não tem próximo passo. <code>.cta-final</code> é só um flex row dentro de <code>.container</code> — a cor de fundo vem do <code>.section</code> que envolve (aqui <code>.bg-dojo</code>; cada página escolhe a sua, ver a tabela de ritmo de fundos do CHECKLIST-PAGINAS.md), os botões são os mesmos <code>.btn</code> de sempre.</p>
+      <details class="ds-snippet"><summary>Código</summary>
+        <div class="ds-code"><button class="ds-code__copy" type="button">Copiar</button><pre><code>&lt;section class="section bg-dojo"&gt;
+  &lt;div class="container cta-final"&gt;
+    &lt;h2 class="cta-final__titulo"&gt;…&lt;/h2&gt;
+    &lt;div class="cta-final__acoes"&gt;
+      &lt;a class="btn btn--primary btn--lg" href="…"&gt;…&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre></div>
       </details>
     </div>
 

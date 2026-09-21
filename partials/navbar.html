@@ -1,0 +1,37 @@
+<!-- =========================================================
+     NAVBAR — Dobra 0
+     Os `data-nav="..."` marcam a página atual; build.js troca
+     o atributo pelo `aria-current="page"` do link correspondente
+     e remove o resto (ver o cabeçalho de build.js).
+     ========================================================= -->
+<header class="navbar" id="navbar">
+  <a class="navbar__brand" href="/" data-nav="home" aria-label="Goetten Brazilian Jiu-Jitsu — página inicial">
+    <img src="assets/logo/monograma.svg" alt="" width="36" height="28" class="navbar__mark">
+    Goetten <span class="navbar__brand-sufixo">BJJ</span>
+  </a>
+
+  <nav aria-label="Navegação principal">
+    <ul class="navbar__links">
+      <li><a href="/projeto-social" data-nav="projeto-social">Projeto social</a></li>
+      <li><a href="/escola" data-nav="escola">Escola</a></li>
+      <li><a href="/equipe" data-nav="equipe">Equipe</a></li>
+      <li><a href="/conquistas" data-nav="conquistas">Conquistas</a></li>
+      <li><a href="/transparencia" data-nav="transparencia">Transparência</a></li>
+    </ul>
+  </nav>
+
+  <a class="btn btn--primary btn--sm" href="/seja-patrocinador" data-nav="seja-patrocinador">Seja patrocinador</a>
+
+  <button class="navbar__toggle" type="button" aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
+    <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+  </button>
+
+  <ul class="navbar__menu-mobile" id="menu-mobile">
+    <li><a href="/projeto-social" data-nav="projeto-social">Projeto social</a></li>
+    <li><a href="/escola" data-nav="escola">Escola</a></li>
+    <li><a href="/equipe" data-nav="equipe">Equipe</a></li>
+    <li><a href="/conquistas" data-nav="conquistas">Conquistas</a></li>
+    <li><a href="/transparencia" data-nav="transparencia">Transparência</a></li>
+    <li><a class="btn btn--primary" href="/seja-patrocinador" data-nav="seja-patrocinador" style="width: 100%;">Seja patrocinador</a></li>
+  </ul>
+</header>

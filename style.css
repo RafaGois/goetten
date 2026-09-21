@@ -614,6 +614,15 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   position: absolute; top: 0; right: var(--space-6); transform: translateY(-50%);
 }
 .tier__name { font-size: var(--text-h4); }
+/* Valor mínimo do nível — Página 1 (Seja Patrocinador). Não existe na
+   home: lá a tabela é prévia, e o valor é a primeira coisa que quem
+   abre uma página dedicada de patrocínio procura. */
+.tier__valor { font-family: var(--font-display); font-weight: 700; font-size: var(--text-h3); }
+.tier__valor small {
+  display: block; font-family: var(--font-body); font-weight: 400;
+  font-size: var(--text-caption); color: var(--text-muted);
+  text-transform: none; letter-spacing: normal;
+}
 .tier__tax { display: flex; gap: var(--space-2); align-items: flex-start; font-size: var(--text-caption); color: var(--text-muted); }
 .tier__tax svg { flex: none; margin-top: 1px; color: var(--accent-text); }
 .tier__list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-body-sm); }
@@ -770,6 +779,91 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 }
 .skip-link:focus { transform: none; }
 
+/* Hero de página interna (Página 1+, ver CHECKLIST-PAGINAS.md).
+   Curto (40–50vh) de propósito: a home tem UM hero de tela cheia com
+   kanji, dois CTAs e sequência de entrada — repetir isso em nove páginas
+   internas faria cada uma delas parecer uma home. Aqui é só
+   .section-header centralizado verticalmente: kicker + h1 + lead, sem
+   CTA (a conversão da página vem depois, no corpo ou no .cta-final). */
+.hero--pagina {
+  display: flex; align-items: center;
+  min-height: 40vh; min-height: 40svh;
+}
+.hero--pagina .section-header { margin-bottom: 0; }
+
+/* Prosa — texto corrido de página interna (Página 1+).
+   A home nunca empilha mais de 2 parágrafos por dobra; as páginas
+   internas têm leitura longa de verdade, e essa leitura precisa de
+   ritmo vertical próprio, não do espaçamento apertado dos cards. */
+.prosa { max-width: 68ch; }
+.prosa > * + * { margin-top: var(--space-5); }
+.prosa h2 { margin-top: var(--space-12); }
+.prosa h3 { margin-top: var(--space-8); }
+.prosa p, .prosa li { line-height: 1.7; color: var(--text-muted); }
+.prosa ul, .prosa ol { padding-left: 1.25em; display: flex; flex-direction: column; gap: var(--space-2); }
+.prosa strong { color: var(--text); }
+
+/* CTA final — faixa de conversão antes do footer de página interna.
+   Sem ela, quem lê uma página inteira até o fim esbarra direto no
+   rodapé institucional: nenhum próximo passo. */
+.cta-final {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--space-6);
+}
+.cta-final__titulo { font-size: var(--text-h3); max-width: 28ch; }
+.cta-final__acoes { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+
+/* CTA de contato — Dobra 11, fecho da home. Centralizado, com uma
+   única ação: depois de 10 dobras argumentando, a última pergunta que
+   resta é "como eu falo com vocês", e a resposta certa é uma porta só.
+   Sem lista de local/horário/Instagram aqui — isso já mora no rodapé,
+   a próxima coisa que a pessoa vê; repetir é ruído, não reforço.
+
+   Foto de fundo em baixa opacidade, via --foto (mesmo mecanismo do
+   hero e do .bg-foto): véu de papel a 92% deixa só um traço da foto
+   por trás, textura de tatame/treino sem brigar com o texto escuro —
+   diferente do véu escuro do hero, aqui o texto é `--text` (preto). */
+#contato.section {
+  background:
+    linear-gradient(rgba(247, 245, 242, .92), rgba(247, 245, 242, .92)),
+    var(--foto, none) center top / cover no-repeat,
+    var(--bg);
+}
+
+/* Foto de fundo em baixa opacidade — Dobra 5 (Equipe). Mesmo mecanismo
+   do Contato, mas com véu escuro (não o de papel): esta dobra é escura
+   por padrão (--bg: --color-black em :root), então o véu usa os mesmos
+   tons rgba do hero para o texto branco continuar acima de AA. */
+#equipe.section {
+  background:
+    linear-gradient(rgba(10, 10, 10, .88), rgba(10, 10, 10, .88)),
+    var(--foto, none) center top / cover no-repeat,
+    var(--bg);
+}
+
+.contato-final {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: var(--space-4); max-width: 30rem; margin-inline: auto;
+}
+.contato-final .traco { max-width: 9rem; }
+.contato-final__titulo { margin-top: var(--space-1); }
+.contato-final__lead { color: var(--text-muted); font-size: var(--text-body-lg); }
+
+.contato-final__whatsapp {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-4) var(--space-8);
+  background: var(--color-black); color: var(--color-white);
+  font-weight: 700; font-size: var(--text-body);
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease-strike);
+}
+/* verde oficial do WhatsApp no ícone: mesma exceção documentada do .whatsapp-btn */
+.contato-final__whatsapp svg:first-child { color: #25D366; }
+.contato-final__whatsapp:hover { background: #128C3E; }
+.contato-final__whatsapp:hover .contato-final__seta { transform: translateX(3px); }
+.contato-final__seta { transition: transform var(--dur-fast) var(--ease-strike); }
+
 /* ------------------------------------------------------------
    7. FUNDOS DE SEÇÃO
    As quatro variantes documentadas em docs/design_system.html §9.
@@ -826,6 +920,21 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   color: var(--color-white);
 }
 
+/* Variante de .bg-corte com foto de fundo em baixa opacidade — textura
+   fotográfica sutil atrás do corte vermelho e do conteúdo, não o "véu"
+   pesado de .bg-foto. Foto entra por --foto, mesma convenção acima:
+   <section class="bg-corte bg-corte--foto" style="--foto: url('…')">
+   isolation: isolate garante que o z-index negativo fique contido nesta
+   seção (mesma técnica de .grain), sem vazar para trás da página. */
+.bg-corte--foto { isolation: isolate; }
+.bg-corte--foto::after {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background: var(--foto, none) center / cover no-repeat;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
 /* ------------------------------------------------------------
    8. HERO — Dobra 1
    ------------------------------------------------------------ */
@@ -833,14 +942,30 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   position: relative;
   overflow: hidden; /* contém o kanji-marca d'água: sem isso ele cria scroll horizontal */
   display: flex;
-  align-items: center;
+  /* Ancorado embaixo, não centralizado: a foto de fundo é clara em
+     cima (fuselagem do avião) e escura embaixo (moletons escuros dos
+     atletas) — o texto branco precisa da metade escura por baixo dele
+     para não perder contraste contra a metade clara. */
+  align-items: flex-end;
   /* desconta a navbar para o hero caber exatamente numa tela.
      svh (small viewport height) evita o salto causado pela barra
      de endereço no mobile; a linha em vh é o fallback. */
   min-height: calc(100vh - 72px);
   min-height: calc(100svh - 72px);
-  padding: var(--space-24) var(--gutter) var(--space-16);
-  background: linear-gradient(160deg, var(--color-black) 55%, #100B0B 100%);
+  padding: var(--space-24) var(--gutter) var(--space-8);
+  /* Foto opcional por trás do gradiente, via --foto (mesmo mecanismo
+     de .bg-foto): sem --foto, cai no gradiente sólido de sempre. O véu
+     usa a mesma proporção testada em .bg-foto (85–93%) para manter o
+     texto branco e o kicker em --color-muted-dark acima de AA.
+     Tamanho 150% auto (não "cover" puro): a proporção do hero é bem
+     mais larga que a da foto, então "cover" já encaixa a foto exatamente
+     pela largura — zero folga para deslocar na horizontal. "auto" na
+     altura preserva a proporção original (sem distorcer), e o 150%
+     garante sobra nos dois eixos para o --foto-x empurrar o conteúdo. */
+  background:
+    linear-gradient(160deg, rgba(10, 10, 10, .85) 55%, rgba(16, 11, 11, .93) 100%),
+    var(--foto, none) var(--foto-x, 35%) center / 120% auto no-repeat,
+    linear-gradient(160deg, var(--color-black) 55%, #100B0B 100%);
   color: var(--color-white);
 }
 
@@ -901,10 +1026,9 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   .hero__ctas .btn { flex: 1 1 100%; }
 }
 
-/* Um único filho (a dica de rolagem), encostado à direita do container.
-   space-between não serve aqui: com um item só ele alinharia à esquerda. */
+/* Um único filho (a dica de rolagem), centralizado no container. */
 .hero__rodape {
-  display: flex; align-items: flex-end; justify-content: flex-end;
+  display: flex; align-items: flex-end; justify-content: center;
   margin-top: var(--space-12);
 }
 
@@ -932,10 +1056,9 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 }
 
 /* Viewports baixos (notebooks): comprime o ritmo vertical para a dica de
-   rolagem continuar dentro da primeira tela. Em telas altas o align-items
-   center já distribui a folga, então o padding generoso é redundante. */
+   rolagem continuar dentro da primeira tela. */
 @media (max-height: 920px) {
-  .hero { padding-block: var(--space-12) var(--space-8); }
+  .hero { padding-block: var(--space-12) var(--space-4); }
   .hero__titulo { margin-top: var(--space-4); }
   .hero__lead   { margin-top: var(--space-4); }
   .hero__ctas   { margin-top: var(--space-6); }
@@ -992,7 +1115,20 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 }
 
 /* Foto real: mesma proporção do placeholder, para a troca não mexer no layout */
-.foto { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
+/* height: auto é necessário, não decorativo — sem ele, o atributo HTML
+   height="…" (mantido por compatibilidade/CLS) vence o aspect-ratio no
+   cascade, e a foto renderiza no tamanho literal do atributo em vez da
+   proporção real, cortando gente que não devia ser cortada. */
+.foto { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; }
+
+/* Recorte mais baixo, ancorado no topo — usado quando a parte de baixo
+   da foto original não serve (ex.: foto do projeto social) */
+.foto--baixa { aspect-ratio: 16 / 9; object-position: top; }
+
+/* Mantém a proporção do .foto (ou a do .card__media, no caso dos
+   cards de professor), só muda a âncora do recorte para o topo —
+   usado quando o rosto fica cortado por uma foto de corpo inteiro. */
+.foto--topo { object-position: top; }
 
 /* --- Informações práticas (horário, local) — Dobra 4 --- */
 /* Duas colunas quando cabe: em coluna única a lista empurrava a seção
@@ -1140,6 +1276,9 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 @media (min-width: 1024px) { .grade-fotos { grid-template-columns: repeat(6, 1fr); } }
 .grade-fotos > li { aspect-ratio: 1; }
 .grade-fotos .foto-placeholder { font-size: var(--text-overline); padding: var(--space-2); }
+/* Foto real da galeria: preenche o quadrado do <li>, mesma lógica do
+   .foto-placeholder--preencher (quem manda na proporção é o <li>). */
+.grade-fotos img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* --- Galeria expansível --- */
 /* Os extras usam o atributo `hidden`, não uma classe visual: assim eles

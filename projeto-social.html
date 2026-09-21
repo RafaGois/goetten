@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Projeto Social — Goetten Brazilian Jiu-Jitsu</title>
+<meta name="description" content="O projeto social gratuito de jiu-jitsu da Goetten em Curitibanos (SC): quem é atendido, como funciona e o impacto do tatame aberto.">
+<meta name="author" content="Associação Goetten de Jiu-Jitsu">
+<link rel="canonical" href="https://goettenjiujitsu.com.br/projeto-social">
+
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<!-- TODO: apple-touch-icon.png 180x180 — exportar do favicon.svg (Safari iOS não lê SVG) -->
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Goetten Brazilian Jiu-Jitsu">
+<meta property="og:title" content="Projeto Social — Goetten Brazilian Jiu-Jitsu">
+<meta property="og:description" content="Tatame gratuito para crianças e adolescentes de Curitibanos — a vaga não depende de talento, nota nem histórico. Conheça o projeto social da Goetten.">
+<meta property="og:url" content="https://goettenjiujitsu.com.br/projeto-social">
+<!-- TODO: og:image precisa de 1200x630px, foto real de treino -->
+<meta property="og:image" content="https://goettenjiujitsu.com.br/assets/img/og-capa.jpg">
+<meta property="og:image:alt" content="Alunos da Goetten Brazilian Jiu-Jitsu treinando no tatame">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="theme-color" content="#0A0A0A">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsOrganization",
+  "name": "Associação Goetten de Jiu-Jitsu",
+  "alternateName": "Goetten Brazilian Jiu-Jitsu",
+  "sport": "Brazilian Jiu-Jitsu",
+  "url": "https://goettenjiujitsu.com.br/",
+  "sameAs": ["https://www.instagram.com/curitibanosbjj/"],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Curitibanos",
+    "addressRegion": "SC",
+    "addressCountry": "BR"
+  },
+  "nonprofitStatus": "NonprofitANBI"
+}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- =========================================================
+     SPRITE DE ÍCONES — docs/design_system.html §7
+     Grid 24px · traço 1.75 · linecap square · linejoin miter
+     ========================================================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-faixa" viewBox="0 0 24 24"><path d="M2 10h20v4H2z"/><path d="M15 10v4"/><path d="M12 14l-3 6M12 14l3 6"/></symbol>
+    <symbol id="i-medalha" viewBox="0 0 24 24"><circle cx="12" cy="15" r="5.5"/><path d="M12 12.5v3l2 1.2"/><path d="M8.5 10.5 5 2h5l2 5 2-5h5l-3.5 8.5"/></symbol>
+    <symbol id="i-trofeu" viewBox="0 0 24 24"><path d="M7 3h10v6a5 5 0 0 1-10 0V3z"/><path d="M7 5H3.5v1.5A4.5 4.5 0 0 0 8 11M17 5h3.5v1.5A4.5 4.5 0 0 1 16 11"/><path d="M12 14v4M8 21h8M9.5 18h5"/></symbol>
+    <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 2.5 20 5v7c0 5-3.5 8-8 9.5C7.5 20 4 17 4 12V5l8-2.5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-parceria" viewBox="0 0 24 24"><path d="M2 7h5l5 4.5a1.8 1.8 0 0 1-2.5 2.6L7.5 12"/><path d="M22 7h-5l-2 1.8"/><path d="M12.5 14.6l1.8 1.6a1.8 1.8 0 0 0 2.4-2.7"/><path d="M14.9 16.2l1 0.9a1.8 1.8 0 0 1-2.4 2.7l-1.6-1.5"/><path d="M2 15h4M18 15h4"/></symbol>
+    <symbol id="i-familia" viewBox="0 0 24 24"><circle cx="8" cy="6.5" r="3"/><circle cx="17" cy="8.5" r="2.2"/><path d="M2.5 21v-3a5.5 5.5 0 0 1 11 0v3"/><path d="M16 21v-2.5a4 4 0 0 1 5.5-3.7"/></symbol>
+    <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16"/><path d="M3 10h18M8 2.5V7M16 2.5V7"/><path d="M7.5 14.5h3v3h-3z"/></symbol>
+    <symbol id="i-local" viewBox="0 0 24 24"><path d="M12 21.5S5 14.8 5 9.5a7 7 0 0 1 14 0c0 5.3-7 12-7 12z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z"/><path d="M8.7 8.5c-.3 2.8 4 7.2 6.8 6.8l.9-1.7-2.3-1.2-1 .9c-.9-.4-2-1.5-2.4-2.4l.9-1-1.2-2.3-1.7.9z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8h.01"/></symbol>
+    <symbol id="i-documento" viewBox="0 0 24 24"><path d="M6 2.5h8l4 4V21.5H6z"/><path d="M14 2.5v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
+    <symbol id="i-seta" viewBox="0 0 24 24"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13"/></symbol>
+    <symbol id="i-mais" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6.5h18M3 12h18M3 17.5h12"/></symbol>
+  </defs>
+</svg>
+
+<!-- =========================================================
+     NAVBAR — Dobra 0
+     Os `data-nav="..."` marcam a página atual; build.js troca
+     o atributo pelo `aria-current="page"` do link correspondente
+     e remove o resto (ver o cabeçalho de build.js).
+     ========================================================= -->
+<header class="navbar" id="navbar">
+  <a class="navbar__brand" href="/" aria-label="Goetten Brazilian Jiu-Jitsu — página inicial">
+    <img src="assets/logo/monograma.svg" alt="" width="36" height="28" class="navbar__mark">
+    Goetten <span class="navbar__brand-sufixo">BJJ</span>
+  </a>
+
+  <nav aria-label="Navegação principal">
+    <ul class="navbar__links">
+      <li><a href="/projeto-social" aria-current="page">Projeto social</a></li>
+      <li><a href="/escola">Escola</a></li>
+      <li><a href="/equipe">Equipe</a></li>
+      <li><a href="/conquistas">Conquistas</a></li>
+      <li><a href="/transparencia">Transparência</a></li>
+    </ul>
+  </nav>
+
+  <a class="btn btn--primary btn--sm" href="/seja-patrocinador">Seja patrocinador</a>
+
+  <button class="navbar__toggle" type="button" aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
+    <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+  </button>
+
+  <ul class="navbar__menu-mobile" id="menu-mobile">
+    <li><a href="/projeto-social" aria-current="page">Projeto social</a></li>
+    <li><a href="/escola">Escola</a></li>
+    <li><a href="/equipe">Equipe</a></li>
+    <li><a href="/conquistas">Conquistas</a></li>
+    <li><a href="/transparencia">Transparência</a></li>
+    <li><a class="btn btn--primary" href="/seja-patrocinador" style="width: 100%;">Seja patrocinador</a></li>
+  </ul>
+</header>
+
+<main id="conteudo">
+
+  <!-- =======================================================
+       HERO — .hero--pagina (Página 2)
+       ======================================================= -->
+  <section class="section bg-dojo hero--pagina" id="topo">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-header__kicker">
+          <span class="corte" aria-hidden="true"></span>
+          Projeto social
+        </p>
+        <h1>Tatame aberto,<br>futuro aberto</h1>
+        <span class="traco traco-draw" aria-hidden="true"></span>
+        <p class="section-header__lead">
+          Projeto esportivo social gratuito, aprovado pelo Ministério do
+          Esporte, mantido há mais de dois anos pela Associação Goetten de
+          Jiu-Jitsu em Curitibanos (SC).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       O QUE É — split com foto + prosa (texto herdado da Dobra 3,
+       já vetado: só afirma o que o BRIEFING confirma)
+       ======================================================= -->
+  <section class="section theme-paper" id="o-que-e">
+    <div class="container">
+      <div class="split">
+
+        <!-- TODO: substituir o placeholder pela foto real. Markup pronto:
+             <img class="foto" src="assets/img/aulas/projeto-social.jpg"
+                  width="800" height="600" loading="lazy"
+                  alt="Crianças do projeto social em roda de cumprimento no início da aula">
+        -->
+        <div class="foto-placeholder">
+          <svg class="icon icon--lg" aria-hidden="true"><use href="#i-familia"/></svg>
+          <span><strong>Foto pendente</strong><br>aula do projeto social</span>
+        </div>
+
+        <div class="coluna-texto rise">
+          <div class="section-header">
+            <p class="section-header__kicker">
+              <span class="corte" aria-hidden="true"></span>
+              01 · O que é
+            </p>
+            <h2>Um tatame que não cobra entrada</h2>
+            <span class="traco traco-draw" aria-hidden="true"></span>
+          </div>
+
+          <div class="prosa">
+            <p>
+              O tatame da Goetten está aberto para crianças e adolescentes de
+              Curitibanos que não teriam como pagar uma academia. A aula é
+              <strong>gratuita</strong>, e a vaga não depende de talento, de
+              nota nem de histórico.
+            </p>
+            <p>
+              Mais do que ensinar jiu-jitsu, o projeto usa o esporte como
+              estrutura: horário para cumprir, cumprimento antes e depois do
+              treino, respeito por quem está do outro lado. É uma disciplina
+              que sai do tatame e vai junto para a escola e para casa.
+            </p>
+            <p>
+              É a frente social de uma associação sem fins lucrativos com
+              CNPJ ativo há mais de dois anos — o projeto esportivo é
+              aprovado pelo Ministério do Esporte, o que também é o que
+              sustenta a dedução fiscal de quem <a class="link-ink" href="/seja-patrocinador">patrocina</a>.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       QUEM ATENDEMOS
+       ======================================================= -->
+  <section class="section theme-paper section--tight" id="quem-atendemos">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-header__kicker">
+          <span class="corte" aria-hidden="true"></span>
+          02 · Quem atendemos
+        </p>
+        <h2>Sem seletiva, sem mensalidade</h2>
+        <span class="traco traco-draw" aria-hidden="true"></span>
+      </div>
+
+      <ul class="info-lista">
+        <li>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-familia"/></svg>
+          <!-- TODO: confirmar com a associação a faixa etária atendida -->
+          <span><strong>Faixa etária</strong>A confirmar com a associação</span>
+        </li>
+        <li>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-familia"/></svg>
+          <!-- TODO: confirmar quantos alunos o projeto atende hoje -->
+          <span><strong>Alunos atendidos</strong>A confirmar com a associação</span>
+        </li>
+        <li>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>
+          <span><strong>Critério de vaga</strong>Não depende de talento, de nota nem de histórico</span>
+        </li>
+      </ul>
+
+      <!-- TODO: se houver acompanhamento de nota/frequência escolar dos
+           alunos, é o argumento mais forte desta página para
+           patrocinador — e ainda não está confirmado em nenhuma fonte
+           do projeto. Confirmar com a associação antes de escrever
+           qualquer frase sobre isso. -->
+    </div>
+  </section>
+
+  <!-- =======================================================
+       COMO FUNCIONA
+       ======================================================= -->
+  <section class="section theme-paper section--tight" id="como-funciona">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-header__kicker">
+          <span class="corte" aria-hidden="true"></span>
+          03 · Como funciona
+        </p>
+        <h2>A rotina no tatame</h2>
+        <span class="traco traco-draw" aria-hidden="true"></span>
+      </div>
+
+      <ul class="info-lista">
+        <li>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendario"/></svg>
+          <!-- TODO: confirmar frequência semanal e duração das aulas -->
+          <span><strong>Frequência</strong>A confirmar com a associação</span>
+        </li>
+        <li>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-local"/></svg>
+          <span><strong>Onde</strong>Curitibanos · SC <!-- TODO: endereço completo --></span>
+        </li>
+        <li>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-faixa"/></svg>
+          <!-- TODO: confirmar o que o aluno recebe (kimono? faixa?
+               transporte? lanche?) -->
+          <span><strong>O aluno recebe</strong>A confirmar com a associação</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       IMPACTO — números reais pendentes; [TODO] visível em vez de
+       número inventado, mesmo critério usado nos tiers da Página 1
+       ======================================================= -->
+  <section class="section theme-paper" id="impacto">
+    <div class="container">
+      <h2 class="visually-hidden">O projeto em números</h2>
+
+      <!-- TODO: números reais de impacto — pendência nº 3, herdada da
+           Dobra 2. Sem eles confirmados, fica [TODO] visível: um número
+           bonito mas inventado convenceria menos que a honestidade, e
+           convenceria errado. -->
+      <ul class="stats-row stagger">
+        <li class="stat">
+          <span class="stat__value">[TODO]</span>
+          <span class="stat__label">Alunos atendidos</span>
+        </li>
+        <li class="stat">
+          <span class="stat__value">[TODO]</span>
+          <span class="stat__label">Anos de projeto</span>
+        </li>
+        <li class="stat">
+          <span class="stat__value">100<em>%</em></span>
+          <span class="stat__label">Gratuito</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       GALERIA — 6 fotos, todas placeholder
+       ======================================================= -->
+  <section class="section theme-paper" id="galeria">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-header__kicker">
+          <span class="corte" aria-hidden="true"></span>
+          04 · Galeria
+        </p>
+        <h2>O tatame em fotos</h2>
+        <span class="traco traco-draw" aria-hidden="true"></span>
+      </div>
+
+      <!-- TODO: 6 fotos reais do projeto social (treino, roda de
+           cumprimento, entrega de faixa). Markup do <img> real:
+           <img class="foto" src="assets/img/aulas/projeto-social-N.jpg"
+                width="400" height="400" loading="lazy"
+                alt="descrição específica da cena"> -->
+      <ul class="grade-fotos stagger">
+        <li><div class="foto-placeholder"><svg class="icon" aria-hidden="true"><use href="#i-familia"/></svg><span>Foto pendente</span></div></li>
+        <li><div class="foto-placeholder"><svg class="icon" aria-hidden="true"><use href="#i-familia"/></svg><span>Foto pendente</span></div></li>
+        <li><div class="foto-placeholder"><svg class="icon" aria-hidden="true"><use href="#i-familia"/></svg><span>Foto pendente</span></div></li>
+        <li><div class="foto-placeholder"><svg class="icon" aria-hidden="true"><use href="#i-familia"/></svg><span>Foto pendente</span></div></li>
+        <li><div class="foto-placeholder"><svg class="icon" aria-hidden="true"><use href="#i-familia"/></svg><span>Foto pendente</span></div></li>
+        <li><div class="foto-placeholder"><svg class="icon" aria-hidden="true"><use href="#i-familia"/></svg><span>Foto pendente</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       CTA FINAL — dois caminhos, empresa e pessoa física
+       ======================================================= -->
+  <section class="section bg-corte">
+    <div class="container cta-final">
+      <h2 class="cta-final__titulo">Ajude a manter o tatame aberto</h2>
+      <div class="cta-final__acoes">
+        <a class="btn btn--primary btn--lg" href="/seja-patrocinador">Seja patrocinador</a>
+        <a class="btn btn--secondary btn--lg" href="/como-ajudar">Como ajudar</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER — fecha a Dobra 11
+     Preto puro (#030303, o preto da marca) para o lockup assentar
+     sem emenda visível. Segundo uso do carimbo hanko.
+
+     TODO — endereço completo e o ano de fundação.
+     ========================================================= -->
+<footer class="footer">
+  <div class="footer__grid">
+
+    <div class="footer__brand">
+      <span class="hanko hanko--sm" aria-hidden="true">柔術</span>
+      <img src="assets/logo/lockup.svg" alt="Goetten Brazilian Jiu-Jitsu"
+           width="240" height="90" style="width: 15rem; height: auto;">
+      <p style="font-size: var(--text-caption); color: var(--color-muted-dark); max-width: 30ch;">
+        Associação sem fins lucrativos. Projeto esportivo aprovado pelo
+        Ministério do Esporte.
+      </p>
+    </div>
+
+    <nav aria-label="Mapa do site">
+      <h2 class="rotulo-coluna">Navegue</h2>
+      <ul>
+        <li><a href="/projeto-social">Projeto social</a></li>
+        <li><a href="/escola">Escola de jiu-jitsu</a></li>
+        <li><a href="/equipe">Equipe</a></li>
+        <li><a href="/conquistas">Conquistas</a></li>
+        <li><a href="/seja-patrocinador">Seja patrocinador</a></li>
+        <li><a href="/transparencia">Transparência</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="rotulo-coluna">Contato</h2>
+      <ul>
+        <li>
+          <a href="/contato">
+            <svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px" aria-hidden="true"><use href="#i-documento"/></svg>
+            Formulário
+          </a>
+        </li>
+        <li>
+          <!-- TODO: WhatsApp real -->
+          <a href="https://wa.me/55SEUNUMERO" target="_blank" rel="noopener">
+            <svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+            WhatsApp
+          </a>
+        </li>
+        <li>
+          <a href="https://www.instagram.com/curitibanosbjj/" target="_blank" rel="noopener">
+            <svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px" aria-hidden="true"><use href="#i-instagram"/></svg>
+            @curitibanosbjj
+          </a>
+        </li>
+        <li>
+          <a href="/contato">
+            <svg class="icon icon--sm" style="display:inline-block;vertical-align:-3px" aria-hidden="true"><use href="#i-local"/></svg>
+            Curitibanos · SC
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer__legal">
+    <span class="footer__cnpj">Associação Goetten de Jiu-Jitsu · CNPJ 57.466.814/0001-33</span>
+    <span>© 2026 — Feito com disciplina.</span>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
