@@ -277,8 +277,11 @@
   <!-- =======================================================
        DOBRA 4 — ESCOLA DE JIU-JITSU
        Espelho da Dobra 3: foto do lado oposto, cabeçalho dentro da
-       coluna de texto. Única dobra que fala do serviço PAGO — por isso
-       fecha com a frase que liga a matrícula ao projeto gratuito.
+       coluna de texto. Única dobra que fala do serviço PAGO. As
+       informações práticas (turmas, horário, endereço) ficam numa "ficha" de
+       três cards compactos — dois lado a lado e o endereço embaixo, em
+       largura total — em vez de soltas no meio do texto; o pedido de ação
+       vem depois dela.
 
        TODO — confirmar com a associação: turmas e faixas etárias
        oferecidas e o número real de WhatsApp.
@@ -306,33 +309,28 @@
             particulares — de quem nunca pisou num tatame a quem já compete.
           </p>
 
-          <!-- TODO: confirmar as turmas realmente oferecidas -->
-          <div class="badges-linha">
-            <span class="badge">Infantil</span>
-            <span class="badge">Juvenil</span>
-            <span class="badge">Adulto</span>
-          </div>
-
-          <ul class="info-lista">
-            <li>
-              <svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendario"/></svg>
-              <span><strong>Horários</strong>Segunda a sexta, das 19h às 22h</span>
-            </li>
-            <li>
-              <svg class="icon icon--sm" aria-hidden="true"><use href="#i-local"/></svg>
-              <span>
-                <strong>Como chegar</strong>
+          <dl class="ficha">
+            <!-- TODO: confirmar as turmas realmente oferecidas -->
+            <div class="ficha__item card">
+              <dt><svg class="icon icon--sm" aria-hidden="true"><use href="#i-familia"/></svg>Turmas</dt>
+              <dd>Infantil, juvenil e adulto</dd>
+            </div>
+            <div class="ficha__item card">
+              <dt><svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendario"/></svg>Horários</dt>
+              <dd>
+                <strong class="ficha__destaque">19h às 22h</strong>
+                <span>Segunda a sexta</span>
+              </dd>
+            </div>
+            <div class="ficha__item ficha__item--largo card">
+              <dt><svg class="icon icon--sm" aria-hidden="true"><use href="#i-local"/></svg>Endereço</dt>
+              <dd>
+                <span>Av. Salomão Carneiro de Almeida, 1784<br>Nossa Senhora Aparecida · Curitibanos, SC</span>
                 <a class="link-ink" target="_blank" rel="noopener"
-                   href="https://www.google.com/maps?daddr=Av.+Salom%C3%A3o+Carneiro+de+Almeida,+1784+-+Nossa+senhora+Aparecida,+Curitibanos+-+SC,+89520-000">Abrir rota no Maps</a>
-              </span>
-            </li>
-          </ul>
-
-          <p class="nota-vinculo">
-            Esta é a frente <strong>paga</strong> da associação, e é ela que
-            sustenta o tatame gratuito. Matricular alguém aqui é manter o
-            projeto de pé.
-          </p>
+                   href="https://www.google.com/maps?daddr=Av.+Salom%C3%A3o+Carneiro+de+Almeida,+1784+-+Nossa+senhora+Aparecida,+Curitibanos+-+SC,+89520-000">Como chegar</a>
+              </dd>
+            </div>
+          </dl>
 
           <div class="acoes">
             <!-- TODO: trocar SEUNUMERO pelo WhatsApp real da associação -->

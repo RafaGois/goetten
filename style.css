@@ -1243,7 +1243,7 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 
 /* Retrato vertical (3:4) — para foto em pé. Largura limitada para a altura
    não passar da coluna de texto ao lado; centralizado na sua coluna. */
-.foto--vertical { aspect-ratio: 3 / 4; object-position: 50% 20%; max-width: 24rem; justify-self: center; }
+.foto--vertical { aspect-ratio: 3 / 4; object-position: 50% 20%; max-width: 26rem; justify-self: center; }
 
 /* --- Informações práticas (horário, local) — Dobra 4 --- */
 /* Duas colunas quando cabe: em coluna única a lista empurrava a seção
@@ -1273,6 +1273,45 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   border-left: var(--border-w-strong) solid var(--color-red);
   padding-left: var(--space-4);
   font-size: var(--text-body);
+}
+
+/* Ficha de aulas — Dobra 4 (Escola)
+   Três fatos práticos em cards compactos: Turmas e Horários lado a lado,
+   Endereço em largura total embaixo (é o que tem mais texto). Cada item é
+   um .card, então herda fundo, filete e sombra do tema claro. Rótulo em
+   overline, o mesmo vocabulário do .info-lista. */
+.ficha {
+  width: 100%; margin: var(--space-2) 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3);
+}
+.ficha__item {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+}
+.ficha__item--largo { grid-column: 1 / -1; }
+.ficha dt {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--text-overline); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+}
+.ficha dt svg { color: var(--accent-text); flex: none; }
+.ficha dd {
+  margin: 0; text-wrap: balance;
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1);
+  font-size: var(--text-body-sm);
+}
+.ficha__destaque {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--text-h4); line-height: 1.1; letter-spacing: 0.02em;
+}
+/* Endereço largo: texto de um lado, "Como chegar" do outro */
+@media (min-width: 768px) {
+  .ficha__item--largo dd { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-4); }
+}
+@media (max-width: 767px) {
+  .ficha__item { align-items: center; text-align: center; }
+  .ficha dd { align-items: center; }
 }
 
 /* ------------------------------------------------------------
