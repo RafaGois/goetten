@@ -112,9 +112,9 @@ out: index.html
     <div class="container">
       <div class="split">
 
-        <img class="foto foto--baixa" src="https://res.cloudinary.com/dn454izoh/image/upload/v1789592921/unnamed_n894mq.webp"
+        <img class="foto foto--baixa" src="https://res.cloudinary.com/dn454izoh/image/upload/v1789995884/graduacao-20-1000kb_ugbbna.webp"
              width="800" height="450" loading="lazy"
-             alt="Crianças do projeto social em roda de cumprimento no início da aula">
+             alt="Turma da Goetten reunida para a foto de grupo, com alunos de todas as idades de kimono">
 
         <div class="coluna-texto rise">
           <div class="section-header">
@@ -148,15 +148,15 @@ out: index.html
        fecha com a frase que liga a matrícula ao projeto gratuito.
 
        TODO — confirmar com a associação: turmas e faixas etárias
-       oferecidas, horários, endereço e o número real de WhatsApp.
+       oferecidas e o número real de WhatsApp.
        ======================================================= -->
   <section class="section theme-paper" id="escola">
     <div class="container">
       <div class="split split--reverse">
 
-        <img class="foto" src="https://res.cloudinary.com/dn454izoh/image/upload/v1789591419/IMG_8247_iukq9v.webp"
-             width="800" height="600" loading="lazy"
-             alt="Turma adulta treinando guarda durante aula na academia">
+        <img class="foto foto--vertical" src="https://res.cloudinary.com/dn454izoh/image/upload/v1789995883/graduacao-13-1000kb_wbtykj.webp"
+             width="600" height="800" loading="lazy"
+             alt="Professor faixa preta ao lado de um aluno mirim que recebeu o diploma de nova faixa">
 
         <div class="coluna-texto rise">
           <div class="section-header">
@@ -183,11 +183,15 @@ out: index.html
           <ul class="info-lista">
             <li>
               <svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendario"/></svg>
-              <span><strong>Horários</strong>A confirmar — fale com a gente pelo WhatsApp</span>
+              <span><strong>Horários</strong>Segunda a sexta, das 19h às 22h</span>
             </li>
             <li>
               <svg class="icon icon--sm" aria-hidden="true"><use href="#i-local"/></svg>
-              <span><strong>Onde</strong>Curitibanos · SC <!-- TODO: endereço completo --></span>
+              <span>
+                <strong>Como chegar</strong>
+                <a class="link-ink" target="_blank" rel="noopener"
+                   href="https://www.google.com/maps?daddr=Av.+Salom%C3%A3o+Carneiro+de+Almeida,+1784+-+Nossa+senhora+Aparecida,+Curitibanos+-+SC,+89520-000">Abrir rota no Maps</a>
+              </span>
             </li>
           </ul>
 
@@ -241,20 +245,17 @@ out: index.html
         </p>
       </div>
 
-      <ul class="grid-cards stagger">
+      <ul class="grid-cards stagger" data-carrossel="Professores">
         <li>
           <article class="card card--sensei is-preta">
-            <!-- TODO: <img class="foto" src="assets/img/equipe/nome.jpg" width="600" height="600"
-                 loading="lazy" alt="Professor [nome], faixa preta, de kimono no tatame"> -->
             <div class="card__media">
-              <div class="foto-placeholder foto-placeholder--preencher">
-                <svg class="icon icon--lg" aria-hidden="true"><use href="#i-familia"/></svg>
-                <span><strong>Foto pendente</strong><br>retrato quadrado</span>
-              </div>
+              <img class="foto foto--meio" src="https://res.cloudinary.com/dn454izoh/image/upload/c_lpad,w_1000,h_1364,g_south_east,b_gen_fill/v1789996709/Firefly_Gemini_Flash_dessa_iamgem_queroq_ue_voce_remoa_essa_crianc%CC%A7a_do_lado_direito_da_iamgem_344978_xfdvua.webp"
+                   width="600" height="600" loading="lazy"
+                   alt="Professor Luis Alberto Goetten, faixa preta, de kimono no tatame">
             </div>
             <div class="card__body">
               <p class="card__meta">Professor · graduação a confirmar</p>
-              <h3 class="card__title">Nome do professor</h3>
+              <h3 class="card__title">Luis Alberto Goetten</h3>
               <p class="card__bio">
                 Bio a preencher: até ~160 caracteres, cobrindo tempo de tatame
                 e o que a pessoa ensina na associação.
@@ -339,7 +340,7 @@ out: index.html
         </p>
       </div>
 
-      <ul class="grid-cards stagger">
+      <ul class="grid-cards stagger" data-carrossel="Conquistas">
         <li>
           <article class="card card--conquista">
             <div class="card__body">
@@ -444,7 +445,7 @@ out: index.html
       </div>
 
       <!-- TODO: preencher os valores mínimos de cada nível -->
-      <div class="tiers stagger">
+      <div class="tiers stagger" data-carrossel="Níveis de patrocínio">
 
         <div class="tier">
           <h3 class="tier__name">Apoiador</h3>
@@ -518,8 +519,8 @@ out: index.html
        público, prestação de contas pública.
 
        TODO — quando o PDF da prestação de contas existir, trocar a ação
-       pelo link direto (markup pronto abaixo). Até lá ela aponta para o
-       contato, que é um caminho que funciona de verdade: link de
+       pelo link direto (markup pronto abaixo). Até lá ela abre o
+       WhatsApp, que é um caminho que funciona de verdade: link de
        transparência que não leva a lugar nenhum é pior que não ter a seção.
        ======================================================= -->
   <section class="section section--tight theme-paper" id="transparencia">
@@ -551,8 +552,10 @@ out: index.html
                Baixar a prestação de contas
              </a>
         -->
-        <a class="btn btn--secondary" href="?assunto=transparencia#contato">
-          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-documento"/></svg>
+        <!-- TODO: trocar SEUNUMERO pelo WhatsApp real da associação -->
+        <a class="btn btn--secondary" href="https://wa.me/55SEUNUMERO?text=Ol%C3%A1%21%20Gostaria%20de%20solicitar%20a%20presta%C3%A7%C3%A3o%20de%20contas%20da%20Goetten."
+           target="_blank" rel="noopener">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-whatsapp"/></svg>
           Solicitar a prestação de contas
         </a>
 
@@ -591,7 +594,7 @@ out: index.html
         <span class="traco traco-draw" aria-hidden="true"></span>
       </div>
 
-      <ul class="depoimentos stagger">
+      <ul class="depoimentos stagger" data-carrossel="Depoimentos">
         <li>
           <figure class="card card--depoimento">
             <div class="card__body">
@@ -619,11 +622,12 @@ out: index.html
         <li>
           <figure class="card card--depoimento">
             <div class="card__body">
-              <p class="depoimento__origem">Família</p>
+              <p class="depoimento__origem">Aluno</p>
+              <!-- TODO: colar aqui a fala real do Eduardo (com autorização de uso) -->
               <blockquote>[depoimento real de 2 a 3 linhas]</blockquote>
               <figcaption>
-                <span class="avatar" aria-hidden="true">—</span>
-                <span><b>[nome ou &quot;pai de aluna&quot;]</b><span>[papel · desde ano]</span></span>
+                <span class="avatar" aria-hidden="true"><svg class="icon"><use href="#i-google"/></svg></span>
+                <span><b>Eduardo dos Santos</b><span>Avaliação no Google</span></span>
               </figcaption>
             </div>
           </figure>
@@ -642,7 +646,7 @@ out: index.html
        obedece ao design system. A grade é estática, rápida e nossa —
        o custo é atualizar as fotos na mão de vez em quando.
 
-       14 fotos reais: 6 aparecem de cara e 8 entram no botão "Ver mais
+       19 fotos reais: 6 aparecem de cara e 13 entram no botão "Ver mais
        fotos". O handle também precisa de confirmação.
        TODO — logos reais dos patrocinadores, em SVG monocromático.
        ======================================================= -->
@@ -714,6 +718,26 @@ out: index.html
         <li data-extra hidden>
           <img src="https://res.cloudinary.com/dn454izoh/image/upload/v1789589024/WhatsApp_Image_2026-09-01_at_09.39.56_ck87u0.webp"
                loading="lazy" alt="Alunos da Goetten no tatame">
+        </li>
+        <li data-extra hidden>
+          <img src="https://res.cloudinary.com/dn454izoh/image/upload/v1789995883/graduacao-13-1000kb_wbtykj.webp"
+               loading="lazy" alt="Professor com um aluno mirim que recebeu o diploma de nova faixa" style="object-position: 50% 25%">
+        </li>
+        <li data-extra hidden>
+          <img src="https://res.cloudinary.com/dn454izoh/image/upload/v1789995885/jiu-18-1000kb_y5nhao.webp"
+               loading="lazy" alt="Professor faixa preta ensinando uma técnica a uma aluna durante a aula" style="object-position: 50% 25%">
+        </li>
+        <li data-extra hidden>
+          <img src="https://res.cloudinary.com/dn454izoh/image/upload/v1789995884/graduacao-20-1000kb_ugbbna.webp"
+               loading="lazy" alt="Turma da Goetten reunida para a foto da graduação">
+        </li>
+        <li data-extra hidden>
+          <img src="https://res.cloudinary.com/dn454izoh/image/upload/v1789995884/graduacao-32-1000kb_kalvmv.webp"
+               loading="lazy" alt="Dois alunos com o diploma de graduação de faixa azul diante do banner da academia" style="object-position: 50% 25%">
+        </li>
+        <li data-extra hidden>
+          <img src="https://res.cloudinary.com/dn454izoh/image/upload/v1789995884/graduacao-17-1000kb_ce0e14.webp"
+               loading="lazy" alt="Professor ajustando a faixa azul de um aluno durante a graduação" style="object-position: 50% 25%">
         </li>
       </ul>
 

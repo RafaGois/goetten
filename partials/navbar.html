@@ -26,12 +26,42 @@
     <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
   </button>
 
-  <ul class="navbar__menu-mobile" id="menu-mobile">
-    <li><a href="/projeto-social" data-nav="projeto-social">Projeto social</a></li>
-    <li><a href="/escola" data-nav="escola">Escola</a></li>
-    <li><a href="/equipe" data-nav="equipe">Equipe</a></li>
-    <li><a href="/conquistas" data-nav="conquistas">Conquistas</a></li>
-    <li><a href="/transparencia" data-nav="transparencia">Transparência</a></li>
-    <li><a class="btn btn--primary" href="/seja-patrocinador" data-nav="seja-patrocinador" style="width: 100%;">Seja patrocinador</a></li>
-  </ul>
+  <!-- Menu mobile: painel de tela cheia abaixo da barra. Tudo centralizado,
+       como o resto do layout de celular. O `--i` de cada bloco escalona a
+       entrada (ver "Menu mobile" em style.css). Os data-nav marcam a página
+       atual, igual à navegação de desktop.
+       TODO: trocar SEUNUMERO pelo WhatsApp real da associação. -->
+  <div class="menu-mobile" id="menu-mobile">
+    <nav class="menu-mobile__nav" aria-label="Menu mobile">
+      <ul class="menu-mobile__links">
+        <li style="--i:0"><a href="/projeto-social" data-nav="projeto-social">Projeto social</a></li>
+        <li style="--i:1"><a href="/escola" data-nav="escola">Escola</a></li>
+        <li style="--i:2"><a href="/equipe" data-nav="equipe">Equipe</a></li>
+        <li style="--i:3"><a href="/conquistas" data-nav="conquistas">Conquistas</a></li>
+        <li style="--i:4"><a href="/transparencia" data-nav="transparencia">Transparência</a></li>
+      </ul>
+
+      <a class="btn btn--primary btn--lg menu-mobile__cta" href="/seja-patrocinador" data-nav="seja-patrocinador" style="--i:5">Seja patrocinador</a>
+
+      <ul class="menu-mobile__sec" style="--i:6">
+        <li><a href="/sobre" data-nav="sobre">A associação</a></li>
+        <li><a href="/como-ajudar" data-nav="como-ajudar">Como ajudar</a></li>
+        <li><a href="/contato" data-nav="contato">Contato</a></li>
+      </ul>
+    </nav>
+
+    <div class="menu-mobile__rodape" style="--i:7">
+      <div class="menu-mobile__contato">
+        <a href="https://wa.me/55SEUNUMERO" target="_blank" rel="noopener">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+          WhatsApp
+        </a>
+        <a href="https://www.instagram.com/curitibanosbjj/" target="_blank" rel="noopener">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-instagram"/></svg>
+          @curitibanosbjj
+        </a>
+      </div>
+      <p>Associação sem fins lucrativos<br>Curitibanos · SC</p>
+    </div>
+  </div>
 </header>

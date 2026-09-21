@@ -70,6 +70,14 @@
     <symbol id="i-local" viewBox="0 0 24 24"><path d="M12 21.5S5 14.8 5 9.5a7 7 0 0 1 14 0c0 5.3-7 12-7 12z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
     <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z"/><path d="M8.7 8.5c-.3 2.8 4 7.2 6.8 6.8l.9-1.7-2.3-1.2-1 .9c-.9-.4-2-1.5-2.4-2.4l.9-1-1.2-2.3-1.7.9z"/></symbol>
     <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8h.01"/></symbol>
+    <!-- "G" do Google: cores oficiais da marca (exceção documentada, como o verde
+         do WhatsApp). fill/stroke explícitos anulam o traço herdado de .icon. -->
+    <symbol id="i-google" viewBox="0 0 24 24">
+      <path fill="#4285F4" stroke="none" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" stroke="none" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" stroke="none" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+      <path fill="#EA4335" stroke="none" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </symbol>
     <symbol id="i-documento" viewBox="0 0 24 24"><path d="M6 2.5h8l4 4V21.5H6z"/><path d="M14 2.5v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
     <symbol id="i-seta" viewBox="0 0 24 24"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></symbol>
@@ -107,14 +115,44 @@
     <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
   </button>
 
-  <ul class="navbar__menu-mobile" id="menu-mobile">
-    <li><a href="/projeto-social">Projeto social</a></li>
-    <li><a href="/escola">Escola</a></li>
-    <li><a href="/equipe">Equipe</a></li>
-    <li><a href="/conquistas">Conquistas</a></li>
-    <li><a href="/transparencia">Transparência</a></li>
-    <li><a class="btn btn--primary" href="/seja-patrocinador" style="width: 100%;">Seja patrocinador</a></li>
-  </ul>
+  <!-- Menu mobile: painel de tela cheia abaixo da barra. Tudo centralizado,
+       como o resto do layout de celular. O `--i` de cada bloco escalona a
+       entrada (ver "Menu mobile" em style.css). Os data-nav marcam a página
+       atual, igual à navegação de desktop.
+       TODO: trocar SEUNUMERO pelo WhatsApp real da associação. -->
+  <div class="menu-mobile" id="menu-mobile">
+    <nav class="menu-mobile__nav" aria-label="Menu mobile">
+      <ul class="menu-mobile__links">
+        <li style="--i:0"><a href="/projeto-social">Projeto social</a></li>
+        <li style="--i:1"><a href="/escola">Escola</a></li>
+        <li style="--i:2"><a href="/equipe">Equipe</a></li>
+        <li style="--i:3"><a href="/conquistas">Conquistas</a></li>
+        <li style="--i:4"><a href="/transparencia">Transparência</a></li>
+      </ul>
+
+      <a class="btn btn--primary btn--lg menu-mobile__cta" href="/seja-patrocinador" style="--i:5">Seja patrocinador</a>
+
+      <ul class="menu-mobile__sec" style="--i:6">
+        <li><a href="/sobre">A associação</a></li>
+        <li><a href="/como-ajudar">Como ajudar</a></li>
+        <li><a href="/contato">Contato</a></li>
+      </ul>
+    </nav>
+
+    <div class="menu-mobile__rodape" style="--i:7">
+      <div class="menu-mobile__contato">
+        <a href="https://wa.me/55SEUNUMERO" target="_blank" rel="noopener">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+          WhatsApp
+        </a>
+        <a href="https://www.instagram.com/curitibanosbjj/" target="_blank" rel="noopener">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-instagram"/></svg>
+          @curitibanosbjj
+        </a>
+      </div>
+      <p>Associação sem fins lucrativos<br>Curitibanos · SC</p>
+    </div>
+  </div>
 </header>
 
 <main id="conteudo">
@@ -135,7 +173,7 @@
 <!-- =========================================================
      FOOTER — fecha a Dobra 11
      Preto puro (#030303, o preto da marca) para o lockup assentar
-     sem emenda visível. Segundo uso do carimbo hanko.
+     sem emenda visível.
 
      TODO — endereço completo e o ano de fundação.
      ========================================================= -->
@@ -143,7 +181,6 @@
   <div class="footer__grid">
 
     <div class="footer__brand">
-      <span class="hanko hanko--sm" aria-hidden="true">柔術</span>
       <img src="assets/logo/lockup.svg" alt="Goetten Brazilian Jiu-Jitsu"
            width="240" height="90" style="width: 15rem; height: auto;">
       <p style="font-size: var(--text-caption); color: var(--color-muted-dark); max-width: 30ch;">

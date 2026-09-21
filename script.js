@@ -46,15 +46,23 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  /* --- Menu mobile ----------------------------------------- */
+  /* --- Menu mobile -----------------------------------------
+     O painel é de tela cheia, então enquanto aberto o resto da página
+     sai da árvore de acessibilidade e da ordem de Tab (inert); o scroll
+     é travado por CSS (html:has(.is-open)). */
   var toggle = document.querySelector(".navbar__toggle");
   var menu = toggle && document.getElementById(toggle.getAttribute("aria-controls"));
 
   if (toggle && menu) {
+    var iconeToggle = toggle.querySelector("use");
+    var fundo = document.querySelectorAll("main, .footer, .skip-link");
+
     var setMenu = function (open) {
       toggle.setAttribute("aria-expanded", String(open));
       toggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+      if (iconeToggle) iconeToggle.setAttribute("href", open ? "#i-x" : "#i-menu");
       menu.classList.toggle("is-open", open);
+      fundo.forEach(function (el) { el.inert = open; });
     };
 
     toggle.addEventListener("click", function () {
@@ -72,6 +80,12 @@
     /* Navegar para uma âncora fecha o menu */
     menu.addEventListener("click", function (e) {
       if (e.target.closest("a")) setMenu(false);
+    });
+
+    /* Girar o aparelho / alargar a janela até o desktop: o painel some por
+       CSS, então o estado (inert, ícone) precisa acompanhar. */
+    window.matchMedia("(min-width: 768px)").addEventListener("change", function (e) {
+      if (e.matches) setMenu(false);
     });
   }
 
@@ -138,6 +152,168 @@
       }
     });
   }
+
+  /* --- Lightbox da galeria ---------------------------------
+     Cada foto vira um botão (só com JS: sem ele, um botão que não faz
+     nada seria pior que a foto solta) e abre um <dialog> modal nativo.
+     Setas do teclado, botões e arrastar na tela trocam de foto; o
+     dialog cuida de Esc e do foco. Navega por todas as fotos, inclusive
+     as que ainda estão recolhidas atrás do "Ver mais". */
+  var galeriaLista = document.getElementById("galeria");
+  if (galeriaLista && typeof HTMLDialogElement === "function") {
+    var fotos = Array.prototype.slice.call(galeriaLista.querySelectorAll("img"));
+    var atual = 0;
+
+    var caixa = document.createElement("dialog");
+    caixa.className = "lightbox";
+    caixa.setAttribute("aria-label", "Foto ampliada");
+    caixa.innerHTML =
+      '<button type="button" class="lightbox__btn lightbox__fechar" data-lb="fechar" aria-label="Fechar">' +
+        '<svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>' +
+      '<button type="button" class="lightbox__btn lightbox__ant" data-lb="ant" aria-label="Foto anterior">' +
+        '<svg class="icon" aria-hidden="true"><use href="#i-seta"/></svg></button>' +
+      '<figure class="lightbox__fig">' +
+        '<img class="lightbox__img" alt="">' +
+        '<figcaption class="lightbox__legenda" aria-live="polite"></figcaption></figure>' +
+      '<button type="button" class="lightbox__btn lightbox__prox" data-lb="prox" aria-label="Próxima foto">' +
+        '<svg class="icon" aria-hidden="true"><use href="#i-seta"/></svg></button>';
+    document.body.appendChild(caixa);
+
+    var fotoGrande = caixa.querySelector(".lightbox__img");
+    var legenda = caixa.querySelector(".lightbox__legenda");
+
+    var mostrar = function (i) {
+      var total = fotos.length;
+      atual = (i + total) % total;
+      fotoGrande.src = fotos[atual].src;
+      fotoGrande.alt = fotos[atual].alt;
+      legenda.textContent = (atual + 1) + " / " + total;
+      /* pré-carrega as vizinhas para a troca não piscar */
+      [atual - 1, atual + 1].forEach(function (n) {
+        new Image().src = fotos[(n + total) % total].src;
+      });
+    };
+
+    fotos.forEach(function (img, i) {
+      var botao = document.createElement("button");
+      botao.type = "button";
+      botao.className = "galeria-foto";
+      botao.setAttribute("aria-label", "Ampliar foto: " + img.alt);
+      img.parentNode.insertBefore(botao, img);
+      botao.appendChild(img);
+      botao.addEventListener("click", function () {
+        mostrar(i);
+        caixa.showModal();
+      });
+    });
+
+    caixa.addEventListener("click", function (e) {
+      var acao = e.target.closest("[data-lb]");
+      if (acao) {
+        var qual = acao.getAttribute("data-lb");
+        if (qual === "fechar") caixa.close();
+        else mostrar(atual + (qual === "prox" ? 1 : -1));
+      } else if (e.target === caixa || e.target.classList.contains("lightbox__fig")) {
+        caixa.close(); /* clique fora da foto */
+      }
+    });
+
+    caixa.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") mostrar(atual + 1);
+      else if (e.key === "ArrowLeft") mostrar(atual - 1);
+    });
+
+    var toqueX = null;
+    caixa.addEventListener("touchstart", function (e) {
+      toqueX = e.touches[0].clientX;
+    }, { passive: true });
+    caixa.addEventListener("touchend", function (e) {
+      if (toqueX === null) return;
+      var dx = e.changedTouches[0].clientX - toqueX;
+      toqueX = null;
+      if (Math.abs(dx) > 50) mostrar(atual + (dx < 0 ? 1 : -1));
+    });
+  }
+
+  /* --- Carrosséis mobile ------------------------------------
+     A pista horizontal é só CSS (ver "Carrossel mobile" em style.css).
+     Aqui ficam as pistas de que há mais conteúdo: os traços de posição
+     e as classes que esmaecem a borda com mais cards. Sem JS, a pista
+     ainda desliza — só perde os indicadores. */
+  var reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)");
+  document.querySelectorAll("[data-carrossel]").forEach(function (pista) {
+    var itens = Array.prototype.slice.call(pista.children);
+    var nome = pista.getAttribute("data-carrossel");
+    if (itens.length < 2) return;
+
+    var pontos = document.createElement("div");
+    pontos.className = "carrossel-dots";
+    pontos.setAttribute("role", "group");
+    pontos.setAttribute("aria-label", nome + " — navegação");
+    var botoes = itens.map(function (item, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", "Ir para o item " + (i + 1) + " de " + itens.length);
+      b.addEventListener("click", function () {
+        pista.scrollBy({
+          left: item.getBoundingClientRect().left - pista.getBoundingClientRect().left - margem(),
+          behavior: reduzMovimento.matches ? "auto" : "smooth"
+        });
+      });
+      pontos.appendChild(b);
+      return b;
+    });
+    pista.insertAdjacentElement("afterend", pontos);
+
+    /* Onde o snap encosta o card: o scroll-padding da pista. */
+    function margem() {
+      return parseFloat(getComputedStyle(pista).scrollPaddingLeft) || 0;
+    }
+
+    function atualizar() {
+      var max = pista.scrollWidth - pista.clientWidth;
+      var x = pista.scrollLeft;
+      var rolavel = max > 1;
+
+      pista.classList.toggle("tem-ant", rolavel && x > 4);
+      pista.classList.toggle("tem-prox", rolavel && x < max - 4);
+      /* Pista rolável por teclado só quando de fato rola (no desktop
+         ela não rola e não deve virar uma parada de Tab à toa). */
+      if (rolavel) {
+        pista.setAttribute("tabindex", "0");
+        pista.setAttribute("aria-label", nome + " — role para o lado para ver mais");
+      } else {
+        pista.removeAttribute("tabindex");
+        pista.removeAttribute("aria-label");
+      }
+
+      /* Ativo: o card cujo início está mais perto do alinhamento do snap;
+         no fim da pista, o último (ele nunca chega a alinhar no início). */
+      var esquerda = pista.getBoundingClientRect().left + margem();
+      var ativo = 0, menor = Infinity;
+      itens.forEach(function (item, i) {
+        var d = Math.abs(item.getBoundingClientRect().left - esquerda);
+        if (d < menor) { menor = d; ativo = i; }
+      });
+      if (rolavel && x >= max - 4) ativo = itens.length - 1;
+      botoes.forEach(function (b, i) {
+        if (i === ativo) b.setAttribute("aria-current", "true");
+        else b.removeAttribute("aria-current");
+      });
+    }
+
+    /* Um timer curto, e não requestAnimationFrame: o rAF pausa com a aba
+       em segundo plano e deixaria o "já agendado" preso para sempre.
+       Como atualizar() lê a posição na hora em que roda, o último evento
+       de scroll sempre é coberto por uma execução posterior a ele. */
+    var espera = null;
+    pista.addEventListener("scroll", function () {
+      if (espera) return;
+      espera = setTimeout(function () { espera = null; atualizar(); }, 40);
+    }, { passive: true });
+    window.addEventListener("resize", atualizar);
+    atualizar();
+  });
 
   /* --- Contadores de impacto -------------------------------
      Contam de 0 ao valor uma única vez, com ease-out cúbico:

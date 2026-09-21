@@ -588,18 +588,94 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 .navbar__links a { text-decoration: none; font-size: var(--text-body-sm); font-weight: 500; color: var(--color-muted-dark); transition: color var(--dur-fast); }
 .navbar__links a:hover, .navbar__links a[aria-current="page"] { color: var(--color-white); }
 .navbar__toggle { display: none; background: none; border: 0; color: var(--color-white); padding: var(--space-2); cursor: pointer; }
-.navbar__menu-mobile { display: none; }
+.menu-mobile { display: none; }
 @media (max-width: 767px) {
-  .navbar__links, .navbar .btn { display: none; }
+  /* só o botão da barra: o CTA dentro do menu mobile também é .btn */
+  .navbar__links, .navbar > .btn { display: none; }
   .navbar__toggle { display: block; }
-  .navbar__menu-mobile.is-open {
-    display: flex; flex-direction: column; gap: var(--space-4);
-    position: absolute; left: 0; right: 0; top: 100%;
-    padding: var(--space-6) var(--gutter) var(--space-8);
-    background: var(--color-black); border-bottom: var(--border-w) solid var(--color-border-dark);
-    list-style: none;
+}
+
+/* --- Menu mobile ---
+   Painel de tela cheia sob a barra (absoluto ao .navbar, que é sticky e
+   tem backdrop-filter: por isso position:fixed não serviria aqui).
+   Os links seguem o vocabulário do resto do site: Oswald em caixa alta,
+   filetes de 1px, o corte vermelho da marca marcando a página atual. */
+@media (max-width: 767px) {
+  .menu-mobile.is-open {
+    display: flex; flex-direction: column; justify-content: space-between;
+    gap: var(--space-8);
+    position: absolute; left: 0; right: 0; top: calc(100% + 1px); /* abaixo do filete da barra */
+    height: calc(100vh - 72px); height: calc(100dvh - 72px);
+    overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+    padding: var(--space-4) var(--gutter) var(--space-8);
+    background: var(--color-black);
+    text-align: center;
   }
-  .navbar__menu-mobile a { color: var(--color-white); text-decoration: none; font-family: var(--font-display); font-size: var(--text-h4); text-transform: uppercase; }
+  /* Barra sólida enquanto o painel está aberto: sem isso o painel e a barra
+     (88% de opacidade) mostram tons de preto diferentes na emenda. */
+  .navbar:has(.menu-mobile.is-open) { background: var(--color-black); border-bottom-color: var(--color-border-dark); }
+  html:has(.menu-mobile.is-open) { overflow: hidden; }
+
+  .menu-mobile__nav { display: flex; flex-direction: column; gap: var(--space-6); }
+
+  .menu-mobile__links { list-style: none; padding: 0; margin: 0; }
+  .menu-mobile__links li { border-bottom: var(--border-w) solid var(--color-border-dark); }
+  .menu-mobile__links a {
+    display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+    min-height: 3.5rem;
+    color: var(--color-muted-dark); text-decoration: none;
+    font-family: var(--font-display); font-weight: 600;
+    font-size: var(--text-h3); text-transform: uppercase; letter-spacing: 0.04em;
+    transition: color var(--dur-fast);
+  }
+  .menu-mobile__links a:hover,
+  .menu-mobile__links a[aria-current="page"] { color: var(--color-white); }
+  /* O corte da marca antes do rótulo: a página em que você está. */
+  .menu-mobile__links a[aria-current="page"]::before {
+    content: ""; width: 1.25rem; height: 0.5rem; flex: none;
+    background: var(--color-red);
+    clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);
+  }
+
+  .menu-mobile__cta { width: 100%; }
+
+  .menu-mobile__sec {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-6);
+  }
+  .menu-mobile__sec a {
+    display: inline-flex; align-items: center; min-height: 2.75rem; /* alvo de toque */
+    color: var(--color-muted-dark); text-decoration: none;
+    font-size: var(--text-body-sm); font-weight: 500;
+  }
+  .menu-mobile__sec a:hover,
+  .menu-mobile__sec a[aria-current="page"] { color: var(--color-white); }
+
+  .menu-mobile__rodape {
+    display: flex; flex-direction: column; align-items: center; gap: var(--space-4);
+    padding-top: var(--space-6); border-top: var(--border-w) solid var(--color-border-dark);
+    font-size: var(--text-caption); color: var(--color-muted-dark);
+  }
+  .menu-mobile__contato { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-6); }
+  .menu-mobile__contato a {
+    display: inline-flex; align-items: center; gap: var(--space-2); min-height: 2.75rem;
+    color: var(--color-white); text-decoration: none; font-size: var(--text-body-sm);
+  }
+  .menu-mobile__contato a:hover { color: var(--color-red-light); }
+  .menu-mobile__rodape p { line-height: 1.6; }
+
+  /* Entrada escalonada: cada bloco sobe 40ms depois do anterior. */
+  .menu-mobile.is-open .menu-mobile__links li,
+  .menu-mobile.is-open .menu-mobile__cta,
+  .menu-mobile.is-open .menu-mobile__sec,
+  .menu-mobile.is-open .menu-mobile__rodape {
+    animation: menu-entra var(--dur-base) var(--ease-strike) backwards;
+    animation-delay: calc(var(--i, 0) * 40ms);
+  }
+}
+@keyframes menu-entra { from { opacity: 0; transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) {
+  .menu-mobile.is-open * { animation: none !important; }
 }
 
 /* --- Tier table (níveis de patrocínio) --- */
@@ -796,7 +872,7 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
    internas têm leitura longa de verdade, e essa leitura precisa de
    ritmo vertical próprio, não do espaçamento apertado dos cards. */
 .prosa { max-width: 68ch; }
-.prosa > * + * { margin-top: var(--space-5); }
+.prosa > * + * { margin-top: var(--space-6); } /* --space-5 não existe na escala: o espaçamento entre parágrafos não funcionava */
 .prosa h2 { margin-top: var(--space-12); }
 .prosa h3 { margin-top: var(--space-8); }
 .prosa p, .prosa li { line-height: 1.7; color: var(--text-muted); }
@@ -969,6 +1045,22 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
   color: var(--color-white);
 }
 
+/* Celular: o hero fica mais ALTO que largo, o oposto do desktop. O
+   "120% auto" de cima dimensiona a foto pela largura, então a altura dela
+   (largura × proporção) fica bem menor que a do hero e sobra uma faixa
+   sem foto embaixo. Aqui "cover" preenche a caixa toda nos dois eixos,
+   sem distorcer, cortando as laterais; o centro (50%) é onde estão os
+   atletas. Só o tamanho e a posição mudam: o véu e o fundo de reserva
+   continuam os mesmos. */
+@media (max-width: 767px) {
+  .hero {
+    background:
+      linear-gradient(160deg, rgba(10, 10, 10, .85) 55%, rgba(16, 11, 11, .93) 100%),
+      var(--foto, none) 50% center / cover no-repeat,
+      linear-gradient(160deg, var(--color-black) 55%, #100B0B 100%);
+  }
+}
+
 /* O corte do monograma atravessando o topo, em escala de seção.
    Usa ::after, não ::before: .hero também carrega .grain, que já reivindica
    o ::before — os dois se fundiriam por propriedade e o opacity 0.05 do
@@ -1080,6 +1172,20 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
    máximo, porque é ele que precisa ser lido de longe. */
 .stat__value em { font-style: normal; color: var(--accent-text); }
 
+/* Celular: os quatro números ficam numa linha só (o auto-fit os quebraria
+   em 2×2). Cabem porque número e rótulo encolhem junto com a tela; o
+   rótulo pode passar para a linha de baixo dentro da própria coluna,
+   nunca para fora dela. */
+@media (max-width: 767px) {
+  .stats-row { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+  .stat { align-items: center; text-align: center; gap: var(--space-2); }
+  .stat__value { font-size: clamp(1.125rem, 5.6vw, 1.75rem); }
+  .stat__label {
+    font-size: 0.625rem; letter-spacing: 0.04em; line-height: 1.3;
+    hyphens: auto; overflow-wrap: break-word;
+  }
+}
+
 /* ------------------------------------------------------------
    10. SEÇÕES DE CONTEÚDO — Dobras 3 e 4
    ------------------------------------------------------------ */
@@ -1121,14 +1227,23 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
    proporção real, cortando gente que não devia ser cortada. */
 .foto { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; }
 
-/* Recorte mais baixo, ancorado no topo — usado quando a parte de baixo
-   da foto original não serve (ex.: foto do projeto social) */
-.foto--baixa { aspect-ratio: 16 / 9; object-position: top; }
+/* Recorte mais baixo (16:9), com a âncora vertical em 75% — usado em foto
+   de grupo com teto vazio em cima e tatame embaixo (ex.: projeto social),
+   para as pessoas ficarem centralizadas no recorte */
+.foto--baixa { aspect-ratio: 16 / 9; object-position: center 75%; }
 
 /* Mantém a proporção do .foto (ou a do .card__media, no caso dos
    cards de professor), só muda a âncora do recorte para o topo —
    usado quando o rosto fica cortado por uma foto de corpo inteiro. */
 .foto--topo { object-position: top; }
+
+/* Âncora vertical em 45% — retrato mais alto que o quadrado do card, em que
+   o topo (parede/banner) pode ser cortado para mostrar mais do corpo. */
+.foto--meio { object-position: 50% 45%; }
+
+/* Retrato vertical (3:4) — para foto em pé. Largura limitada para a altura
+   não passar da coluna de texto ao lado; centralizado na sua coluna. */
+.foto--vertical { aspect-ratio: 3 / 4; object-position: 50% 20%; max-width: 24rem; justify-self: center; }
 
 /* --- Informações práticas (horário, local) — Dobra 4 --- */
 /* Duas colunas quando cabe: em coluna única a lista empurrava a seção
@@ -1263,6 +1378,63 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 }
 
 /* ------------------------------------------------------------
+   Carrossel mobile — equipe, níveis de patrocínio e depoimentos (home)
+   No celular estas listas crescem na vertical e a dobra vira uma
+   parede de cards. Aqui elas viram uma pista horizontal com snap.
+   Como o que está fora da tela some, a pista se anuncia por quatro
+   pistas visuais somadas: (1) o card seguinte "espia" pela borda,
+   (2) a borda com mais conteúdo esmaece, (3) traços indicam posição e
+   levam ao card, (4) tudo isso some no fim/começo, quando não há mais.
+   Só vale abaixo de 768px; acima, as grades originais seguem iguais.
+   ------------------------------------------------------------ */
+.carrossel-dots { display: none; }
+
+@media (max-width: 767px) {
+  [data-carrossel] {
+    display: flex; gap: var(--space-4);
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    /* Sangra até a borda da tela: dentro do container não haveria onde o
+       próximo card espiar. O padding devolve o alinhamento com o texto. */
+    margin-inline: calc(var(--gutter) * -1);
+    /* Folga em cima e embaixo: o overflow-x recorta também no eixo Y, e a
+       etiqueta do nível destacado e a sombra dos cards passam da borda. */
+    padding: var(--space-4) var(--gutter) var(--space-6);
+    /* Esmaece a borda que ainda tem conteúdo (classes vêm do script). */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-l, 0px), #000 calc(100% - var(--fade-r, 0px)), transparent);
+            mask-image: linear-gradient(to right, transparent, #000 var(--fade-l, 0px), #000 calc(100% - var(--fade-r, 0px)), transparent);
+  }
+  [data-carrossel]::-webkit-scrollbar { display: none; }
+  [data-carrossel].tem-ant  { --fade-l: var(--space-6); }
+  [data-carrossel].tem-prox { --fade-r: var(--space-12); }
+
+  /* 82%: sobra ~18% da largura para o card seguinte espiar. */
+  [data-carrossel] > * { flex: 0 0 min(82%, 22rem); scroll-snap-align: start; }
+  [data-carrossel] > :last-child { scroll-snap-align: end; }
+
+  .carrossel-dots { display: flex; justify-content: center; margin-top: calc(var(--space-2) * -1); }
+  .carrossel-dots button {
+    position: relative; width: 2.25rem; height: 1.75rem;
+    padding: 0; border: 0; background: none; cursor: pointer;
+  }
+  /* Traço inclinado, o mesmo corte do .corte da marca — nada de bolinha. */
+  .carrossel-dots button::before {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 1.25rem; height: 3px; translate: -50% -50%;
+    transform: skewX(-20deg);
+    background: var(--text-muted); opacity: 0.45;
+    transition: width var(--dur-fast) var(--ease-strike), opacity var(--dur-fast), background-color var(--dur-fast);
+  }
+  .carrossel-dots button[aria-current="true"]::before {
+    width: 1.75rem; background: var(--accent); opacity: 1;
+  }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .carrossel-dots button::before { transition: none; }
+}
+
+/* ------------------------------------------------------------
    15. COMUNIDADE — Dobra 10
    ------------------------------------------------------------ */
 /* Grade de fotos recentes. Colunas explícitas, não auto-fit: com 6 itens
@@ -1307,6 +1479,67 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 
 @media (prefers-reduced-motion: reduce) {
   .grade-fotos.is-expandida > li[data-extra] { animation: none; }
+}
+
+/* --- Lightbox da galeria ---
+   Foto ampliada num <dialog> modal nativo: ele já cuida de Esc, de prender o
+   foco e de devolvê-lo à miniatura ao fechar. O script só o monta e troca a
+   foto. Cobre a tela inteira, então dispensa ::backdrop e z-index (top layer). */
+.galeria-foto {
+  display: block; width: 100%; height: 100%;
+  padding: 0; border: 0; background: none;
+  overflow: hidden; cursor: zoom-in;
+}
+.galeria-foto img { transition: transform var(--dur-base) var(--ease-strike); }
+.galeria-foto:hover img { transform: scale(1.05); }
+
+.lightbox {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: var(--space-4); border: 0;
+  background: rgba(3, 3, 3, 0.96); color: var(--color-white);
+}
+.lightbox[open] {
+  display: flex; align-items: center; justify-content: center;
+  animation: lightbox-in var(--dur-base) var(--ease-strike);
+}
+@keyframes lightbox-in { from { opacity: 0; } }
+html:has(.lightbox[open]) { overflow: hidden; }
+
+.lightbox__fig {
+  margin: 0; max-width: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-3);
+}
+.lightbox__img {
+  display: block; max-width: 100%;
+  max-height: calc(100vh - 8rem); max-height: calc(100dvh - 8rem);
+  object-fit: contain;
+}
+.lightbox__legenda {
+  font-family: var(--font-display); font-size: var(--text-overline);
+  letter-spacing: 0.1em; color: var(--color-muted-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.lightbox__btn {
+  position: absolute; display: grid; place-items: center;
+  width: 3rem; height: 3rem; padding: 0;
+  background: rgba(3, 3, 3, 0.6); color: var(--color-white);
+  border: var(--border-w) solid rgba(247, 245, 242, var(--alpha-hairline));
+  cursor: pointer;
+  transition: border-color var(--dur-fast), background var(--dur-fast);
+}
+.lightbox__btn:hover { border-color: var(--color-red); background: rgba(3, 3, 3, 0.9); }
+.lightbox__fechar { top: var(--space-4); right: var(--space-4); }
+.lightbox__ant, .lightbox__prox { top: 50%; translate: 0 -50%; }
+.lightbox__ant  { left: var(--space-4); }
+.lightbox__prox { right: var(--space-4); }
+.lightbox__ant svg { rotate: 180deg; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox[open] { animation: none; }
+  .galeria-foto img { transition: none; }
+  .galeria-foto:hover img { transform: none; }
 }
 
 .comunidade-rodape {
@@ -1354,3 +1587,88 @@ a.card:hover, .card--interactive:hover { transform: translateY(-3px); border-col
 .form-status--erro { border-color: var(--color-error); background: color-mix(in srgb, var(--color-error) 8%, transparent); }
 .form-status--ok   { border-color: var(--color-success); background: color-mix(in srgb, var(--color-success) 10%, transparent); }
 .form-status a { color: inherit; font-weight: 600; }
+
+/* ------------------------------------------------------------
+   Layout de celular — conteúdo centralizado (≤767px)
+   No desktop o texto corre à esquerda, ao lado da mídia. Numa coluna só,
+   esse alinhamento deixa o lado direito da tela vazio e o conteúdo parece
+   "caído" para um lado. Aqui cabeçalhos, blocos de texto curtos, CTAs e o
+   rodapé passam a ficar no eixo central da tela.
+   Ficam à esquerda de propósito: o interior dos cards, a prosa das páginas
+   internas, o acordeão de perguntas e o formulário — texto corrido ou
+   campos de preenchimento leem melhor alinhados, e centralizar linhas de
+   tamanhos diferentes só deixa a borda esquerda serrilhada.
+   Fica no fim do arquivo para vencer as regras de base na cascata.
+   ------------------------------------------------------------ */
+@media (max-width: 767px) {
+  /* Cabeçalho de seção: kicker, título, traço e lead */
+  .section-header { align-items: center; text-align: center; margin-inline: auto; }
+  .section-header__kicker { justify-content: center; }
+  .section-header .traco { margin-inline: auto; }
+  /* Lead solto fora do .section-header (ex.: página 404) e parágrafo que só
+     carrega um link: também acompanham o eixo central. */
+  .section-header__lead { text-align: center; margin-inline: auto; }
+  p:has(> .link-ink:only-child) { text-align: center; }
+  .nota-vinculo { text-align: center; }
+  .traco-draw { transform-origin: center; }
+
+  /* Hero */
+  .hero__inner { text-align: center; }
+  /* Kicker do hero quebra em duas linhas: o corte vai em cima do texto,
+     senão fica sozinho na borda esquerda com o texto centralizado ao lado. */
+  .hero__inner .section-header__kicker { flex-direction: column; justify-content: center; gap: var(--space-2); }
+  .hero__titulo, .hero__lead { margin-inline: auto; }
+  .hero__ctas { justify-content: center; }
+  .hero__ctas .btn { flex: 1 1 100%; } /* os dois, nunca só um (ver acima) */
+
+  /* Coluna de texto ao lado da foto (dobras Projeto social e Escola) */
+  .coluna-texto { align-items: center; text-align: center; }
+  .badges-linha { justify-content: center; }
+  .acoes { flex-direction: column; align-items: center; width: 100%; }
+  .acoes .whatsapp-btn, .acoes .btn { width: 100%; justify-content: center; }
+  /* A barra vermelha da frase de vínculo é lateral; centralizada ela
+     passa para cima do texto, senão fica encostada num lado só. */
+  .nota-vinculo {
+    border-left: 0; padding-left: 0;
+    border-top: var(--border-w-strong) solid var(--color-red); padding-top: var(--space-3);
+  }
+
+  /* Prosa longa (páginas internas) fica à esquerda; a de 2–3 parágrafos
+     dentro da coluna de texto acompanha o resto da coluna. */
+  .prosa { text-align: left; }
+  .coluna-texto .prosa { text-align: center; }
+
+  /* Lista de fatos (horário, endereço…): ícone em cima, texto embaixo */
+  .info-lista { grid-template-columns: 1fr; justify-items: center; }
+  .info-lista li { flex-direction: column; align-items: center; text-align: center; gap: var(--space-1); }
+  .info-lista svg { margin-top: 0; }
+
+  /* Faixas de fechamento: texto e ação empilhados, ação em largura total */
+  .transparencia { flex-direction: column; text-align: center; }
+  .transparencia__texto { flex-basis: auto; }
+  .transparencia__texto p { margin-inline: auto; }
+  .transparencia > .btn { width: 100%; }
+
+  .cta-final { flex-direction: column; text-align: center; justify-content: center; }
+  .cta-final__titulo { margin-inline: auto; }
+  .cta-final__acoes { flex-direction: column; width: 100%; }
+  /* Botão grande com rótulo longo: sem reduzir, o texto quebra em duas linhas
+     e o ícone fica sozinho na ponta esquerda. */
+  .cta-final__acoes .btn { width: 100%; padding-inline: var(--space-4); font-size: var(--text-body-sm); text-align: center; }
+
+  .patrocinio-rodape, .comunidade-rodape { flex-direction: column; text-align: center; }
+  .patrocinio-rodape p { margin-inline: auto; }
+  .patrocinio-rodape .btn, .comunidade-rodape .btn { width: 100%; }
+  .secao-rodape { justify-content: center; }
+
+  /* Formulário e o aparte de contato */
+  .formulario .btn { width: 100%; }
+  .contato__aparte { text-align: center; }
+  .contato__aparte .whatsapp-btn { width: 100%; justify-content: center; }
+
+  /* Footer */
+  .footer__grid { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .footer__brand { align-items: center; }
+  .footer ul { align-items: center; }
+  .footer__legal { flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); text-align: center; }
+}
